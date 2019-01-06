@@ -474,7 +474,7 @@ namespace GameExpress.Controls
         }
 
         /// <summary>
-        /// Using a DependencyProperty as the backing store for HorizontalScrollValue.  This enables animation, styling, binding, etc...
+        /// Using a DependencyProperty as the backing store for Item.  This enables animation, styling, binding, etc...
         /// </summary>
         public static readonly DependencyProperty ItemProperty =
             DependencyProperty.Register("Item", typeof(Item), typeof(EditorPanel), new PropertyMetadata(null));

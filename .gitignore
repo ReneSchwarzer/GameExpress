@@ -328,8 +328,6 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-/assets
-/src
 /doc/ActiveScript.docx
 /doc/LostOnOmicron-Story.docx
 /doc/MIDI.docx

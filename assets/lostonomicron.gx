@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Lost on Omicron" id="0" enable="true" lock="false" width="1024" height="768">
+  <note>Adventurespiel</note>
+  <item xsi:type="scene" name="Szene 1" id="0" enable="true" lock="false">
+    <note />
+	<instance name="Erstes Schlüsselbild" item="Hintergrund">
+		<keyframe from="0" duration="99999999" tweening="false">
+			<matrix m11="0.3" m12="0" m13="0" m21="0" m22="0.3" m23="0" m31="0" m32="0" m33="1" />
+		</keyframe>
+	</instance>
+    <item xsi:type="image" name="Hintergrund" id="0" enable="true" lock="false">
+      <note />
+      <hotspot x="0" y="0" />
+      <gamma value="0" />
+      <alpha value="255" />
+      <blur value="0" />
+      <source>C:\Users\rene_\source\repos\GameExpress\src\GameExpress\bin\x86\Debug\AppX\Assets\Items\scene1.png</source>
+    </item>
+	<item xsi:type="map" name="Map" id="0" enable="true" lock="false">
+	</item>
+    <hotspot x="0" y="0" />
+    <gamma value="0" />
+    <alpha value="255" />
+    <blur value="0" />
+  </item>
+  <item xsi:type="object" name="Fliegendes UFO" id="0" enable="true" lock="false" endtime="210" loop="oscillate">
+    <note />
+	<instance name="Erstes Schlüsselbild" item="UFO">
+		<keyframe from="0" duration="10" tweening="true">
+			<matrix m11="0.5" m12="0" m13="0" m21="0" m22="0.5" m23="0" m31="100" m32="100" m33="1" />
+		</keyframe>
+		<keyframe from="100" duration="1" tweening="true">
+			<matrix m11="0.3" m12="0" m13="0" m21="0" m22="0.3" m23="0" m31="0" m32="80" m33="1" />
+		</keyframe>
+		<keyframe from="200" duration="10" tweening="false">
+			<matrix m11="0.25" m12="0" m13="0" m21="0" m22="0.25" m23="0" m31="-100" m32="-100" m33="1" />
+		</keyframe>
+	</instance>
+	<instance name="Zweites Schlüsselbild" item="Omicron">
+		<keyframe from="0" duration="210" tweening="true">
+			<matrix m11="0.2" m12="0" m13="0" m21="0" m22="0.2" m23="0" m31="-40" m32="-100" m33="1" />
+		</keyframe>
+	</instance>
+    <item xsi:type="image" name="UFO" id="0" enable="true" lock="false">
+      <note />
+      <hotspot x="0" y="0" />
+      <gamma value="0" />
+      <alpha value="255" />
+      <blur value="0" />
+      <source>C:\Users\rene_\source\repos\GameExpress\src\GameExpress\bin\x86\Debug\AppX\Assets\Items\ufo.png</source>
+    </item>
+    <hotspot x="0" y="0" />
+    <gamma value="0" />
+    <alpha value="255" />
+    <blur value="0" />
+  </item>
+  <item xsi:type="image" name="Sputnik" id="0" enable="true" lock="false">
+    <note />
+    <hotspot x="0" y="0" />
+    <gamma value="0" />
+    <alpha value="255" />
+    <blur value="0" />
+    <source>C:\Users\rene_\source\repos\GameExpress\src\GameExpress\bin\x86\Debug\AppX\Assets\Items\sputnik.png</source>
+  </item>
+  <item xsi:type="image" name="Omicron" id="0" enable="true" lock="false">
+    <note />
+    <hotspot x="0" y="0" />
+    <gamma value="0" />
+    <alpha value="255" />
+    <blur value="0" />
+    <source>C:\Users\rene_\source\repos\GameExpress\src\GameExpress\bin\x86\Debug\AppX\Assets\Items\omicron.png</source>
+  </item>
+  <item xsi:type="sound" name="Boom" id="0" enable="true" lock="false">
+    <note />
+    <source>C:\Users\rene_\source\repos\GameExpress\src\GameExpress\bin\x86\Debug\AppX\Assets\Items\boom.mp3</source>
+  </item>
+</game>

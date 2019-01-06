@@ -1,9 +1,14 @@
-﻿using Microsoft.Graphics.Canvas.Geometry;
+﻿using GameExpress.Model.Item;
+using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.UI.Xaml;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Numerics;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace GameExpress.Controls
 {
@@ -15,6 +20,11 @@ namespace GameExpress.Controls
         private CanvasControl Ruler { get; set; }
 
         /// <summary>
+        /// Liefert oder setzt die Tabelle
+        /// </summary>
+        private Grid Table { get; set; }
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         public TimeLinePanel()
@@ -22,6 +32,7 @@ namespace GameExpress.Controls
             this.DefaultStyleKey = typeof(TimeLinePanel);
             Time = 0;
         }
+
 
         /// <summary>
         /// Wird beim Anwenden des Templates (EditorPanel.xaml-Datei) aufgerufen
@@ -35,7 +46,82 @@ namespace GameExpress.Controls
             if (Ruler != null)
             {
                 Ruler.Draw += OnDrawRuler;
+                Ruler.PointerPressed += OnRulerPointerPressed;
+                Ruler.PointerMoved += OnPointerMoved;
+                Ruler.PointerReleased += OnPointerReleased;
+                //Window.Current.CoreWindow.PointerMoved += OnRulerPointerMoved;
             }
+
+            Table = GetTemplateChild("Table") as Grid;
+
+
+            // Eigenschaft TimeProperty hat sich geändert
+            RegisterPropertyChangedCallback(TimeProperty, new DependencyPropertyChangedCallback((s, e) =>
+            {
+                // Neuzeichnen erforderlich
+                Ruler?.Invalidate();
+            }));
+
+            // Eigenschaft InstancesProperty hat sich geändert
+            RegisterPropertyChangedCallback(InstancesProperty, new DependencyPropertyChangedCallback((s, e) =>
+            {
+                FillInstanceLsit();
+            }));
+
+            FillInstanceLsit();
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn ein Zeigegerät, was vorher gedrückt wurde, losgelassen wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn ein Zeigegerät bewegt wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnRulerPointerMoved(CoreWindow sender, PointerEventArgs args)
+        {
+
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn der Zeigegerät über das Lineal gedrückt wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnRulerPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var pointer = e.GetCurrentPoint(Ruler);
+            if (pointer.IsInContact)
+            {
+                Time = (ulong)pointer.Position.X;
+            }
+
+            e.Handled = true;
+
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn der Zeigegerät über das Lineal bewegt wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            var pointer = e.GetCurrentPoint(Ruler);
+            if (pointer.IsInContact)
+            {
+                Time = (ulong)pointer.Position.X;
+            }
+
+            e.Handled = true;
         }
 
         /// <summary>
@@ -87,6 +173,30 @@ namespace GameExpress.Controls
         }
 
         /// <summary>
+        /// Füllt die Liste der Instanzen
+        /// </summary>
+        private void FillInstanceLsit()
+        {
+            var head = Table.RowDefinitions.FirstOrDefault();
+            Table.RowDefinitions.Clear();
+
+            Table.RowDefinitions.Add(head);
+            int i = 1;
+
+            foreach(var r in Instances)
+            {
+                Table.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(25, GridUnitType.Pixel) });
+
+                var label = new TextBlock() { Text = r.Name };
+                Table.Children.Add(label);
+                Grid.SetColumn(label, 0);
+                Grid.SetRow(label, i);
+
+                i++;
+            }
+        }
+
+        /// <summary>
         /// Liefert oder setzt die Animationszeit
         /// </summary>
         public ulong Time
@@ -96,10 +206,25 @@ namespace GameExpress.Controls
         }
 
         /// <summary>
-        /// Using a DependencyProperty as the backing store for HorizontalScrollValue.  This enables animation, styling, binding, etc...
+        /// Using a DependencyProperty as the backing store for Time.
         /// </summary>
         public static readonly DependencyProperty TimeProperty =
-            DependencyProperty.Register("TimeProperty", typeof(ulong), typeof(TimeLinePanel), new PropertyMetadata(0));
+            DependencyProperty.Register("TimeProperty", typeof(ulong), typeof(TimeLinePanel), new PropertyMetadata(new ulong()));
+
+        /// <summary>
+        /// Liefert oder setzt des Items
+        /// </summary>
+        public ObservableCollection<ItemInstance> Instances
+        {
+            get { return (ObservableCollection<ItemInstance>)GetValue(InstancesProperty); }
+            set { SetValue(InstancesProperty, value); }
+        }
+
+        /// <summary>
+        /// Using a DependencyProperty as the backing store for Instances.
+        /// </summary>
+        public static readonly DependencyProperty InstancesProperty =
+            DependencyProperty.Register("Instances", typeof(ObservableCollection<ItemInstance>), typeof(TimeLinePanel), new PropertyMetadata(null));
 
     }
 }

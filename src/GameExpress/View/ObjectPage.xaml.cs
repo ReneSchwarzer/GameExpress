@@ -31,14 +31,25 @@ namespace GameExpress.View
         {
             base.OnNavigatedTo(args);
 
-            DataContext = args.Parameter;
+            DataContext = args.Parameter as ItemObject;
             Editor.Item = args.Parameter as ItemObject;
+            TimeLine.Instances = (args.Parameter as ItemObject).Instances;
 
             Editor.Loaded += (s, e) =>
             {
                 Editor.MergeCommandBar(ToolBar, false);
                 ToolBar.Visibility = Visibility.Collapsed;
             };
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn der Previousbutton gedrückt wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnPrevious(object sender, RoutedEventArgs e)
+        {
+            Editor.Time = 0;
         }
 
         /// <summary>

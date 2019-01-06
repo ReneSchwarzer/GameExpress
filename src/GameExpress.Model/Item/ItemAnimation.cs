@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using Windows.Foundation;
+using Windows.UI.Xaml;
 
 namespace GameExpress.Model.Item
 {
@@ -12,7 +13,7 @@ namespace GameExpress.Model.Item
         /// Liefert oder setzt die Instanzen
         /// </summary>
         [XmlElement("instance")]
-        public ObservableCollection<ItemInstance> Instance { get; set; } = new ObservableCollection<ItemInstance>();
+        public ObservableCollection<ItemInstance> Instances { get; set; } = new ObservableCollection<ItemInstance>();
 
         /// <summary>
         /// Liefert oder setzt die Zeit, bei dem die Annimation beendet wird
@@ -44,7 +45,7 @@ namespace GameExpress.Model.Item
         /// </summary>
         public ItemAnimation()
         {
-            Instance.CollectionChanged += (s, e) =>
+            Instances.CollectionChanged += (s, e) =>
             {
                 if (e.NewItems != null)
                 {
@@ -72,7 +73,7 @@ namespace GameExpress.Model.Item
         {
             base.Update(uc);
 
-            foreach (var v in Instance)
+            foreach (var v in Instances)
             {
                 v.Update(new UpdateContext(uc));
             }
@@ -86,9 +87,9 @@ namespace GameExpress.Model.Item
         {
             base.Presentation(pc);
 
-            if (Instance == null) return;
+            if (Instances == null) return;
 
-            foreach (var v in Instance)
+            foreach (var v in Instances)
             {
                 v.Presentation(new PresentationContext(pc) { Time = LocalTime(pc.Time) });
             }
@@ -102,9 +103,9 @@ namespace GameExpress.Model.Item
         {
             var copy = base.Copy<T>() as ItemObject;
 
-            foreach (var i in Instance)
+            foreach (var i in Instances)
             {
-                copy.Instance.Add(i.Copy<ItemInstance>());
+                copy.Instances.Add(i.Copy<ItemInstance>());
             }
 
             return copy as T;

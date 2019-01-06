@@ -31,7 +31,7 @@ namespace GameExpress.Controls
 
             Time = 0;
 
-            // Eigenschaft GridVisibilityProperty hat sich geändert
+            // Eigenschaft TimeProperty hat sich geändert
             RegisterPropertyChangedCallback(TimeProperty, new DependencyPropertyChangedCallback((s, e) =>
             {
                 // Neuzeichnen erforderlich
@@ -87,7 +87,7 @@ namespace GameExpress.Controls
         /// Using a DependencyProperty as the backing store for HorizontalScrollValue.  This enables animation, styling, binding, etc...
         /// </summary>
         public static readonly DependencyProperty TimeProperty =
-            DependencyProperty.Register("TimeProperty", typeof(ulong), typeof(AnimationEditorPanel), new PropertyMetadata(0));
+            DependencyProperty.Register("TimeProperty", typeof(ulong), typeof(AnimationEditorPanel), new PropertyMetadata(new ulong()));
 
     }
 }

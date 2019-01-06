@@ -19,11 +19,18 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <CommandBar Grid.Column="0" Grid.Row="0" Name="ToolBar" Visibility="Collapsed" >
-            <AppBarToggleButton Name="Play" Icon="Play" Click="OnPlay"/>
+            <AppBarButton Name="Previous" Label="Zurücksetzen" Icon="Previous" Click="OnPrevious"/>
+            <AppBarToggleButton Name="Play" Label="Abspielen" Icon="Play" Click="OnPlay"/>
             <AppBarSeparator/>
         </CommandBar>
-        <controls:TimeLinePanel Grid.Column="0" Grid.Row="1" x:Name="TimeLine" Background="{ThemeResource SystemChromeMediumLowColor}"/>
-
+        
+        <controls:TimeLinePanel 
+            Grid.Column="0" 
+            Grid.Row="1" 
+            x:Name="TimeLine" 
+            Background="{ThemeResource SystemChromeMediumLowColor}" 
+            Time="{x:Bind Path=Editor.Time, Mode=TwoWay}"
+            Instances="{Binding Path=Instances, Mode=TwoWay}"/>
         <controls:AnimationEditorPanel Grid.Column="0" Grid.Row="2" x:Name="Editor" />
 
         <controls1:GridSplitter Background="Transparent"
