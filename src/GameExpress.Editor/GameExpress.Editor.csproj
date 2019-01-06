@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1C7ECFE9-F1CF-4A9F-B449-96B697976CDB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GameExpress.Editor</RootNamespace>
+    <AssemblyName>GameExpress.Editor</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EditorContext.cs" />
+    <Compile Include="Pages\ChanegedSelectetItemArgs.cs" />
+    <Compile Include="Pages\ChangedTimeEventArgs.cs" />
+    <Compile Include="Pages\ChangeActiveItemEventArgs.cs" />
+    <Compile Include="Pages\ComboBoxItem.cs" />
+    <Compile Include="Pages\ItemContainerPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ItemContainerPage.Designer.cs">
+      <DependentUpon>ItemContainerPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ItemDirectoryPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ItemDirectoryPage.Designer.cs">
+      <DependentUpon>ItemDirectoryPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ItemGeometryPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ItemGeometryPage.Designer.cs">
+      <DependentUpon>ItemGeometryPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ItemMapPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ItemMapPage.Designer.cs">
+      <DependentUpon>ItemMapPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ItemImagePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ItemImagePage.Designer.cs">
+      <DependentUpon>ItemImagePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ItemAnimatedPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ItemAnimatedPage.Designer.cs">
+      <DependentUpon>ItemAnimatedPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ItemScenePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ItemScenePage.Designer.cs">
+      <DependentUpon>ItemScenePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ItemObjectPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ItemObjectPage.Designer.cs">
+      <DependentUpon>ItemObjectPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ItemObjectStatePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ItemObjectStatePage.Designer.cs">
+      <DependentUpon>ItemObjectStatePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ItemPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ItemPage.Designer.cs">
+      <DependentUpon>ItemPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ItemPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\ItemPanel.Designer.cs">
+      <DependentUpon>ItemPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Page.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Page.Designer.cs">
+      <DependentUpon>Page.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PaintViewEventArgs.cs" />
+    <Compile Include="Pages\Panel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\Panel.Designer.cs">
+      <DependentUpon>Panel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PullFrame.cs" />
+    <Compile Include="Pages\RetrieveItemSizeEventArgs.cs" />
+    <Compile Include="Pages\StatusChangeEventArgs.cs" />
+    <Compile Include="Pages\TimeLinePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Pages\TimeLinePanel.Designer.cs">
+      <DependentUpon>TimeLinePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\ItemContainerPage.resx">
+      <DependentUpon>ItemContainerPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ItemDirectoryPage.resx">
+      <DependentUpon>ItemDirectoryPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ItemGeometryPage.resx">
+      <DependentUpon>ItemGeometryPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ItemMapPage.resx">
+      <DependentUpon>ItemMapPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ItemImagePage.resx">
+      <DependentUpon>ItemImagePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ItemAnimatedPage.resx">
+      <DependentUpon>ItemAnimatedPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ItemScenePage.resx">
+      <DependentUpon>ItemScenePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ItemObjectPage.resx">
+      <DependentUpon>ItemObjectPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ItemObjectStatePage.resx">
+      <DependentUpon>ItemObjectStatePage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ItemPage.resx">
+      <DependentUpon>ItemPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ItemPanel.resx">
+      <DependentUpon>ItemPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Panel.resx">
+      <DependentUpon>Panel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\TimeLinePanel.resx">
+      <DependentUpon>TimeLinePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\application_view_columns.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\application_view_detail.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\application_view_tile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\asc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\color_wheel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\desc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hintergrund.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\item_directory.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\item_image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\item_object.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\item_root.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\new.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\origin.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\paintcan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\property.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\remove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rename.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rotate.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\type.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_in.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GameExpress.Core\GameExpress.Core.csproj">
+      <Project>{a19bd6d2-98f8-4925-bfc6-41ee61bbadb9}</Project>
+      <Name>GameExpress.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plugin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

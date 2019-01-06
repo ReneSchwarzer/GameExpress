@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A19BD6D2-98F8-4925-BFC6-41EE61BBADB9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GameExpress.Core</RootNamespace>
+    <AssemblyName>GameExpress.Core</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Converter\AlphaTypeConverter.cs" />
+    <Compile Include="Converter\GammaTypeConverter.cs" />
+    <Compile Include="Converter\HueTypeConverter.cs" />
+    <Compile Include="Converter\TransparencyTypeConverter .cs" />
+    <Compile Include="IProject.cs" />
+    <Compile Include="IProjectContext.cs" />
+    <Compile Include="ItemContextList.cs" />
+    <Compile Include="ItemEventArgs.cs" />
+    <Compile Include="Items\IItem.cs" />
+    <Compile Include="Items\IItemContext.cs" />
+    <Compile Include="Items\ItemMapMesh.cs" />
+    <Compile Include="Items\ItemMapMeshContext.cs" />
+    <Compile Include="Items\ItemMapVertextContext.cs" />
+    <Compile Include="Items\ItemMapContext.cs" />
+    <Compile Include="Items\ItemMap.cs" />
+    <Compile Include="Items\Item.cs" />
+    <Compile Include="Items\ItemContext.cs" />
+    <Compile Include="Items\ItemDirectory.cs" />
+    <Compile Include="Items\ItemDirectoryContext.cs" />
+    <Compile Include="Items\ItemMapVertext.cs" />
+    <Compile Include="Items\ItemVisualInstanceContainer.cs" />
+    <Compile Include="Items\ItemVisualGeometry.cs" />
+    <Compile Include="Items\ItemVisualGeometryRectangele.cs" />
+    <Compile Include="Items\ItemVisualGeometryRectangeleContext.cs" />
+    <Compile Include="Items\ItemVisualScene.cs" />
+    <Compile Include="Items\ItemVisualSceneContext.cs" />
+    <Compile Include="Items\ItemVisualKeyFrameTweening.cs" />
+    <Compile Include="Items\ItemVisualKeyFrameContext.cs" />
+    <Compile Include="Items\ItemVisualKeyFrame.cs" />
+    <Compile Include="Items\ItemVisualObject.cs" />
+    <Compile Include="Items\ItemVisualInstanceContext.cs" />
+    <Compile Include="Items\ItemVisualInstance.cs" />
+    <Compile Include="Items\ItemVisualAnimatedObjectStateContext.cs" />
+    <Compile Include="Items\ItemVisualAnimatedObjectState.cs" />
+    <Compile Include="Items\ItemVisualObjectContext.cs" />
+    <Compile Include="Items\ItemVisualAnimated.cs" />
+    <Compile Include="Items\ItemVisual.cs" />
+    <Compile Include="Items\ItemVisualImage.cs" />
+    <Compile Include="Items\ItemVisualImageContext.cs" />
+    <Compile Include="Items\ItemRoot.cs" />
+    <Compile Include="Items\ItemRootContext.cs" />
+    <Compile Include="Items\ITree.cs" />
+    <Compile Include="Items\Loop.cs" />
+    <Compile Include="Items\Tree.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structs\Alpha.cs" />
+    <Compile Include="Structs\Gamma.cs" />
+    <Compile Include="Structs\Hue.cs" />
+    <Compile Include="Structs\Matrix3D.cs" />
+    <Compile Include="Structs\UpdateContext.cs" />
+    <Compile Include="Structs\PresentationContext.cs" />
+    <Compile Include="Structs\Time.cs" />
+    <Compile Include="Structs\Transparency.cs" />
+    <Compile Include="Structs\Tweening.cs" />
+    <Compile Include="UIEditor\BrushEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UIEditor\BrushEditor.Designer.cs">
+      <DependentUpon>BrushEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UIEditor\BrushUITypeEditor.cs" />
+    <Compile Include="UIEditor\HueUITypeEditor.cs" />
+    <Compile Include="UIEditor\TransparencyUITypeEditor.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="UIEditor\BrushEditor.resx">
+      <DependentUpon>BrushEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 und x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\item_root.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\item_directory.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\item_image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\item_object.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\item_scene.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\item_path.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

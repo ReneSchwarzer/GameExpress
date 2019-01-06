@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Drawing;
+
+namespace GameExpress.Core.Items
+{
+    public class ItemMapVertextContext : ItemContext
+    {
+        /// <summary>
+        /// Item-Erzeugung
+        /// </summary>
+        /// <returns>Ein neues Item</returns>
+        public override Item ItemFactory()
+        {
+            return new ItemMapVertext(this);
+        }
+
+        /// <summary>
+        /// Stellt fest, ob der Typ ein Unterobjekt des aktuellen Items sein kann
+        /// </summary>
+        /// <param name="type">Der zu überprüfende Type</param>
+        /// <returns>true wenn erfolgreich, sonst false</returns>
+        public override bool Accept(Type type)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Liefert den allgemeinen Namen
+        /// </summary>
+        public override string Name
+        {
+            get { return "Vertext"; }
+        }
+
+        /// <summary>
+        /// Liefert das allgemeine Symbol
+        /// </summary>
+        public override Image Image
+        {
+            get { return Properties.Resources.item_path; }
+        }
+
+        /// <summary>
+        /// Gibt an, ob die Items im Baum angezeigt werden
+        /// </summary>
+        public override bool Hidden { get { return true; } }
+    }
+}

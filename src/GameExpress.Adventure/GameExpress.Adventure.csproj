@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2CF31249-92AF-4C7A-B453-6B8F2B74A631}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GameExpress.Adventure</RootNamespace>
+    <AssemblyName>GameExpress.Adventure</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Items\ItemImageBackgroundScene1.cs" />
+    <Compile Include="Items\ItemMap1.cs" />
+    <Compile Include="Items\ItemScene1.cs" />
+    <Compile Include="Items\ItemObjectState2.cs" />
+    <Compile Include="Items\ItemObjectState1.cs" />
+    <Compile Include="Items\ItemImageSputnik.cs" />
+    <Compile Include="Items\ItemImageOmicron.cs" />
+    <Compile Include="Items\ItemImageUfo.cs" />
+    <Compile Include="Items\ItemImageFlower4.cs" />
+    <Compile Include="Items\ItemImageFlower3.cs" />
+    <Compile Include="Items\ItemImageFlower2.cs" />
+    <Compile Include="Items\ItemImageFlower1.cs" />
+    <Compile Include="Items\ItemRoot.cs" />
+    <Compile Include="Items\ItemRootContext.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\door.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\blume1.tif" />
+    <Content Include="Resources\Blume2.tif" />
+    <Content Include="Resources\blume3.tif" />
+    <Content Include="Resources\blume4.tif" />
+    <None Include="Resources\Sputnik.png" />
+    <None Include="Resources\omicron.png" />
+    <None Include="Resources\Scene1.png" />
+    <Content Include="Resources\sonne.tif" />
+    <None Include="Resources\ufo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GameExpress.Core\GameExpress.Core.csproj">
+      <Project>{a19bd6d2-98f8-4925-bfc6-41ee61bbadb9}</Project>
+      <Name>GameExpress.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
