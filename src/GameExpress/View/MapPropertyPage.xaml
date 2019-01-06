@@ -1,0 +1,13 @@
+﻿<Page
+    x:Class="GameExpress.View.MapPropertyPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Padding="10,10,10,10">
+        <TextBox Header="Name:" Name="Name" Margin="0,10,0,10" Text="{Binding Name, Mode=TwoWay}"/>
+        <RichEditBox Header="Beschreibung:" Name="Note" Margin="0,10,0,10"/>
+    </StackPanel>
+</Page>

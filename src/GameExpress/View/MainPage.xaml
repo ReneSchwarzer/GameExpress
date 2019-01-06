@@ -1,0 +1,231 @@
+﻿<Page
+    x:Class="GameExpress.View.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Item="using:GameExpress.Model.Item"
+    xmlns:View="using:GameExpress.View"
+    xmlns:controls="using:Windows.UI.Xaml.Controls"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <!--<ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../ResourceDictionary.xaml"/>
+                --><!--<ResourceDictionary Source="TreeViewDictionary.xaml"/>--><!--
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>-->
+
+        <Style TargetType="Grid" x:Key="TitelBar">
+            <Setter Property="Background" Value="{ThemeResource SystemAccentColor}"/>
+            <Setter Property="Opacity" Value="0.9"/>
+        </Style>
+
+        <Style TargetType="Button" x:Key="TitelBarButton">
+            <Setter Property="FlowDirection" Value="LeftToRight"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="MinWidth" Value="20"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="TitelBarText">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="28"/>
+        </Style>
+
+        <DataTemplate 
+        x:Key="DefaultTemplate" 
+        x:DataType="Item:ItemTreeNode">
+            <TreeViewItem ItemsSource="{Binding Children}">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Placeholder" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </TreeViewItem>
+        </DataTemplate>
+
+        <DataTemplate 
+        x:Key="GameTemplate" 
+        x:DataType="Item:ItemGame">
+            <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="True">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xE7FC;" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </TreeViewItem>
+        </DataTemplate>
+
+        <DataTemplate 
+        x:Key="SceneTemplate" 
+        x:DataType="Item:ItemScene">
+            <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="True">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Street" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </TreeViewItem>
+        </DataTemplate>
+
+        <DataTemplate 
+        x:Key="ObjectTemplate" 
+        x:DataType="Item:ItemObject">
+            <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="True">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xEBD2;" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </TreeViewItem>
+        </DataTemplate>
+
+        <DataTemplate 
+        x:Key="MapTemplate" 
+        x:DataType="Item:ItemMap">
+            <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="True">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xE707;" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </TreeViewItem>
+        </DataTemplate>
+
+        <DataTemplate 
+        x:Key="ImageTemplate" 
+        x:DataType="Item:ItemImage">
+            <TreeViewItem ItemsSource="{Binding Children}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xF69E;" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </TreeViewItem>
+        </DataTemplate>
+
+        <DataTemplate 
+        x:Key="SoundTemplate" 
+        x:DataType="Item:ItemSound">
+            <TreeViewItem ItemsSource="{Binding Children}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xE8D6;" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </TreeViewItem>
+        </DataTemplate>
+
+        <View:ItemTemplateSelector x:Key="ItemTemplateSelector"
+                                   DefaultTemplate="{StaticResource DefaultTemplate}" 
+                                   GameTemplate="{StaticResource GameTemplate}" 
+                                   SceneTemplate="{StaticResource SceneTemplate}" 
+                                   ObjectTemplate="{StaticResource ObjectTemplate}"
+                                   MapTemplate="{StaticResource MapTemplate}"
+                                   ImageTemplate="{StaticResource ImageTemplate}"
+                                   SoundTemplate="{StaticResource SoundTemplate}" 
+            />
+    </Page.Resources>
+    
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Column="0" Grid.Row="0" Style="{StaticResource TitelBar}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Height="50" Width="50" Style="{StaticResource TitelBarButton}">
+               <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Laden" Click="OnOpenAsync">
+                            <MenuFlyoutItem.Icon><SymbolIcon Symbol="OpenLocal"/></MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Speichern" Click="OnSave">
+                            <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE74E;"/></MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Speichern unter..." Icon="SaveLocal" Click="OnSaveAsAsync"/>
+                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutItem Text="Beenden" Icon="Cancel" Click="OnExit"/>
+                    </MenuFlyout>
+                </Button.Flyout>
+                <Button.Content>
+                    <FontIcon Glyph="&#xE700;"/>
+                </Button.Content>
+            </Button>
+
+            <TextBlock x:Name="Titel" 
+                       VerticalAlignment="Center"
+                       Margin="5,0,5,0"
+                       Grid.Row="0" Grid.Column="1"    
+                       x:Uid="PageInventoryItemEditLabel"
+                       Style="{StaticResource TitelBarText}"  
+                       Text="{Binding Name}" TabFocusNavigation="Cycle"/>
+        </Grid>
+
+        <Grid Grid.Column="0" Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Background="{ThemeResource SystemChromeMediumLowColor}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <ScrollViewer Grid.Row="0">
+                    <StackPanel>
+                        <controls:TreeView Name="Tree" ItemsSource="{Binding Tree}" ItemTemplateSelector="{StaticResource ItemTemplateSelector}" ItemInvoked="OnItemInvoked"/>
+                        <Frame Name="PropertyFrame" Visibility="Collapsed"/>
+                    </StackPanel>
+
+                </ScrollViewer>
+
+                <CommandBar Grid.Row="1">
+                    <CommandBar.PrimaryCommands>
+                        <AppBarButton Name="Save" Label="Speichern" Icon="Save" Click="OnSave"/>
+                        <AppBarButton Name="Add" Label="Hinzufügen" Icon="Add" Click="OnAdd"/>
+                        <AppBarToggleButton Name="Edit" Label="Bearbeiten" Icon="Edit" Click="OnEdit"/>
+                    </CommandBar.PrimaryCommands>
+                    <CommandBar.SecondaryCommands>
+                        <AppBarButton Name="Delete" Label="Löschen" Icon="Delete" Click="OnDelete"/>
+                    </CommandBar.SecondaryCommands>
+                </CommandBar>
+            </Grid>
+
+            <Grid Margin="0" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <ProgressBar 
+                        Grid.Column="0"
+                        Grid.Row="0"
+                     Name="ProgressBar" 
+                     IsIndeterminate="True" ShowPaused="False" ShowError="False"
+                     Visibility="{Binding VisibilityProgresBar}"
+                     HorizontalAlignment="Stretch" 
+                     VerticalAlignment="Center"/>
+
+                <Frame Grid.Column="0" Grid.Row="1" Name="ItemFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Grid>
+
+            <controls1:GridSplitter Background="Transparent" ResizeDirection="Columns"
+                Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Width="16">
+                <controls1:GridSplitter.RenderTransform>
+                    <TranslateTransform X="-8" />
+                </controls1:GridSplitter.RenderTransform>
+                <controls1:GridSplitter.Element>
+                    <Grid>
+                    </Grid>
+                </controls1:GridSplitter.Element>
+            </controls1:GridSplitter>
+        </Grid>
+
+    </Grid>
+</Page>

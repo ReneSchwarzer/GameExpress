@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+  <Identity Name="f75ecab1-8500-48ff-8ef9-d3dc1d25c24e" Publisher="CN=rene_" Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="f75ecab1-8500-48ff-8ef9-d3dc1d25c24e" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Properties>
+    <DisplayName>GameExpress</DisplayName>
+    <PublisherDisplayName>rene_</PublisherDisplayName>
+    <Logo>Assets\Tile\StoreLogo.png</Logo>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="GameExpress.App">
+      <uap:VisualElements DisplayName="GameExpress" Square150x150Logo="Assets\Tile\Square150x150Logo.png" Square44x44Logo="Assets\Tile\Square44x44Logo.png" Description="GameExpress" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Tile\Wide310x150Logo.png" Square310x310Logo="Assets\Tile\LargeTile.png" Square71x71Logo="Assets\Tile\SmallTile.png">
+        </uap:DefaultTile>
+        <uap:SplashScreen Image="Assets\Tile\SplashScreen.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="gx">
+            <uap:DisplayName>GameExpress</uap:DisplayName>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.gx</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <uap:Capability Name="documentsLibrary" />
+    <uap:Capability Name="picturesLibrary" />
+    <uap:Capability Name="musicLibrary" />
+    <uap:Capability Name="objects3D" />
+  </Capabilities>
+</Package>
