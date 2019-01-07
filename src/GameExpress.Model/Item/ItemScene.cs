@@ -4,7 +4,7 @@ using Windows.Foundation;
 namespace GameExpress.Model.Item
 {
     [XmlType("scene")]
-    public class ItemScene : ItemGraphics
+    public class ItemScene : ItemObject
     {
         /// <summary>
         /// Konstruktor

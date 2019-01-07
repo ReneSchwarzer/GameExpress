@@ -53,11 +53,17 @@ namespace GameExpress.Controls
         protected CommandBar CommandBar { get; set; }
 
         /// <summary>
+        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die derigistrierung benötigt wird
+        /// </summary>
+        private long GridVisibilityPropertyToken { get; set; }
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         public EditorPanel()
         {
             DefaultStyleKey = typeof(EditorPanel);
+            Unloaded += OnUnloaded;
         }
 
         /// <summary>
@@ -117,7 +123,7 @@ namespace GameExpress.Controls
             }
 
             // Eigenschaft GridVisibilityProperty hat sich geändert
-            RegisterPropertyChangedCallback(GridVisibilityProperty, new DependencyPropertyChangedCallback((s, e) => 
+            GridVisibilityPropertyToken = RegisterPropertyChangedCallback(GridVisibilityProperty, new DependencyPropertyChangedCallback((s, e) => 
             {
                 // Neuzeichnen erforderlich
                 Content?.Invalidate();
@@ -126,11 +132,7 @@ namespace GameExpress.Controls
             // Eigenschaften des Items haben sich geändert
             if (Item != null)
             {
-                Item.PropertyChanged += (s, e) =>
-                {
-                    // Neuzeichnen erforderlich
-                    Content?.Invalidate();
-                };
+                Item.PropertyChanged += OnInvalidate;
             }
             
         }
@@ -426,6 +428,33 @@ namespace GameExpress.Controls
                     SetValue(ZoomProperty, value);
                 }
             }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn das Control entladen wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            UnregisterPropertyChangedCallback(GridVisibilityProperty, GridVisibilityPropertyToken);
+
+            if (Item != null)
+            {
+                Item.PropertyChanged -= OnInvalidate;
+            }
+
+            Unloaded -= OnUnloaded;
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn das Steuerelement neu gezeichnet werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnInvalidate(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>

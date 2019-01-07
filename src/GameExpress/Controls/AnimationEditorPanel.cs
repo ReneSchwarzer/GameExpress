@@ -87,7 +87,7 @@ namespace GameExpress.Controls
         /// Using a DependencyProperty as the backing store for HorizontalScrollValue.  This enables animation, styling, binding, etc...
         /// </summary>
         public static readonly DependencyProperty TimeProperty =
-            DependencyProperty.Register("TimeProperty", typeof(ulong), typeof(AnimationEditorPanel), new PropertyMetadata(new ulong()));
+            DependencyProperty.Register("Time", typeof(ulong), typeof(AnimationEditorPanel), new PropertyMetadata(new ulong()));
 
     }
 }

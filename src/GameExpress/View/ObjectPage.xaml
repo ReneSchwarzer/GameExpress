@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:GameExpress.Controls"
-    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="120"/>
+            <RowDefinition Height="180"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <CommandBar Grid.Column="0" Grid.Row="0" Name="ToolBar" Visibility="Collapsed" >
@@ -33,15 +33,15 @@
             Instances="{Binding Path=Instances, Mode=TwoWay}"/>
         <controls:AnimationEditorPanel Grid.Column="0" Grid.Row="2" x:Name="Editor" />
 
-        <controls1:GridSplitter Background="Transparent"
+        <toolkit:GridSplitter Background="Transparent"
             Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Height="4">
-            <controls1:GridSplitter.RenderTransform>
+            <toolkit:GridSplitter.RenderTransform>
                 <TranslateTransform Y="-8" />
-            </controls1:GridSplitter.RenderTransform>
-            <controls1:GridSplitter.Element>
+            </toolkit:GridSplitter.RenderTransform>
+            <toolkit:GridSplitter.Element>
                 <Grid>
                 </Grid>
-            </controls1:GridSplitter.Element>
-        </controls1:GridSplitter>
+            </toolkit:GridSplitter.Element>
+        </toolkit:GridSplitter>
     </Grid>
 </Page>
