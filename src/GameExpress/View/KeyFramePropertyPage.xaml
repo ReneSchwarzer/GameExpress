@@ -1,0 +1,24 @@
+﻿<Page
+    x:Class="GameExpress.View.KeyFramePropertyPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GameExpress.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Padding="10,10,10,10">
+        <TextBox Header="Startzeit:" Name="From" Margin="0,10,0,10" Text="{Binding From, Mode=TwoWay}"/>
+        <TextBox Header="Dauer:" Name="Duration" Margin="0,10,0,10" Text="{Binding Duration, Mode=TwoWay}"/>
+        <!--<Slider Header="Rotation um die x-Achse:" Name="RotationX" Margin="0,10,0,10" Value="{Binding RotationX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="360"/>
+        <Slider Header="Rotation um die y-Achse:" Name="RotationY" Margin="0,10,0,10" Value="{Binding RotationY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="360"/>-->
+        <Slider Header="Rotation:" Name="RotationZ" Margin="0,10,0,10" Value="{Binding RotationZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="360"/>
+        <Slider Header="Verschiebung entlang der x-Achse:" Name="TranslationX" Margin="0,10,0,10" Value="{Binding TranslationX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-1024" Maximum="1024"/>
+        <Slider Header="Verschiebung entlang der y-Achse:" Name="TranslationY" Margin="0,10,0,10" Value="{Binding TranslationY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-1024" Maximum="1024"/>
+        <Slider Header="Skalierung der x-Achse:" Name="ScaleX" Margin="0,10,0,10" Value="{Binding ScaleX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="400"/>
+        <Slider Header="Skalierung der y-Achse:" Name="ScaleY" Margin="0,10,0,10" Value="{Binding ScaleY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="400"/>
+        <Slider Header="Scherung der x-Achse:" Name="ShearX" Margin="0,10,0,10" Value="{Binding ShearX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-400" Maximum="400"/>
+        <Slider Header="Scherung der y-Achse:" Name="ShearY" Margin="0,10,0,10" Value="{Binding ShearY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-400" Maximum="400"/>
+        
+    </StackPanel>
+</Page>

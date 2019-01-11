@@ -12,8 +12,8 @@ namespace GameExpress.Model.Item
         /// <summary>
         /// Liefert oder setzt die Instanzen
         /// </summary>
-        [XmlElement("instance")]
-        public ObservableCollection<ItemInstance> Instances { get; set; } = new ObservableCollection<ItemInstance>();
+        [XmlElement("story")]
+        public ObservableCollection<ItemStory> StoryBoard { get; set; } = new ObservableCollection<ItemStory>();
 
         /// <summary>
         /// Liefert oder setzt die Zeit, bei dem die Annimation beendet wird
@@ -45,11 +45,11 @@ namespace GameExpress.Model.Item
         /// </summary>
         public ItemAnimation()
         {
-            Instances.CollectionChanged += (s, e) =>
+            StoryBoard.CollectionChanged += (s, e) =>
             {
                 if (e.NewItems != null)
                 {
-                    foreach (ItemInstance v in e.NewItems)
+                    foreach (ItemStory v in e.NewItems)
                     {
                         v.Object = this;
                     }
@@ -57,7 +57,7 @@ namespace GameExpress.Model.Item
 
                 if (e.OldItems != null)
                 {
-                    foreach (ItemInstance v in e.OldItems)
+                    foreach (ItemStory v in e.OldItems)
                     {
                         v.Object = this;
                     }
@@ -73,7 +73,7 @@ namespace GameExpress.Model.Item
         {
             base.Update(uc);
 
-            foreach (var v in Instances)
+            foreach (var v in StoryBoard)
             {
                 v.Update(new UpdateContext(uc));
             }
@@ -87,9 +87,9 @@ namespace GameExpress.Model.Item
         {
             base.Presentation(pc);
 
-            if (Instances == null) return;
+            if (StoryBoard == null) return;
 
-            foreach (var v in Instances)
+            foreach (var v in StoryBoard)
             {
                 v.Presentation(new PresentationContext(pc) { Time = LocalTime(pc.Time) });
             }
@@ -103,9 +103,9 @@ namespace GameExpress.Model.Item
         {
             var copy = base.Copy<T>() as ItemObject;
 
-            foreach (var i in Instances)
+            foreach (var i in StoryBoard)
             {
-                copy.Instances.Add(i.Copy<ItemInstance>());
+                copy.StoryBoard.Add(i.Copy<ItemStory>());
             }
 
             return copy as T;

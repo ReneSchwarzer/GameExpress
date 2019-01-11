@@ -1,9 +1,16 @@
 ﻿using GameExpress.Model.Structs;
+using System.Xml.Serialization;
+using Windows.Foundation;
 
 namespace GameExpress.Model.Item
 {
-    internal class ItemKeyFrameTweening : ItemKeyFrame
+    internal class ItemKeyFrameTweening : ItemKeyFrameBase
     {
+        /// <summary>
+        /// Die Matrix
+        /// </summary>
+        private Matrix3D m_matrix;
+
         /// <summary>
         /// Konstruktor
         /// </summary>
@@ -18,6 +25,20 @@ namespace GameExpress.Model.Item
         public override void Presentation(PresentationContext pc)
         {
             base.Presentation(pc);
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die Transformationsmatrix
+        /// </summary>
+        [XmlIgnore]
+        public override Matrix3D Matrix
+        {
+            get { return m_matrix; }
+            set
+            {
+                m_matrix = value;
+                RaisePropertyChanged();
+            }
         }
     }
 }

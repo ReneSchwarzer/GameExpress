@@ -55,7 +55,7 @@ namespace GameExpress.Model.Item
         /// Liefert oder setzt die Beschreibung
         /// </summary>
         [Category("Allgmein"), DisplayName("Beschreibung"), Description("Geben Sie hier eine Notiz an.")]
-        [XmlElement("note")]
+        [XmlElement("note", IsNullable = true)]
         public string Note
         {
             get { return m_note; }

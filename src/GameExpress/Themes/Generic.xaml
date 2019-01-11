@@ -8,39 +8,6 @@
 
     <converter:VisibilityToBooleanConverter x:Key="VisibilityToBoolean" />
 
-    <Style TargetType="local:TimePosition">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:TimePosition">
-                    <Canvas
-                        Name="Content"
-                        VerticalAlignment="Stretch"
-                        Background="{TemplateBinding Background}">
-                        <Rectangle Fill="{ThemeResource SystemControlAccentDark1AcrylicElementAccentDark1Brush}" Width="10" Height="23" Canvas.Left="{Binding Time}" Canvas.Top="0" Canvas.ZIndex="1" >
-                            <Rectangle.RenderTransform>
-                                <TranslateTransform X="-5" />
-                            </Rectangle.RenderTransform>
-                        </Rectangle>
-                    </Canvas>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    
-    <Style TargetType="local:KeyFrameEditor">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:KeyFrameEditor">
-                    <Canvas
-                        Name="Content"
-                        VerticalAlignment="Stretch"
-                        Background="{TemplateBinding Background}">
-                    </Canvas>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style TargetType="local:EditorPanel">
         <Setter Property="Template">
             <Setter.Value>
@@ -60,7 +27,7 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <Canvas Grid.Column="0" Grid.Row="0" Background="#ff7D7D7D" Visibility="{Binding RulerVisibility}" />
+                        <Canvas Grid.Column="0" Grid.Row="0" Background="{StaticResource SystemChromeHighColor}" Visibility="{Binding RulerVisibility}" />
                         <controls:CanvasControl Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Name="VerticalRuler" Width="20" Visibility="{Binding RulerVisibility, Mode=TwoWay}"/>
                         <controls:CanvasControl Grid.Column="1" Grid.Row="0" Name="HorizontalRuler" Height="20" HorizontalAlignment="Stretch" Visibility="{Binding RulerVisibility, Mode=TwoWay}"/>
                         <controls:CanvasControl Grid.Column="1" Grid.Row="1" Name="Content"/>
@@ -103,62 +70,5 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <Style TargetType="local:TimeLinePanel">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:TimeLinePanel">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="23"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-
-                        <controls:CanvasControl Name="Ruler" Grid.Column="0" Grid.Row="0"/>
-
-                        <local:TimePosition Name="TimePosition" Grid.Column="0" Grid.Row="0" Time="{Binding Time, Mode=TwoWay}" />
-
-                        <toolkit:DataGrid Name="Table" 
-                                          Grid.Column="0" Grid.Row="1"
-                                          ItemsSource="{Binding Instances}" 
-                                          CanUserReorderColumns="False" 
-                                          GridLinesVisibility="All"
-                                          AutoGenerateColumns="False"
-                                          FrozenColumnCount="2">
-
-                            <toolkit:DataGrid.Columns>
-                                <toolkit:DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                                <toolkit:DataGridTemplateColumn>
-                                    <toolkit:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button>
-                                                <SymbolIcon Symbol="Setting" />
-                                                <Button.Flyout>
-                                                    <MenuFlyout>
-                                                        <MenuFlyoutSeparator />
-                                                        <MenuFlyoutItem Text="Löschen" Icon="Delete" />
-                                                    </MenuFlyout>
-                                                </Button.Flyout>
-                                            </Button>
-                                        </DataTemplate>
-                                    </toolkit:DataGridTemplateColumn.CellTemplate>
-                                </toolkit:DataGridTemplateColumn>
-                                <toolkit:DataGridTemplateColumn Width="2*" >
-                                    <toolkit:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate >
-                                            <local:KeyFrameEditor 
-                                                Items="{Binding KeyFrames}" />
-                                                <!--Time="{Binding Path=(local:TimeLinePanel.Time), RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"-->
-                                                
-                                        </DataTemplate>
-                                    </toolkit:DataGridTemplateColumn.CellTemplate>
-                                </toolkit:DataGridTemplateColumn>
-
-                            </toolkit:DataGrid.Columns>
-                        </toolkit:DataGrid>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    
 </ResourceDictionary>

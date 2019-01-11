@@ -82,17 +82,24 @@ namespace GameExpress.Model.Item
             // Nichts zum zeichnen vorhanden
             if (Image == null) return;
 
-            var matrix = new Matrix4x4
+            var matrix = new Matrix3x2
             (
-                (float)pc.Matrix.M11, (float)pc.Matrix.M12, (float)pc.Matrix.M13, 0f,
-                (float)pc.Matrix.M21, (float)pc.Matrix.M22, (float)pc.Matrix.M23, 0f,
-                (float)pc.Matrix.M31, (float)pc.Matrix.M32, (float)pc.Matrix.M33, 0f,
-                0f, 0f, 0f, 1f
+                (float)pc.Matrix.M11, (float)pc.Matrix.M12, 
+                (float)pc.Matrix.M21, (float)pc.Matrix.M22,
+                (float)pc.Matrix.M31, (float)pc.Matrix.M32
             );
+
+            if (pc.Level > 1)
+            {
+                matrix.Translation = new Vector2(Hotspot.X * -1, Hotspot.Y * -1);
+            }
+
+            var transform = pc.Graphics.Transform;
+            pc.Graphics.Transform = matrix;
 
             // Alphawert umrechnen
             var opacity = Alpha / 255f;
-            
+
             base.Presentation(pc);
 
             // Punkte transformieren
@@ -129,14 +136,14 @@ namespace GameExpress.Model.Item
             // Effekte anwenden und Blid zeichnen
             pc.Graphics.DrawImage
             (
-                (CanvasBitmap)effect,
-                (float)origin.X / (float)pc.Matrix.M11, // Zoom M11 herausrechnen
-                (float)origin.Y / (float)pc.Matrix.M22, // Zoom M22 herausrechnen
+                effect,
+                0, 0,
                 new Rect(new Point(), Image.Size),
                 opacity,
-                CanvasImageInterpolation.Linear,
-                matrix
+                CanvasImageInterpolation.Linear
             );
+
+            pc.Graphics.Transform = transform;
 
             // Hotspot zeichnen
             DrawHotspot(pc);

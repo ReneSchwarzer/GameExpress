@@ -1,11 +1,12 @@
 ﻿using GameExpress.Model.Structs;
+using System;
 using System.Xml.Serialization;
 using Windows.Foundation;
 
 namespace GameExpress.Model.Item
 {
     [XmlType("keyframe")]
-    public class ItemKeyFrame : ItemGraphics
+    public class ItemKeyFrame : ItemKeyFrameBase
     {
         /// <summary>
         /// Beginn
@@ -18,14 +19,54 @@ namespace GameExpress.Model.Item
         private ulong m_duration;
 
         /// <summary>
-        /// Matrix
-        /// </summary>
-        private Matrix3D m_matrix = Matrix3D.Identity;
-
-        /// <summary>
         /// Übergang
         /// </summary>
         private bool m_tweening;
+
+        /// <summary>
+        /// Die Rotation um die x-Achse
+        /// </summary>
+        private short m_rotaionX = 0;
+
+        /// <summary>
+        /// Die Rotation um die x-Achse
+        /// </summary>
+        private short m_rotaionY = 0;
+
+        /// <summary>
+        /// Die Rotation um die x-Achse
+        /// </summary>
+        private short m_rotaionZ = 0;
+
+        /// <summary>
+        /// Die Verschiebung der x-Achse entlang
+        /// </summary>
+        private short m_translationX = 0;
+
+        /// <summary>
+        /// Die Verschiebung der y-Achse entlang
+        /// </summary>
+        private short m_translationY = 0;
+
+        /// <summary>
+        /// Die Skalierung der x-Achse
+        /// </summary>
+        private short m_scaleX = 100;
+
+        /// <summary>
+        /// Die Skalierung der y-Achse
+        /// </summary>
+        private short m_scaleY = 100;
+
+        /// <summary>
+        /// Die Scherung der x-Achse
+        /// </summary>
+        private short m_shearX = 0;
+
+        /// <summary>
+        /// Die Scherung der y-Achse
+        /// </summary>
+        private short m_shearY = 0;
 
         /// <summary>
         /// Konstruktor
@@ -61,7 +102,15 @@ namespace GameExpress.Model.Item
             var copy = base.Copy<T>() as ItemKeyFrame;
             copy.From = From;
             copy.Duration = Duration;
-            copy.Matrix = Matrix;
+            copy.RotationX = RotationX;
+            copy.RotationY = RotationY;
+            copy.RotationZ = RotationZ;
+            copy.TranslationX = TranslationX;
+            copy.TranslationY = TranslationY;
+            copy.ScaleX = ScaleX;
+            copy.ScaleY = ScaleY;
+            copy.ShearX = ShearX;
+            copy.ShearY = ShearY;
             copy.Tweening = Tweening;
 
             return copy as T;
@@ -104,24 +153,6 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
-        /// Liefert oder setzt die Transformationsmatrix
-        /// </summary>
-        [XmlElement("matrix")]
-        public Matrix3D Matrix
-        {
-            get { return m_matrix; }
-            set
-            {
-                if (!m_matrix.Equals(value))
-                {
-                    m_matrix = value;
-
-                    RaisePropertyChanged();
-                }
-            }
-        }
-
-        /// <summary>
         /// Liefert oder setzt die Tweening-Eigenschaft
         /// </summary>
         [XmlAttribute("tweening")]
@@ -138,6 +169,195 @@ namespace GameExpress.Model.Item
                 }
             }
         }
+
+        /// <summary>
+        /// Liefert oder setzt die Transformationsmatrix
+        /// </summary>
+        [XmlIgnore]
+        public override Matrix3D Matrix
+        {
+            get
+            {
+                var matrix = Matrix3D.Identity;
+
+                matrix *= Matrix3D.RotationX(RotationX);
+                matrix *= Matrix3D.RotationY(RotationY);
+                matrix *= Matrix3D.RotationZ(RotationZ);
+                matrix *= Matrix3D.Scaling(ScaleX / 100f, ScaleY / 100f);
+                matrix *= Matrix3D.Translation(TranslationX, TranslationY);
+                matrix *= Matrix3D.Shear(ShearX / 100f, ShearY / 100f);
+
+                return matrix;
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die Rotation um die x-Achse
+        /// </summary>
+        [XmlAttribute("rotationx")]
+        public short RotationX
+        {
+            get { return m_rotaionX; }
+            set
+            {
+                if (!m_rotaionX.Equals(value))
+                {
+                    m_rotaionX = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die Rotation um die y-Achse
+        /// </summary>
+        [XmlAttribute("rotationy")]
+        public short RotationY
+        {
+            get { return m_rotaionY; }
+            set
+            {
+                if (!m_rotaionY.Equals(value))
+                {
+                    m_rotaionY = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die Rotation um die z-Achse
+        /// </summary>
+        [XmlAttribute("rotationz")]
+        public short RotationZ
+        {
+            get { return m_rotaionZ; }
+            set
+            {
+                if (!m_rotaionZ.Equals(value))
+                {
+                    m_rotaionZ = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die Verschiebung der x-Achse entlang
+        /// </summary>
+        [XmlAttribute("translationx")]
+        public short TranslationX
+        {
+            get { return m_translationX; }
+            set
+            {
+                if (!m_translationX.Equals(value))
+                {
+                    m_translationX = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die Verschiebung der y-Achse entlang
+        /// </summary>
+        [XmlAttribute("translationy")]
+        public short TranslationY
+        {
+            get { return m_translationY; }
+            set
+            {
+                if (!m_translationY.Equals(value))
+                {
+                    m_translationY = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die Skalierung der x-Achse
+        /// </summary>
+        [XmlAttribute("sclaex")]
+        public short ScaleX
+        {
+            get { return m_scaleX; }
+            set
+            {
+                if (!m_scaleX.Equals(value))
+                {
+                    m_scaleX = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die Skalierung der y-Achse
+        /// </summary>
+        [XmlAttribute("scaley")]
+        public short ScaleY
+        {
+            get { return m_scaleY; }
+            set
+            {
+                if (!m_scaleY.Equals(value))
+                {
+                    m_scaleY = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die Scherung der x-Achse
+        /// </summary>
+        [XmlAttribute("shearx")]
+        public short ShearX
+        {
+            get { return m_shearX; }
+            set
+            {
+                if (!m_shearX.Equals(value))
+                {
+                    m_shearX = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die Scherung der y-Achse
+        /// </summary>
+        [XmlAttribute("sheary")]
+        public short ShearY
+        {
+            get { return m_shearY; }
+            set
+            {
+                if (!m_shearY.Equals(value))
+                {
+                    m_shearY = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
         /// <summary>
         /// Liefert die Größe
         /// </summary>

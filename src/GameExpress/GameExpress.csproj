@@ -122,16 +122,24 @@
     </Compile>
     <Compile Include="Controls\AnimationEditorPanel.cs" />
     <Compile Include="Controls\EditorPanel.cs" />
-    <Compile Include="Controls\KeyFrameEditor.cs" />
+    <Compile Include="Controls\KeyFrameEditor.xaml.cs">
+      <DependentUpon>KeyFrameEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TimeLinePanel.xaml.cs">
+      <DependentUpon>TimeLinePanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Panel.cs" />
-    <Compile Include="Controls\TimeLinePanel.cs" />
-    <Compile Include="Controls\TimePosition.cs" />
+    <Compile Include="Converter\ItemObjectToItemInctanceConverter.cs" />
+    <Compile Include="Converter\ULongToDoubleConverter.cs" />
     <Compile Include="Converter\GammaToIntConverter.cs" />
     <Compile Include="Converter\BlurToIntConverter.cs" />
     <Compile Include="Converter\AlphaToIntConverter.cs" />
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
     <Compile Include="ViewModel\ViewModelMain.cs" />
+    <Compile Include="View\KeyFramePropertyPage.xaml.cs">
+      <DependentUpon>KeyFramePropertyPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MapPropertyPage.xaml.cs">
       <DependentUpon>MapPropertyPage.xaml</DependentUpon>
     </Compile>
@@ -161,9 +169,6 @@
     <Compile Include="View\ObjectPropertyPage.xaml.cs">
       <DependentUpon>ObjectPropertyPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ScenePage.xaml.cs">
-      <DependentUpon>ScenePage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\ScenePropertyPage.xaml.cs">
       <DependentUpon>ScenePropertyPage.xaml</DependentUpon>
     </Compile>
@@ -173,6 +178,10 @@
     <Compile Include="View\SoundPropertyPage.xaml.cs">
       <DependentUpon>SoundPropertyPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\StoryPropertyPage.xaml.cs">
+      <DependentUpon>StoryPropertyPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ViewHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -245,6 +254,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\KeyFrameEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TimeLinePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -252,6 +269,10 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\KeyFramePropertyPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\MapPropertyPage.xaml">
       <SubType>Designer</SubType>
@@ -289,10 +310,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ScenePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\ScenePropertyPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -302,6 +319,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SoundPropertyPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\StoryPropertyPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,5 +1,4 @@
-﻿using GameExpress.Model.Item;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,14 +16,13 @@ using Windows.UI.Xaml.Navigation;
 namespace GameExpress.View
 {
     /// <summary>
-    /// Ansichtsseite eines Sounditems
-    /// </summary>
-    public sealed partial class SoundPage : Page
+    /// Eigenschaftsseite eines KeyFrames
+    public sealed partial class KeyFramePropertyPage : Page
     {
         /// <summary>
         /// Konstruktor
         /// </summary>
-        public SoundPage()
+        public KeyFramePropertyPage()
         {
             this.InitializeComponent();
         }
@@ -38,9 +36,6 @@ namespace GameExpress.View
             base.OnNavigatedTo(e);
 
             DataContext = e.Parameter;
-            //Editor.Item = e.Parameter as ItemScene;
-
-            ViewHelper.ChangePropertyPage(e.Parameter as Item);
         }
     }
 }

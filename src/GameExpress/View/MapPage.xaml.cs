@@ -39,6 +39,8 @@ namespace GameExpress.View
 
             DataContext = e.Parameter;
             Editor.Item = e.Parameter as ItemMap;
+
+            ViewHelper.ChangePropertyPage(e.Parameter as Item);
         }
     }
 }

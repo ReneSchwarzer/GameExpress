@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -290,7 +291,7 @@ namespace GameExpress.Controls
             var viewRect = GetItemViewRect(out infinity);
 
             var white = Color.FromArgb(255, 255, 255, 255);
-            var lightGray = Color.FromArgb(255, 125, 125, 125);
+            var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
             var black = Color.FromArgb(255, 0, 0, 0);
 
             if (infinity)
@@ -343,11 +344,10 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnDrawHorizontalRuler(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            bool infinity;
-            var viewRect = GetItemViewRect(out infinity);
+            var viewRect = GetItemViewRect(out bool infinity);
 
             var white = Color.FromArgb(255, 255, 255, 255);
-            var lightGray = Color.FromArgb(255, 125, 125, 125);
+            var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
             var black = Color.FromArgb(255, 0, 0, 0);
 
             if (infinity)

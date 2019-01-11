@@ -27,6 +27,8 @@ namespace GameExpress.View
         {
             Model = new ViewModelMain();
 
+            ViewHelper.MainPage = this;
+
             DataContext = Model;
 
             this.InitializeComponent();
@@ -37,11 +39,24 @@ namespace GameExpress.View
         }
 
         /// <summary>
+        /// Wechselt die Eigenschaftsseite
+        /// </summary>
+        /// <param name="page">Die Seite, zu der gewechselt werden soll</param>
+        /// <param name="item">Das Item</param>
+        public void ChangePropertyPage(Type page, Item item)
+        {
+            if (PropertyFrame.CurrentSourcePageType != page || PropertyFrame.DataContext == item)
+            {
+                PropertyFrame.Navigate(page, item);
+            }
+        }
+
+        /// <summary>
         /// Tritt ein, wenn ein Item aus dem Baum aufgerufen wird
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
         /// <param name="args">Das Eventargument</param>
-        private void OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
+            private void OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
         {
             var item = args.InvokedItem as Item;
             Titel.DataContext = item;
@@ -49,32 +64,26 @@ namespace GameExpress.View
             if (item is ItemGame)
             {
                 ItemFrame.Navigate(typeof(GamePage), item);
-                PropertyFrame.Navigate(typeof(GamePropertyPage), item);
             }
             else if (item is ItemScene)
             {
-                ItemFrame.Navigate(typeof(ScenePage), item);
-                PropertyFrame.Navigate(typeof(ScenePropertyPage), item);
+                ItemFrame.Navigate(typeof(ObjectPage), item);
             }
             else if (item is ItemObject)
             {
                 ItemFrame.Navigate(typeof(ObjectPage), item);
-                PropertyFrame.Navigate(typeof(ObjectPropertyPage), item);
             }
             else if (item is ItemMap)
             {
                 ItemFrame.Navigate(typeof(MapPage), item);
-                PropertyFrame.Navigate(typeof(MapPropertyPage), item);
             }
             else if (item is ItemImage)
             {
                 ItemFrame.Navigate(typeof(ImagePage), item);
-                PropertyFrame.Navigate(typeof(ImagePropertyPage), item);
             }
             else if (item is ItemSound)
             {
                 ItemFrame.Navigate(typeof(SoundPage), item);
-                PropertyFrame.Navigate(typeof(SoundPropertyPage), item);
             }
         }
 

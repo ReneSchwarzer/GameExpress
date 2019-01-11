@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using Windows.Foundation;
 
 namespace GameExpress.Model.Structs
@@ -96,6 +97,57 @@ namespace GameExpress.Model.Structs
         }
 
         /// <summary>
+        /// Liefert die Rotationsmatrix der x-Achse
+        /// </summary>
+        /// <param name="degrees">Der Drehwinkel</param>
+        /// <returns>Die Rotationsmatrx</returns>
+        public static Matrix3D RotationX(int degrees)
+        {
+            var angle = Math.PI * degrees / 180.0;
+
+            return new Matrix3D
+            (
+                1.0f, 0f, 0f, 
+                0f, Math.Cos(angle), Math.Sin(angle) * -1, 
+                0f, Math.Sin(angle), Math.Cos(angle)
+            );
+        }
+
+        /// <summary>
+        /// Liefert die Rotationsmatrix der y-Achse
+        /// </summary>
+        /// <param name="degrees">Der Drehwinkel</param>
+        /// <returns>Die Rotationsmatrx</returns>
+        public static Matrix3D RotationY(int degrees)
+        {
+            var angle = Math.PI * degrees / 180.0;
+
+            return new Matrix3D
+            (
+                Math.Cos(angle), 0f, Math.Sin(angle),
+                0f, 1f, 0f,
+                Math.Sin(angle) * -1, 0f, Math.Cos(angle)
+            );
+        }
+
+        /// <summary>
+        /// Liefert die Rotationsmatrix der z-Achse
+        /// </summary>
+        /// <param name="degrees">Der Drehwinkel</param>
+        /// <returns>Die Rotationsmatrx</returns>
+        public static Matrix3D RotationZ(int degrees)
+        {
+            var angle = Math.PI * degrees / 180.0;
+
+            return new Matrix3D
+            (
+                Math.Cos(angle), Math.Sin(angle) * -1, 0f,
+                Math.Sin(angle), Math.Cos(angle), 0f,
+                0f, 0f, 1f
+            );
+        }
+
+        /// <summary>
         /// Translationsmatrix (Verschiebungsmatrix) berechnen
         /// </summary>
         /// <param name="pt">Verschiebevektor</param>
@@ -115,7 +167,27 @@ namespace GameExpress.Model.Structs
         public static Matrix3D Translation(double x, double y)
         {
             // Translationsmatrix berechnen
-            return new Matrix3D(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, x, y, 1.0f);
+            return new Matrix3D
+            (
+                1.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f,
+                x, y, 1.0f);
+        }
+
+        /// <summary>
+        /// Scherungsmatrix berechnen
+        /// </summary>
+        /// <param name="x">X-Komponente des Scherungvektors</param>
+        /// <param name="y">Y-Komponente des Scherungvektors</param>
+        /// <returns>Die Scherungsmatrix</returns>
+        public static Matrix3D Shear(double x, double y)
+        {
+            // Scherungsmatrix berechnen
+            return new Matrix3D
+            (
+                1f, x, 0f,
+                y, 1f, 0f,
+                0f, 0f, 1.0f);
         }
 
         /// <summary>

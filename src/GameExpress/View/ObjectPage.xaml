@@ -6,9 +6,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:GameExpress.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:converter="using:GameExpress.Converter"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <converter:ItemObjectToItemInctanceConverter x:Key="ItemObjectToItemInctance" />
+    </Page.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -30,7 +35,7 @@
             x:Name="TimeLine" 
             Background="{ThemeResource SystemChromeMediumLowColor}" 
             Time="{x:Bind Path=Editor.Time, Mode=TwoWay}"
-            Instances="{Binding Path=Instances, Mode=TwoWay}"/>
+            Instances="{x:Bind Path=Editor.Item, Mode=OneTime, Converter={StaticResource ItemObjectToItemInctance}}"/>
         <controls:AnimationEditorPanel Grid.Column="0" Grid.Row="2" x:Name="Editor" />
 
         <toolkit:GridSplitter Background="Transparent"

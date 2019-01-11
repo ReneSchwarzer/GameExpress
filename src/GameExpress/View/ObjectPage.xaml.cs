@@ -24,6 +24,14 @@ namespace GameExpress.View
         }
 
         /// <summary>
+        /// Zwingt das Control zum neuzeichnen
+        /// </summary>
+        public void Invalidate()
+        {
+            Editor.Invalidate();
+        }
+
+        /// <summary>
         /// Wird aufgerufen, wenn zu dieser Seite gewechselt wird
         /// </summary>
         /// <param name="args">Das Eventargument</param>
@@ -33,7 +41,7 @@ namespace GameExpress.View
 
             DataContext = args.Parameter as ItemObject;
             Editor.Item = args.Parameter as ItemObject;
-            TimeLine.Instances = (args.Parameter as ItemObject).Instances;
+            ViewHelper.ChangePropertyPage(args.Parameter as Item);
 
             Editor.Loaded += (s, e) =>
             {
@@ -49,6 +57,7 @@ namespace GameExpress.View
         /// <param name="e">Das Eventargument</param>
         private void OnPrevious(object sender, RoutedEventArgs e)
         {
+            Play.IsChecked = false;
             Editor.Time = 0;
         }
 

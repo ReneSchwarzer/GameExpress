@@ -124,6 +124,7 @@
     <Compile Include="Item\ItemGame.cs" />
     <Compile Include="Item\ItemGraphics.cs" />
     <Compile Include="Item\ItemImage.cs" />
+    <Compile Include="Item\ItemKeyFrameBase.cs" />
     <Compile Include="Item\ItemKeyFrame.cs" />
     <Compile Include="Item\ItemKeyFrameTweening.cs" />
     <Compile Include="Item\ItemMap.cs" />
@@ -132,7 +133,7 @@
     <Compile Include="Item\ItemAnimation.cs" />
     <Compile Include="Item\ItemObject.cs" />
     <Compile Include="Item\ItemScene.cs" />
-    <Compile Include="Item\ItemInstance.cs" />
+    <Compile Include="Item\ItemStory.cs" />
     <Compile Include="Item\ItemTreeNode.cs" />
     <Compile Include="Item\ItemSound.cs" />
     <Compile Include="Item\ItemVisual.cs" />

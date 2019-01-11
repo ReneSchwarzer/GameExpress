@@ -13,8 +13,8 @@ namespace GameExpress.Model.Item
     /// <summary>
     /// Objektinstanz
     /// </summary>
-    [XmlType("instance")]
-    public class ItemInstance : ItemGraphics
+    [XmlType("story")]
+    public class ItemStory : ItemGraphics
     {
         /// <summary>
         /// Das Item
@@ -28,19 +28,21 @@ namespace GameExpress.Model.Item
         public ObservableCollection<ItemKeyFrame> KeyFrames { get; set; } = new ObservableCollection<ItemKeyFrame>();
 
         /// <summary>
-        /// Liefert oder setzt den aktuellen KeyFrame
-        /// </summary>
-        private ItemKeyFrame CurrentKeyFrame { get; set; }
-
-        /// <summary>
         /// Liefert oder setzt den Verweis auf das zugehörige Objekt
         /// </summary>
+        [XmlIgnore]
         internal ItemAnimation Object { get; set; }
+
+        /// <summary>
+        /// Die ID des mit der Instanz verbundenen Element
+        /// </summary>
+        [XmlIgnore]
+        public Item Instance { get; private set; }
 
         /// <summary>
         /// Konstruktor
         /// </summary>
-        public ItemInstance()
+        public ItemStory()
         {
 
         }
@@ -85,6 +87,8 @@ namespace GameExpress.Model.Item
         /// <param name="pc">Der Präsentationskontext</param>
         public override void Presentation(PresentationContext pc)
         {
+            if (pc.Level > 10) return;
+
             base.Presentation(pc);
 
             if (Instance == null)
@@ -92,12 +96,13 @@ namespace GameExpress.Model.Item
                 AttachedInstance(Item);
             }
 
-            CurrentKeyFrame = GetKeyFrame((ulong)pc.Time);
+            var currentKeyFrame = GetKeyFrame((ulong)pc.Time);
 
-            if (CurrentKeyFrame != null)
+            if (currentKeyFrame != null)
             {
                 var newPC = new PresentationContext(pc);
-                newPC.Matrix *= CurrentKeyFrame.Matrix;
+                //newPC.Matrix = currentKeyFrame.Matrix * pc.Matrix;
+                newPC.Matrix *= currentKeyFrame.Matrix;
 
                 Instance?.Presentation(newPC);
             }
@@ -109,7 +114,7 @@ namespace GameExpress.Model.Item
         /// <returns>Die Tiefenkopie</returns>
         public override T Copy<T>()
         {
-            var copy = base.Copy<T>() as ItemInstance;
+            var copy = base.Copy<T>() as ItemStory;
 
             return copy as T;
         }
@@ -140,7 +145,7 @@ namespace GameExpress.Model.Item
         /// </summary>
         /// <param name="time">Die Zeit</param>
         /// <returns>Das Schlüsselbid oder null</returns>
-        public ItemKeyFrame GetKeyFrame(ulong time)
+        public ItemKeyFrameBase GetKeyFrame(ulong time)
         {
             ItemKeyFrame prevKeyFrame = null;
             ItemKeyFrame nextKeyFrame = null;
@@ -158,6 +163,8 @@ namespace GameExpress.Model.Item
                 else if (time < k.From + k.Duration)
                 {
                     nextKeyFrame = k;
+
+                    break;
                 }
             }
 
@@ -173,14 +180,14 @@ namespace GameExpress.Model.Item
 
                 return new ItemKeyFrameTweening()
                 {
-                    From = from,
-                    Duration = till - from,
+                    //From = from,
+                    //Duration = till - from,
                     Matrix = prevKeyFrame.Matrix * new Matrix3D
-                                        (
-                                            (mt.M11 - 1) * t + 1, mt.M12 * t, 0,
-                                            mt.M21 * t, (mt.M22 - 1) * t + 1, 0,
-                                            mt.M31 * t, mt.M32 * t, 1
-                                        )
+                    (
+                        (mt.M11 - 1) * t + 1, mt.M12 * t, 0,
+                        mt.M21 * t, (mt.M22 - 1) * t + 1, 0,
+                        mt.M31 * t, mt.M32 * t, 1
+                    )
                     // ToDo: Alpha, usw.
                 };
             }
@@ -209,12 +216,6 @@ namespace GameExpress.Model.Item
                 }
             }
         }
-
-        /// <summary>
-        /// Die ID des mit der Instanz verbundenen Element
-        /// </summary>
-        [XmlIgnore]
-        public Item Instance { get; private set; }
 
         /// <summary>
         /// Liefert die Größe

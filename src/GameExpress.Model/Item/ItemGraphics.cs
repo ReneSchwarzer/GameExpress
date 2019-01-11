@@ -99,10 +99,10 @@ namespace GameExpress.Model.Item
 
             if (pc.Level == 1)
             {
-                pc.Graphics.DrawLine((float)p.X - 5, (float)p.Y, (float)p.X + 6, (float)p.Y, black, 3);
-                pc.Graphics.DrawLine((float)p.X, (float)p.Y - 5, (float)p.X, (float)p.Y + 6, black, 3);
-                pc.Graphics.DrawLine((float)p.X - 5, (float)p.Y, (float)p.X + 6, (float)p.Y, white, 1);
-                pc.Graphics.DrawLine((float)p.X, (float)p.Y - 5, (float)p.X, (float)p.Y + 6, white, 1);
+                pc.Graphics.DrawLine((float)p.X - 5, (float)p.Y, (float)p.X + 5, (float)p.Y, black, 3);
+                pc.Graphics.DrawLine((float)p.X, (float)p.Y - 5, (float)p.X, (float)p.Y + 5, black, 3);
+                pc.Graphics.DrawLine((float)p.X - 5, (float)p.Y, (float)p.X + 5, (float)p.Y, white, 1);
+                pc.Graphics.DrawLine((float)p.X, (float)p.Y - 5, (float)p.X, (float)p.Y + 5, white, 1);
             }
             else if (pc.Level == 2)
             {

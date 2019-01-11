@@ -2,6 +2,7 @@
 using GameExpress.Model.Structs;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Xaml;
+using System.ComponentModel;
 using Windows.Foundation;
 using Windows.UI.Input;
 using Windows.UI.Xaml.Controls;
@@ -46,6 +47,8 @@ namespace GameExpress.View
 
             DataContext = e.Parameter;
 
+            ViewHelper.ChangePropertyPage(e.Parameter as Item);
+
             Editor.Item = Image;
         }
 
@@ -62,7 +65,7 @@ namespace GameExpress.View
             //Recognizer.ManipulationStarted += OnManipulationStarted;
             Recognizer.ManipulationUpdated += OnManipulationUpdated;
 
-            //ZoomSlider.DataContext = this;
+            Image.PropertyChanged += OnPropertyChanged;
         }
 
         /// <summary>
@@ -77,6 +80,18 @@ namespace GameExpress.View
             //Recognizer.ManipulationInertiaStarting -= OnManipulationInertiaStarting;
             //Recognizer.ManipulationStarted -= OnManipulationStarted;
             Recognizer.ManipulationUpdated -= OnManipulationUpdated;
+
+            Image.PropertyChanged -= OnPropertyChanged;
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn die Eigenschaften des Bildes geändert haben
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            Editor.Invalidate();
         }
 
         /// <summary>

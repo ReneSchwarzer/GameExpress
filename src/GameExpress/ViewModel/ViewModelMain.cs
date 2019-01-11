@@ -51,13 +51,15 @@ namespace GameExpress.ViewModel
             var storageFolder = KnownFolders.DocumentsLibrary;
             var folder = await storageFolder.CreateFolderAsync("Lost On Omicron", CreationCollisionOption.OpenIfExists);
 
-            //var file = await folder.CreateFileAsync("lostonomicron.gx", CreationCollisionOption.ReplaceExisting);
-            //SaveProject(file);
-            //Thread.Sleep(5000);
+            
             
             var file1 = await folder.CreateFileAsync("lostonomicron1.gx", CreationCollisionOption.OpenIfExists);
             LoadProject(file1);
- #endif
+
+            var file = await folder.CreateFileAsync("lostonomicron.gx", CreationCollisionOption.ReplaceExisting);
+            SaveProject(file);
+            //Thread.Sleep(5000);
+#endif
         }
 
         /// <summary>
