@@ -19,21 +19,28 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="20"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
                         <Canvas Grid.Column="0" Grid.Row="0" Background="{StaticResource SystemChromeHighColor}" Visibility="{Binding RulerVisibility}" />
-                        <controls:CanvasControl Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Name="VerticalRuler" Width="20" Visibility="{Binding RulerVisibility, Mode=TwoWay}"/>
+                        <controls:CanvasControl Grid.Column="0" Grid.Row="1" Name="VerticalRuler" Width="20" Visibility="{Binding RulerVisibility, Mode=TwoWay}"/>
                         <controls:CanvasControl Grid.Column="1" Grid.Row="0" Name="HorizontalRuler" Height="20" HorizontalAlignment="Stretch" Visibility="{Binding RulerVisibility, Mode=TwoWay}"/>
-                        <controls:CanvasControl Grid.Column="1" Grid.Row="1" Name="Content"/>
-                        <!--<ScrollBar Name="VerticalScrollBar" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Vertical" Minimum="-100" Maximum="100" Value="0" VerticalAlignment="Stretch" />
-                        <ScrollBar Name="HorizontalScrollBar"  Grid.Column="0" Grid.Row="2" Grid.RowSpan="3" Orientation="Horizontal" Minimum="-100" Maximum="100" Value="0" HorizontalAlignment="Stretch"/>-->
-                        <Grid Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Background="{ThemeResource SystemAltMediumColor}">
+                        <ScrollViewer Name="ScrollViewer" 
+                                      Grid.Column="1" Grid.Row="1" 
+                                      HorizontalScrollMode="Enabled" 
+                                      HorizontalScrollBarVisibility="Auto"
+                                      ZoomMode="Disabled"
+                                      MinZoomFactor="0.1"
+                                      MaxZoomFactor="4"
+                                      CanContentRenderOutsideBounds ="False">
+                            <Canvas Width="5000" Height="5000">
+                                <controls:CanvasControl Name="Content" Canvas.Top="0" Canvas.Left="0"/>
+                            </Canvas>
+                        </ScrollViewer>
+                         <Grid Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Background="{ThemeResource SystemAltMediumColor}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>

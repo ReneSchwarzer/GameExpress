@@ -33,9 +33,13 @@ namespace GameExpress.Model.Item
         /// <param name="pc"></param>
         public override void Presentation(PresentationContext pc)
         {
+            var transform = pc.Graphics.Transform;
+
             base.Presentation(pc);
 
-            
+            pc.Graphics.Transform = transform;
+
+            DrawHotspot(pc);
         }
 
         /// <summary>

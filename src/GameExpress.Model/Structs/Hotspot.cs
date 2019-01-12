@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Windows.Foundation;
 
@@ -14,19 +11,66 @@ namespace GameExpress.Model.Structs
     /// Hotspot
     /// </summary>
     [XmlType("hotspot")]
-    public struct Hotspot
+    public class Hotspot : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Event zum Mitteilen, dass sich eine Eigenschaften geändert hat
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Die X-Koordinate
+        /// </summary>
+        private int m_x = 0;
+
+        /// <summary>
+        /// Die Y-Koordinate
+        /// </summary>
+        private int m_y = 0;
+
         /// <summary>
         /// Die X-Koordinate
         /// </summary>
         [XmlAttribute("x")]
-        public int X { get; set; }
+        public int X
+        {
+            get { return m_x; }
+            set
+            {
+                if (!m_x.Equals(value))
+                {
+                    m_x = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Die Y-Koordinate
         /// </summary>
         [XmlAttribute("y")]
-        public int Y { get; set; }
+        public int Y
+        {
+            get { return m_y; }
+            set
+            {
+                if (!m_y.Equals(value))
+                {
+                    m_y = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        public Hotspot()
+            :this(0)
+        {
+        }
 
         /// <summary>
         /// Konstruktor
@@ -86,6 +130,15 @@ namespace GameExpress.Model.Structs
         public override string ToString()
         {
             return "(" + X.ToString() + "," + Y.ToString() + ")";
+        }
+
+        /// <summary>
+        /// Löst das PropertyChanged-Event aus
+        /// </summary>
+        /// <param name="propertyName">Der Name der geänderten Eigenschaft</param>
+        private void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

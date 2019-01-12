@@ -63,7 +63,7 @@ namespace GameExpress.Controls
             TimePropertyToken = RegisterPropertyChangedCallback(TimeProperty, new DependencyPropertyChangedCallback((s, e) =>
             {
                 // Neuzeichnen erforderlich
-                Content?.Invalidate();
+                Invalidate();
             }));
         }
 

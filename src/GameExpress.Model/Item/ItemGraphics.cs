@@ -1,6 +1,7 @@
 ﻿using GameExpress.Model.Structs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace GameExpress.Model.Item
         /// <summary>
         /// Der Hotspot
         /// </summary>
-        private Hotspot m_hotspot = new Hotspot(0, 0);
+        private Hotspot m_hotspot = new Hotspot();
 
         /// <summary>
         /// Der Gammawert von 0-1
@@ -56,7 +57,7 @@ namespace GameExpress.Model.Item
         /// </summary>
         public override void Init()
         {
-
+            
         }
 
         /// <summary>
@@ -106,8 +107,8 @@ namespace GameExpress.Model.Item
             }
             else if (pc.Level == 2)
             {
-                pc.Graphics.DrawEllipse((float)p.X - 3, (float)p.Y - 3, 6, 6, black);
-                pc.Graphics.DrawEllipse((float)p.X - 2, (float)p.Y - 2, 4, 4, white);
+                pc.Graphics.DrawEllipse((float)p.X - 3, (float)p.Y - 3, 6, 6, black, 3);
+                pc.Graphics.DrawEllipse((float)p.X - 3, (float)p.Y - 3, 6, 6, white);
             }
         }
 
@@ -127,6 +128,16 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Wird aufgerufen, wennsich der x-Wert oder y-Wert innerhalb des Hotspot ändert
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnHotspotPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            RaisePropertyChanged("Hotspot");
+        }
+
+        /// <summary>
         /// Liefert oder setzt den HotSpot
         /// </summary>
         [XmlElement("hotspot")]
@@ -137,7 +148,11 @@ namespace GameExpress.Model.Item
             {
                 if (!m_hotspot.Equals(value))
                 {
+                    m_hotspot.PropertyChanged -= OnHotspotPropertyChanged;
+
                     m_hotspot = value;
+
+                    m_hotspot.PropertyChanged += OnHotspotPropertyChanged;
 
                     RaisePropertyChanged();
                 }

@@ -14,7 +14,7 @@ namespace GameExpress.Model.Item
     /// Objektinstanz
     /// </summary>
     [XmlType("story")]
-    public class ItemStory : ItemGraphics
+    public class ItemStory : ItemVisual
     {
         /// <summary>
         /// Das Item
@@ -54,16 +54,16 @@ namespace GameExpress.Model.Item
         {
             base.Init();
 
-            KeyFrames.CollectionChanged += (s, e) =>
-            {
-                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-                {
-                    foreach (Item v in e.NewItems)
-                    {
-                        //AddChild(v);
-                    }
-                }
-            };
+            //KeyFrames.CollectionChanged += (s, e) =>
+            //{
+            //    if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            //    {
+            //        foreach (Item v in e.NewItems)
+            //        {
+            //            //AddChild(v);
+            //        }
+            //    }
+            //};
         }
 
         /// <summary>
@@ -100,9 +100,14 @@ namespace GameExpress.Model.Item
 
             if (currentKeyFrame != null)
             {
-                var newPC = new PresentationContext(pc);
-                //newPC.Matrix = currentKeyFrame.Matrix * pc.Matrix;
+                var newPC = new PresentationContext(pc) { Level = pc.Level };
                 newPC.Matrix *= currentKeyFrame.Matrix;
+
+                if (Instance is ItemGraphics)
+                {
+                    var graphics = Instance as ItemGraphics;
+                    newPC.Matrix *= Matrix3D.Translation(graphics.Hotspot.X * -1, graphics.Hotspot.Y * -1);
+                }
 
                 Instance?.Presentation(newPC);
             }

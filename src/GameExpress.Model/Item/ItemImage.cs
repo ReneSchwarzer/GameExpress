@@ -64,13 +64,13 @@ namespace GameExpress.Model.Item
         /// <param name="uc">Der Updatekontext</param>
         public override void Update(UpdateContext uc)
         {
-            
+
         }
 
         /// <summary>
         /// Objekt darstllen
         /// </summary>
-        /// <param name="pc"></param>
+        /// <param name="pc">Der Präsentationskontext</param>
         public override void Presentation(PresentationContext pc)
         {
             if (Image == null)
@@ -84,18 +84,21 @@ namespace GameExpress.Model.Item
 
             var matrix = new Matrix3x2
             (
-                (float)pc.Matrix.M11, (float)pc.Matrix.M12, 
+                (float)pc.Matrix.M11, (float)pc.Matrix.M12,
                 (float)pc.Matrix.M21, (float)pc.Matrix.M22,
                 (float)pc.Matrix.M31, (float)pc.Matrix.M32
             );
 
-            if (pc.Level > 1)
-            {
-                matrix.Translation = new Vector2(Hotspot.X * -1, Hotspot.Y * -1);
-            }
-
             var transform = pc.Graphics.Transform;
             pc.Graphics.Transform = matrix;
+
+            //if (pc.Level > 1)
+            //{
+            //    pc.Graphics.Transform = Matrix3x2.CreateTranslation
+            //    ( 
+            //        new Vector2(Hotspot.X * -1, Hotspot.Y * -1)
+            //    ) * matrix;
+            //}
 
             // Alphawert umrechnen
             var opacity = Alpha / 255f;
@@ -143,10 +146,30 @@ namespace GameExpress.Model.Item
                 CanvasImageInterpolation.Linear
             );
 
+            //if (pc.Level == 2)
+            //{
+            //    //pc.Graphics.Transform = matrix;
+            //    //pc.Graphics.Transform = transform;
+
+            //    var p = pc.Matrix.Transform(Hotspot);
+            //    pc.Graphics.Transform = Matrix3x2.CreateTranslation((float)p.X * 1, (float)p.Y * 1);
+
+            //    pc.Graphics.Transform = Matrix3x2.CreateTranslation
+            //    (
+            //        new Vector2((float)p.X * 1, (float)p.Y * 1)
+            //    ) * matrix;
+
+            //    // Hotspot zeichnen
+            //    DrawHotspot(pc);
+            //}
+
             pc.Graphics.Transform = transform;
 
-            // Hotspot zeichnen
-            DrawHotspot(pc);
+            //if (pc.Level == 1)
+            //{
+                // Hotspot zeichnen
+                DrawHotspot(pc);
+            //}
         }
 
         /// <summary>
@@ -167,11 +190,14 @@ namespace GameExpress.Model.Item
         /// <param name="g">Der Zeichenkontext</param>
         public override void CreateResources(ICanvasResourceCreator g)
         {
-           Image = Task.Run(async () => 
-           {
-               return await CanvasBitmap.LoadAsync(g, Source);
-           }).Result;
+            Image = Task.Run(async () =>
+            {
+                return await CanvasBitmap.LoadAsync(g, Source);
+            }).Result;
+
+            RaisePropertyChanged("Image");
+            RaisePropertyChanged("Size");
         }
-        
+
     }
 }

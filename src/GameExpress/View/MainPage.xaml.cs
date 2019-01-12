@@ -56,7 +56,7 @@ namespace GameExpress.View
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
         /// <param name="args">Das Eventargument</param>
-            private void OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
+        private void OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
         {
             var item = args.InvokedItem as Item;
             Titel.DataContext = item;

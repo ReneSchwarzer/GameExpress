@@ -1,15 +1,21 @@
 ﻿using GameExpress.Model.Item;
 using GameExpress.Model.Structs;
+using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI;
+using Microsoft.Graphics.Canvas.UI.Composition;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Graphics;
+using Windows.Graphics.DirectX;
 using Windows.UI;
+using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Media;
 
 namespace GameExpress.Controls
 {
@@ -54,9 +60,29 @@ namespace GameExpress.Controls
         protected CommandBar CommandBar { get; set; }
 
         /// <summary>
+        /// Liefert oder setzt den ScrollViewer
+        /// </summary>
+        protected ScrollViewer ScrollViewer { get; set; }
+
+        /// <summary>
         /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die derigistrierung benötigt wird
         /// </summary>
         private long GridVisibilityPropertyToken { get; set; }
+
+        /// <summary>
+        /// Liefert oder setzt das Device-Objekt
+        /// </summary>
+        private CompositionGraphicsDevice Device { get; set; }
+
+        /// <summary>
+        /// Liefert oder setzt das DrawingSurface-Objekt
+        /// </summary>
+        private CompositionDrawingSurface DrawingSurface { get; set; }
+
+        /// <summary>
+        /// Leifert oder setzt die DrawingSession
+        /// </summary>
+        private CanvasDrawingSession DrawingSession { get; set; }
 
         /// <summary>
         /// Konstruktor
@@ -64,6 +90,8 @@ namespace GameExpress.Controls
         public EditorPanel()
         {
             DefaultStyleKey = typeof(EditorPanel);
+
+            Loaded += OnLoaded;
             Unloaded += OnUnloaded;
         }
 
@@ -123,6 +151,14 @@ namespace GameExpress.Controls
             {
             }
 
+            ScrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
+
+            if (ScrollViewer != null)
+            {
+                ScrollViewer.ViewChanged += OnViewChanged;
+                ScrollViewer.Loaded += OnScrollViewerLoaded;
+            }
+
             // Eigenschaft GridVisibilityProperty hat sich geändert
             GridVisibilityPropertyToken = RegisterPropertyChangedCallback(GridVisibilityProperty, new DependencyPropertyChangedCallback((s, e) => 
             {
@@ -135,7 +171,19 @@ namespace GameExpress.Controls
             {
                 Item.PropertyChanged += OnInvalidate;
             }
-            
+        }
+
+        /// <summary>
+        /// Tritt ein, wenn der Bildlauf oder der Zoom geändert wurde
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnViewChanged(object sender, ScrollViewerViewChangedEventArgs args)
+        {
+            Content.SetValue(Canvas.TopProperty, ScrollViewer.VerticalOffset);
+            Content.SetValue(Canvas.LeftProperty, ScrollViewer.HorizontalOffset);
+
+            Invalidate();
         }
 
         /// <summary>
@@ -143,6 +191,7 @@ namespace GameExpress.Controls
         /// </summary>
         public virtual void Invalidate()
         {
+            //OnDrawContent(new CanvasDrawEventArgs(DrawingSession));
             Content.Invalidate();
             HorizontalRuler.Invalidate();
             VerticalRuler.Invalidate();
@@ -181,14 +230,13 @@ namespace GameExpress.Controls
 
             var size = Item is ItemVisual ? (Item as ItemVisual).Size : new Size();
 
-            if (size.IsEmpty)
+            if (size.IsEmpty || size.Equals(new Size()))  
             {
                 // Keine Größe angegeben, Infinity-Modus wird aktiv
-                sz.Width = 1000;
-                sz.Height = 1000;
+                sz = new Size(Content.ActualWidth, Content.ActualHeight);
 
-                pt.X = 0; // - HorizontalScrollBar.Value;
-                pt.Y = 0;// - VerticalScrollBar.Value;
+                pt.X = (ScrollViewer.ScrollableWidth / 2) - (sz.Width / 2) - ScrollViewer.HorizontalOffset + (Content.ActualWidth / 2);
+                pt.Y = (ScrollViewer.ScrollableHeight / 2) - (sz.Height / 2) - ScrollViewer.VerticalOffset + (Content.ActualHeight / 2);
 
                 infinity = true;
             }
@@ -196,13 +244,26 @@ namespace GameExpress.Controls
             {
                 sz = new Size(size.Width * Zoom / 100f, size.Height * Zoom / 100f);
 
-                pt.X = (Content.ActualWidth / 2) - (sz.Width / 2); // - HorizontalScrollBar.Value;
-                pt.Y = (Content.ActualHeight / 2) - (sz.Height / 2); // - VerticalScrollBar.Value;
+                pt.X = (ScrollViewer.ScrollableWidth / 2) - (sz.Width / 2) - ScrollViewer.HorizontalOffset + (Content.ActualWidth / 2);
+                pt.Y = (ScrollViewer.ScrollableHeight / 2) - (sz.Height / 2) - ScrollViewer.VerticalOffset + (Content.ActualHeight / 2);
 
                 infinity = false;
             }
 
             return new Rect((int)pt.X, (int)pt.Y, (int)sz.Width, (int)sz.Height);
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn das Control seine Größe ändert
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Content.Width = e.NewSize.Width;
+            Content.Height = e.NewSize.Height;
+
+            Invalidate();
         }
 
         /// <summary>
@@ -253,6 +314,8 @@ namespace GameExpress.Controls
                 Designer = true,
                 Matrix = Matrix3D.Identity * Matrix3D.Translation(viewRect.Left, viewRect.Top) * Matrix3D.Scaling(Zoom / 100f, Zoom / 100f)
             });
+
+            args.DrawingSession.Flush();
         }
 
         /// <summary>
@@ -267,10 +330,11 @@ namespace GameExpress.Controls
             {
                 var lightGray = Color.FromArgb(80, 125, 125, 125);
 
-                var alternated = false;
-                for (int y = (int)(viewRect.Top % 10) - 20; y < Content.ActualHeight; y = y + 10)
+                var alternated = ((int)(viewRect.Top / 10) + (int)(viewRect.Left / 10)) % 2 == 0;
+
+                for (int y = (int)(viewRect.Top % 10) - 20; y < ActualHeight; y = y + 10)
                 {
-                    for (int x = (int)(viewRect.Left % 10) - (alternated ? 10 : 20); x < Content.ActualWidth; x = x + 20)
+                    for (int x = (int)(viewRect.Left % 10) - (alternated ? 10 : 20); x < ActualWidth; x = x + 20)
                     {
                         args.DrawingSession.FillRectangle(new Rect(x, y, 10, 10), lightGray);
                     }
@@ -287,20 +351,20 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnDrawVerticalRuler(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            bool infinity;
-            var viewRect = GetItemViewRect(out infinity);
+            var viewRect = GetItemViewRect(out bool infinity);
 
             var white = Color.FromArgb(255, 255, 255, 255);
             var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
             var black = Color.FromArgb(255, 0, 0, 0);
 
+            args.DrawingSession.FillRectangle(new Rect(0, 0, VerticalRuler.ActualWidth, VerticalRuler.ActualHeight), lightGray);
+
             if (infinity)
             {
-                args.DrawingSession.FillRectangle(new Rect(0, 0, VerticalRuler.ActualWidth, VerticalRuler.ActualHeight), black);
+                args.DrawingSession.FillRectangle(new Rect(2, 0, VerticalRuler.ActualWidth - 4, VerticalRuler.ActualHeight), black);
             }
             else
             {
-                args.DrawingSession.FillRectangle(new Rect(0, 0, VerticalRuler.ActualWidth, VerticalRuler.ActualHeight), lightGray);
                 args.DrawingSession.FillRectangle(new Rect(2, viewRect.Top, VerticalRuler.ActualWidth - 4, viewRect.Height), black);
             }
 
@@ -350,13 +414,14 @@ namespace GameExpress.Controls
             var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
             var black = Color.FromArgb(255, 0, 0, 0);
 
+            args.DrawingSession.FillRectangle(new Rect(0, 0, HorizontalRuler.ActualWidth, HorizontalRuler.ActualHeight), lightGray);
+
             if (infinity)
             {
-                args.DrawingSession.FillRectangle(new Rect(0, 0, HorizontalRuler.ActualWidth, HorizontalRuler.ActualHeight), black);
+                args.DrawingSession.FillRectangle(new Rect(0, 2, HorizontalRuler.ActualWidth, HorizontalRuler.ActualHeight - 4), black);
             }
             else
             {
-                args.DrawingSession.FillRectangle(new Rect(0, 0, HorizontalRuler.ActualWidth, HorizontalRuler.ActualHeight), lightGray);
                 args.DrawingSession.FillRectangle(new Rect(viewRect.Left, 2, viewRect.Width, HorizontalRuler.ActualHeight - 4), black);
             }
 
@@ -431,6 +496,35 @@ namespace GameExpress.Controls
         }
 
         /// <summary>
+        /// Wird aufgerufen, wenn das Control geladen wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnLoaded(object sender, RoutedEventArgs args)
+        {
+            SizeChanged += OnSizeChanged;
+
+            Content.Width = ActualWidth;
+            Content.Height = ActualHeight;
+        }
+
+        // <summary>
+        /// Wird aufgerufen, wenn das ScrollViewer geladen wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnScrollViewerLoaded(object sender, RoutedEventArgs args)
+        {
+            ScrollViewer.ChangeView
+            (
+                ScrollViewer.ScrollableWidth / 2f,
+                ScrollViewer.ScrollableHeight / 2f,
+                1.0f,
+                false
+            );
+        }
+
+        /// <summary>
         /// Wird aufgerufen, wenn das Control entladen wird
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
@@ -444,6 +538,14 @@ namespace GameExpress.Controls
                 Item.PropertyChanged -= OnInvalidate;
             }
 
+            if (ScrollViewer != null)
+            {
+                ScrollViewer.ViewChanged -= OnViewChanged;
+                ScrollViewer.Loaded -= OnScrollViewerLoaded;
+            }
+
+            SizeChanged -= OnSizeChanged;
+            Loaded -= OnLoaded;
             Unloaded -= OnUnloaded;
         }
 
@@ -454,7 +556,7 @@ namespace GameExpress.Controls
         /// <param name="e">Das Eventargument</param>
         private void OnInvalidate(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            Invalidate();
         }
 
         /// <summary>

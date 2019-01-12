@@ -17,6 +17,8 @@
         <TextBox Header="Name:" Name="Name" Margin="0,10,0,10" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <RichEditBox Header="Beschreibung:" Name="Note" Margin="0,10,0,10"/>
         <TextBox Header="Datei:" Name="Source" Margin="0,10,0,10" Text="{Binding Source, Mode=TwoWay}"/>
+        <Slider Header="Hotspot X:" Name="HotspotX" Minimum="0" Maximum="{Binding Size.Width, Mode=OneWay}" Value="{Binding Hotspot.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Slider Header="Hotspot Y:" Name="HotspotY" Minimum="0" Maximum="{Binding Size.Height, Mode=OneWay}" Value="{Binding Hotspot.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Slider Header="Alpha:" Name="Alpha" Minimum="0" Maximum="255" Value="{Binding Alpha, Mode=TwoWay, Converter={StaticResource AlphaToInt}, UpdateSourceTrigger=PropertyChanged}"/>
         <Slider Header="Unschärfe:" Name="Blur" Minimum="0" Maximum="255" Value="{Binding Blur, Mode=TwoWay, Converter={StaticResource BlurToInt}, UpdateSourceTrigger=PropertyChanged}"/>
         <Slider Header="Gamma:" Name="Gamma" Minimum="0" Maximum="255" Value="{Binding Gamma, Mode=TwoWay, Converter={StaticResource GammaToInt}, UpdateSourceTrigger=PropertyChanged}"/>

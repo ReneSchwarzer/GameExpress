@@ -5,7 +5,7 @@ using Windows.Foundation;
 namespace GameExpress.Model.Item
 {
     [XmlType("keyframebase")]
-    public abstract class ItemKeyFrameBase : ItemGraphics
+    public abstract class ItemKeyFrameBase : ItemVisual
     {
         /// <summary>ItemKeyFrameBase
         /// Konstruktor
