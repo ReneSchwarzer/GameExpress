@@ -1,4 +1,5 @@
-﻿using GameExpress.Model.Item;
+﻿using GameExpress.Dialog;
+using GameExpress.Model.Item;
 using GameExpress.View;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
@@ -12,6 +13,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -79,10 +81,8 @@ namespace GameExpress.Controls
                     TimeOffset = 0;
                 }
 
-
                 TimePosition.SetValue(Canvas.LeftProperty, (double)(Time - TimeOffset));
                 TimePositionLocator.SetValue(Canvas.LeftProperty, (double)(Time - TimeOffset));
-
             }));
 
             // Eigenschaft TimeOffsetProperty hat sich geändert
@@ -100,7 +100,7 @@ namespace GameExpress.Controls
 
             }));
 
-            Instances.CollectionChanged += OnInstancesCollectionChanged;
+            Item.StoryBoard.CollectionChanged += OnInstancesCollectionChanged;
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace GameExpress.Controls
         {
             UnregisterPropertyChangedCallback(TimeProperty, TimePropertyToken);
             UnregisterPropertyChangedCallback(TimeOffsetProperty, TimeOffsetPropertyToken);
-            Instances.CollectionChanged -= OnInstancesCollectionChanged;
+            Item.StoryBoard.CollectionChanged -= OnInstancesCollectionChanged;
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var width = Table.Columns.FirstOrDefault().ActualWidth;
+            var width = Table.Columns.Take(2).Sum(x => x.ActualWidth);
             Canvas.SetLeft(Group, width);
 
             width = ActualWidth - width;
@@ -235,9 +235,6 @@ namespace GameExpress.Controls
             var lightGray = Color.FromArgb(255, 125, 125, 125);
             var black = Color.FromArgb(255, 0, 0, 0);
             var accent = new UISettings().GetColorValue(UIColorType.AccentDark3);
-
-            //args.DrawingSession.FillRectangle(0, 0, (float)Ruler.ActualWidth, (float)Ruler.ActualHeight, lightGray);
-
             ulong count = TimeOffset;
 
             for (int i = 0; i < Ruler.ActualWidth; i += 10)
@@ -264,6 +261,64 @@ namespace GameExpress.Controls
         {
             ViewHelper.ChangePropertyPage(e.AddedItems.FirstOrDefault() as Item);
         }
+        /// <summary>
+        /// Wird aufgerufen, wenn die zugehörige Instanz geändert werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private async void OnChangeInstance(object sender, RoutedEventArgs e)
+        {
+            var element = e.OriginalSource as MenuFlyoutItem;
+            if (element == null) return;
+
+            var story = Item?.StoryBoard?.Where(x => x.ID.Equals(element.Tag))?.FirstOrDefault();
+            if (story == null) return;
+
+            var dialog = new SelectInstanceDialog()
+            {
+                CurrentItem = Item,
+                SelectedItem = story.Instance
+            };
+
+            switch (await dialog.ShowAsync())
+            {
+                case ContentDialogResult.Primary:
+                    {
+                        story.Item = dialog.SelectedItem?.Name;
+
+                    }
+                    break;
+            }
+
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn eine Story gelöscht werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private async void OnDeleteStory(object sender, RoutedEventArgs e)
+        {
+            var dialog = new MessageDialog("Möchten Sie die Story wirklich löschen?", "Löschen");
+            var yesCommand = new UICommand("Ja");
+            var noCommand = new UICommand("Nein");
+            dialog.Commands.Add(yesCommand);
+            dialog.Commands.Add(noCommand);
+            dialog.DefaultCommandIndex = 1;
+            dialog.CancelCommandIndex = 1;
+
+            var command = await dialog.ShowAsync();
+            if (command == yesCommand)
+            {
+                var element = e.OriginalSource as MenuFlyoutItem;
+
+                if (element != null)
+                {
+                    var story = Item.StoryBoard.Where(x => x.ID.Equals(element.Tag));
+                    Item.StoryBoard.Remove(story.FirstOrDefault());
+                }
+            }
+        }
 
         /// <summary>
         /// Liefert oder setzt die Animationszeit
@@ -281,19 +336,19 @@ namespace GameExpress.Controls
             DependencyProperty.Register("Time", typeof(ulong), typeof(TimeLinePanel), new PropertyMetadata(new ulong()));
 
         /// <summary>
-        /// Liefert oder setzt des Items
+        /// Liefert oder setzt das Items
         /// </summary>
-        public ObservableCollection<ItemStory> Instances
+        public ItemAnimation Item
         {
-            get { return (ObservableCollection<ItemStory>)GetValue(InstancesProperty); }
-            set { SetValue(InstancesProperty, value); }
+            get { return (ItemAnimation)GetValue(ItemProperty); }
+            set { SetValue(ItemProperty, value); }
         }
 
         /// <summary>
-        /// Using a DependencyProperty as the backing store for Instances.
+        /// Using a DependencyProperty as the backing store for Item.  This enables animation, styling, binding, etc...
         /// </summary>
-        public static readonly DependencyProperty InstancesProperty =
-            DependencyProperty.Register("Instances", typeof(ObservableCollection<ItemStory>), typeof(TimeLinePanel), new PropertyMetadata(null));
+        public static readonly DependencyProperty ItemProperty =
+            DependencyProperty.Register("Item", typeof(ItemAnimation), typeof(TimeLinePanel), new PropertyMetadata(null));
 
         /// <summary>
         /// Liefert oder setzt den Offset der Animationszeit

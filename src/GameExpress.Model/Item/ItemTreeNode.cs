@@ -69,6 +69,21 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Liefert den Pfad
+        /// </summary>
+        /// <returns>Der Pfad</returns>
+        public string Path
+        {
+            get
+            {
+                var path = GetPath();
+
+                return string.Join("/", path);
+                    
+            }
+        }
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         public ItemTreeNode()

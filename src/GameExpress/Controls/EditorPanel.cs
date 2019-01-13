@@ -325,6 +325,9 @@ namespace GameExpress.Controls
         protected virtual void OnDrawBackground(CanvasDrawEventArgs args)
         {
             var viewRect = GetItemViewRect(out bool infinty);
+            var backround = Background is SolidColorBrush ? (Background as SolidColorBrush).Color : Color.FromArgb(255, 0, 0, 0);
+
+            args.DrawingSession.FillRectangle(new Rect(0, 0, ActualWidth, ActualHeight), backround);
 
             if (GridVisibility == Visibility.Visible)
             {
@@ -596,7 +599,7 @@ namespace GameExpress.Controls
             DependencyProperty.Register("VerticalScrollValue", typeof(int), typeof(EditorPanel), new PropertyMetadata(0));
 
         /// <summary>
-        /// Liefert oder setzt des Items
+        /// Liefert oder setzt das Items
         /// </summary>
         public Item Item
         {

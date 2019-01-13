@@ -129,14 +129,20 @@
       <DependentUpon>TimeLinePanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Panel.cs" />
-    <Compile Include="Converter\ItemObjectToItemInctanceConverter.cs" />
+    <Compile Include="Converter\ItemToItemAnimationConverter.cs" />
     <Compile Include="Converter\ULongToDoubleConverter.cs" />
     <Compile Include="Converter\GammaToIntConverter.cs" />
     <Compile Include="Converter\BlurToIntConverter.cs" />
     <Compile Include="Converter\AlphaToIntConverter.cs" />
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Dialog\SelectInstanceDialog.xaml.cs">
+      <DependentUpon>SelectInstanceDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\ViewModel.cs" />
     <Compile Include="ViewModel\ViewModelMain.cs" />
+    <Compile Include="View\GeneralPropertyPage.xaml.cs">
+      <DependentUpon>GeneralPropertyPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\KeyFramePropertyPage.xaml.cs">
       <DependentUpon>KeyFramePropertyPage.xaml</DependentUpon>
     </Compile>
@@ -262,6 +268,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialog\SelectInstanceDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -269,6 +279,10 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\GeneralPropertyPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\KeyFramePropertyPage.xaml">
       <SubType>Designer</SubType>

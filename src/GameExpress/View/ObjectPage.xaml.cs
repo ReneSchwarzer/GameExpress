@@ -16,6 +16,11 @@ namespace GameExpress.View
     public sealed partial class ObjectPage : Page
     {
         /// <summary>
+        /// Liefert das mit der Ansicht verbundene Bild
+        /// </summary>
+        private ItemObject Object { get { return DataContext as ItemObject; } }
+        
+        /// <summary>
         /// Konstruktor
         /// </summary>
         public ObjectPage()
@@ -48,6 +53,19 @@ namespace GameExpress.View
                 Editor.MergeCommandBar(ToolBar, false);
                 ToolBar.Visibility = Visibility.Collapsed;
             };
+        }
+        
+        /// <summary>
+        /// Wird aufgerufen, wenn eine neue Story hinzugefügt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnAddStory(object sender, RoutedEventArgs e)
+        {
+            Object.StoryBoard.Add(new ItemStory()
+            {
+                Name = "Story " + (Object.StoryBoard.Count + 1)
+            });
         }
 
         /// <summary>

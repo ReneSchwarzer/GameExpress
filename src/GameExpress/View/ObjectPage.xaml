@@ -11,7 +11,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <converter:ItemObjectToItemInctanceConverter x:Key="ItemObjectToItemInctance" />
+        <converter:ItemToItemAnimationConverter x:Key="ItemToItemAnimation" />
     </Page.Resources>
     
     <Grid>
@@ -27,6 +27,8 @@
             <AppBarButton Name="Previous" Label="Zurücksetzen" Icon="Previous" Click="OnPrevious"/>
             <AppBarToggleButton Name="Play" Label="Abspielen" Icon="Play" Click="OnPlay"/>
             <AppBarSeparator/>
+            <AppBarButton Name="Stroy" Label="Story" Icon="Add" Click="OnAddStory"/>
+            <AppBarSeparator/>
         </CommandBar>
         
         <controls:TimeLinePanel 
@@ -35,8 +37,8 @@
             x:Name="TimeLine" 
             Background="{ThemeResource SystemChromeMediumLowColor}" 
             Time="{x:Bind Path=Editor.Time, Mode=TwoWay}"
-            Instances="{x:Bind Path=Editor.Item, Mode=OneTime, Converter={StaticResource ItemObjectToItemInctance}}"/>
-        <controls:AnimationEditorPanel Grid.Column="0" Grid.Row="2" x:Name="Editor" />
+            Item="{x:Bind Path=Editor.Item, Mode=OneTime, Converter={StaticResource ItemToItemAnimation}}"/>
+        <controls:AnimationEditorPanel Grid.Column="0" Grid.Row="2" x:Name="Editor" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
 
         <toolkit:GridSplitter Background="Transparent"
             Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Height="4">

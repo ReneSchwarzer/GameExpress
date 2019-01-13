@@ -152,7 +152,7 @@
                     </MenuFlyout>
                 </Button.Flyout>
                 <Button.Content>
-                    <FontIcon Glyph="&#xE700;"/>
+                    <SymbolIcon Symbol="GlobalNavigationButton" />
                 </Button.Content>
             </Button>
 

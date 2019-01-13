@@ -26,39 +26,14 @@ namespace GameExpress.ViewModel
         public override async void InitAsync()
         {
 #if DEBUG
-            //// Testdaten
-            //var items = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Assets", "Items");
-
-            //var game = new ItemGame() { Name = "Lost on Omicron", Note = "Adventurespiel" };
-            //var scene = new ItemScene() { Name = "Szene 1", Alpha = 255 };
-            //var ufo = new ItemImage() { Name = "UFO", Source = Path.Combine(items, "ufo.png"), Alpha = 255 };
-            //var sputnik = new ItemImage() { Name = "Sputnik", Source = Path.Combine(items, "sputnik.png"), Alpha = 255 };
-            //var omicron = new ItemImage() { Name = "Omicron", Source = Path.Combine(items, "omicron.png"), Alpha = 255 };
-            //var scene1Backgraund = new ItemImage() { Name = "Hintergrund", Source = Path.Combine(items, "scene1.png"), Alpha = 255 };
-            //var boom = new ItemSound() { Name = "Boom", Source = Path.Combine(items, "boom.mp3") };
-            //var flyingUfo = new ItemObject() { Name = "Fliegendes UFO", Alpha = 255 };
-
-            //Project.Tree.Add(game);
-
-            //game.Children.Add(scene);
-            //game.Children.Add(flyingUfo);
-            //flyingUfo.Children.Add(ufo);
-            //game.Children.Add(sputnik);
-            //game.Children.Add(omicron);
-            //game.Children.Add(boom);
-            //scene.Children.Add(scene1Backgraund);
-
             var storageFolder = KnownFolders.DocumentsLibrary;
             var folder = await storageFolder.CreateFolderAsync("Lost On Omicron", CreationCollisionOption.OpenIfExists);
 
-            
-            
-            var file1 = await folder.CreateFileAsync("lostonomicron1.gx", CreationCollisionOption.OpenIfExists);
+            var file1 = await folder.CreateFileAsync("lostonomicron.gx", CreationCollisionOption.OpenIfExists);
             LoadProject(file1);
 
-            var file = await folder.CreateFileAsync("lostonomicron.gx", CreationCollisionOption.ReplaceExisting);
+            var file = await folder.CreateFileAsync("lostonomicron1.gx", CreationCollisionOption.ReplaceExisting);
             SaveProject(file);
-            //Thread.Sleep(5000);
 #endif
         }
 
@@ -87,7 +62,7 @@ namespace GameExpress.ViewModel
         /// <summary>
         /// Liefert oder setzt das Project
         /// </summary>
-        private Project Project { get; set; } = new Project();
+        public Project Project { get; private set; } = new Project();
 
         /// <summary>
         /// Liefert oder setzt den Projektbaum

@@ -212,10 +212,7 @@ namespace GameExpress.Model.Item
                 if (m_item == null ? true : !m_item.Equals(value))
                 {
                     m_item = value;
-                    if (Instance == null)
-                    {
-                        AttachedInstance(Item);
-                    }
+                    AttachedInstance(Item);
 
                     RaisePropertyChanged();
                 }

@@ -72,18 +72,35 @@
             
             <toolkit:DataGrid x:Name="Table" 
                               Canvas.Left="0" Canvas.Top="0" Canvas.ZIndex="0"
-                              ItemsSource="{x:Bind Instances, Mode=OneWay}"
+                              ItemsSource="{x:Bind Item.StoryBoard, Mode=OneWay}"
                               CanUserReorderColumns="False" 
                               CanUserResizeColumns="False"
                               GridLinesVisibility="All"
                               ColumnHeaderHeight="{x:Bind Path=Ruler.Height, Mode=OneWay}"
-                              RowDetailsVisibilityMode="VisibleWhenSelected"
+                              RowDetailsVisibilityMode="Collapsed"
                               AutoGenerateColumns="False"
                               SelectionChanged="OnSelectionChanged"
-                              FrozenColumnCount="1">
+                              IsReadOnly="True"
+                              FrozenColumnCount="2">
 
                 <toolkit:DataGrid.Columns>
                     <toolkit:DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                    <toolkit:DataGridTemplateColumn>
+                        <toolkit:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="model:ItemStory">
+                                <Button>
+                                    <Button.Flyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="Instanz" Icon="Link" Click="OnChangeInstance" Tag="{Binding ID}"/>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem Text="Löschen" Icon="Delete" Click="OnDeleteStory" Tag="{Binding ID}"/>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                    <SymbolIcon Symbol="More" />
+                                </Button>
+                            </DataTemplate>
+                        </toolkit:DataGridTemplateColumn.CellTemplate>
+                    </toolkit:DataGridTemplateColumn>
                     <toolkit:DataGridTemplateColumn Width="2*" >
                         <toolkit:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate x:DataType="model:ItemStory">

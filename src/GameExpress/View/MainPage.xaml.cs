@@ -18,7 +18,7 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert oder setzt das Model
         /// </summary>
-        private ViewModelMain Model { get; set; }
+        public ViewModelMain Model { get; set; }
 
         /// <summary>
         /// Konstruktor
@@ -45,7 +45,11 @@ namespace GameExpress.View
         /// <param name="item">Das Item</param>
         public void ChangePropertyPage(Type page, Item item)
         {
-            if (PropertyFrame.CurrentSourcePageType != page || PropertyFrame.DataContext == item)
+            if (page == null && PropertyFrame.CurrentSourcePageType != typeof(GeneralPropertyPage))
+            {
+                PropertyFrame.Navigate(typeof(GeneralPropertyPage), Model);
+            }
+            else if (PropertyFrame.CurrentSourcePageType != page || PropertyFrame.DataContext != item)
             {
                 PropertyFrame.Navigate(page, item);
             }

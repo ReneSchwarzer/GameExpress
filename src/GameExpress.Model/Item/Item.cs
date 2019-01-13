@@ -73,7 +73,7 @@ namespace GameExpress.Model.Item
         /// Liefert die eindeutige ID
         /// </summary>
         [XmlAttribute("id")]
-        public ulong ID { get; set; }
+        public string ID { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
         /// Blendet die Inszanz ein oder aus

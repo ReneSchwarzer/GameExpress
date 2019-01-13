@@ -8,10 +8,6 @@
     mc:Ignorable="d"
     Loading="OnLoading"
     Unloaded="OnUnloaded"
-    PointerPressed="OnPointerPressed"
-    PointerMoved="OnPointerMoved"
-    PointerReleased="OnPointerReleased"
-    PointerCanceled="OnPointerCanceled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>

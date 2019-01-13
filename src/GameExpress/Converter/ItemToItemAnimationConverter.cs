@@ -15,7 +15,7 @@ namespace GameExpress.Converter
     /// <summary>
     /// Konvertiert von ItemObject zu ItemInctance
     /// </summary>
-    public class ItemObjectToItemInctanceConverter : IValueConverter
+    public class ItemToItemAnimationConverter : IValueConverter
     {
         /// <summary>
         /// Konvertieren
@@ -27,14 +27,7 @@ namespace GameExpress.Converter
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is ItemObject)
-            {
-                var buf = value as ItemObject;
-
-                return buf.StoryBoard;
-            }
-
-            return null;
+            return value as ItemObject;
         }
 
         /// <summary>
@@ -47,7 +40,7 @@ namespace GameExpress.Converter
         /// <returns></returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException();
+            return value as Item;
         }
     }
 }

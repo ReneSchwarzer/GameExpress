@@ -1,5 +1,6 @@
 ﻿using GameExpress.Model.Structs;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Xml.Serialization;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -52,6 +53,7 @@ namespace GameExpress.Model.Item
                     foreach (ItemStory v in e.NewItems)
                     {
                         v.Object = this;
+                        v.PropertyChanged += OnStoryPropertyChanged;
                     }
                 }
 
@@ -59,10 +61,21 @@ namespace GameExpress.Model.Item
                 {
                     foreach (ItemStory v in e.OldItems)
                     {
-                        v.Object = this;
+                        v.Object = null;
+                        v.PropertyChanged -= OnStoryPropertyChanged;
                     }
                 }
             };
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn sich eine Story geändert hat
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnStoryPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            RaisePropertyChanged("StoryBoard");
         }
 
         /// <summary>

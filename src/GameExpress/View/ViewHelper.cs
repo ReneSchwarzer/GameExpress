@@ -1,4 +1,5 @@
-﻿using GameExpress.Model.Item;
+﻿using GameExpress.Model;
+using GameExpress.Model.Item;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,17 @@ namespace GameExpress.View
                 MainPage?.ChangePropertyPage(null, item);
             }
 
+        }
+
+        /// <summary>
+        /// Liefert das aktuelle Projekt
+        /// </summary>
+        public static Project Project
+        {
+            get
+            {
+                return MainPage.Model.Project;
+            }
         }
     }
 }
