@@ -45,6 +45,8 @@ namespace GameExpress.Dialog
             List.ItemsSource = ViewHelper.Project.Tree.FirstOrDefault().GetPreOrder().ToList();
 
             List.SelectedItem = SelectedItem;
+
+            CheckBox.Visibility = CurrentItem == null ? Visibility.Collapsed : Visibility.Visible; 
         }
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace GameExpress.Dialog
         /// <param name="e">Das Eventargument</param>
         private void OnCheckedChanged(object sender, RoutedEventArgs e)
         {
-            if (CheckBox.IsChecked == true)
+            if (CheckBox.IsChecked == true || CurrentItem == null)
             {
                 List.ItemsSource = ViewHelper.Project.Tree.FirstOrDefault().GetPreOrder().ToList();
             }

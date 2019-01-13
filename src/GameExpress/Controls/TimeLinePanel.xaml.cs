@@ -66,7 +66,7 @@ namespace GameExpress.Controls
                     (c as KeyFrameEditor).Time = Time;
                 }
 
-                // Prüfe, ob zeit außerhalb des sichtbaren bereiches ist oder kurz davor ist
+                // Prüfe, ob Zeit außerhalb des sichtbaren bereiches ist oder kurz davor ist
                 if (Time > TimeOffset + Ruler.ActualWidth - 45)
                 {
                     var dif = Time - TimeOffset - Ruler.ActualWidth + 90;
@@ -81,8 +81,8 @@ namespace GameExpress.Controls
                     TimeOffset = 0;
                 }
 
-                TimePosition.SetValue(Canvas.LeftProperty, (double)(Time - TimeOffset));
-                TimePositionLocator.SetValue(Canvas.LeftProperty, (double)(Time - TimeOffset));
+                TimePosition.SetValue(Canvas.LeftProperty, Header.ActualWidth + Time - TimeOffset);
+                TimePositionLocator.SetValue(Canvas.LeftProperty, Header.ActualWidth + Time - TimeOffset);
             }));
 
             // Eigenschaft TimeOffsetProperty hat sich geändert
@@ -122,20 +122,8 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var width = Table.Columns.Take(2).Sum(x => x.ActualWidth);
-            Canvas.SetLeft(Group, width);
-
-            width = ActualWidth - width;
-
-            Group.Width = width > 1 ? width : 1;
-            Ruler.Width = width > 1 ? width : 1;
-            Header.Width = ActualWidth;
+            Grid.Width = ActualWidth;
             TimePositionLocator.Height = ActualHeight;
-
-            TimePositionLocator.Clip = new RectangleGeometry
-            {
-                Rect = new Rect(0, 0, ActualWidth, ActualHeight)
-            };
         }
 
         /// <summary>
@@ -232,10 +220,12 @@ namespace GameExpress.Controls
         private void OnDrawRuler(CanvasControl sender, CanvasDrawEventArgs args)
         {
             var white = Color.FromArgb(255, 255, 255, 255);
-            var lightGray = Color.FromArgb(255, 125, 125, 125);
+            var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
             var black = Color.FromArgb(255, 0, 0, 0);
             var accent = new UISettings().GetColorValue(UIColorType.AccentDark3);
             ulong count = TimeOffset;
+
+            args.DrawingSession.FillRectangle(new Rect(0, 0, Ruler.ActualWidth, Ruler.ActualHeight), lightGray);
 
             for (int i = 0; i < Ruler.ActualWidth; i += 10)
             {
@@ -261,6 +251,23 @@ namespace GameExpress.Controls
         {
             ViewHelper.ChangePropertyPage(e.AddedItems.FirstOrDefault() as Item);
         }
+        
+        /// <summary>
+        /// Wird aufgerufen, wenn ein neuer KeyFrame hinzugefügt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnAddKeyFrame(object sender, RoutedEventArgs e)
+        {
+            var element = e.OriginalSource as MenuFlyoutItem;
+            if (element == null) return;
+
+            var story = Item?.StoryBoard?.Where(x => x.ID.Equals(element.Tag))?.FirstOrDefault();
+            if (story == null) return;
+
+            story.KeyFrames.Add(new ItemKeyFrame() { From = Time, Duration = 500 });
+        }
+
         /// <summary>
         /// Wird aufgerufen, wenn die zugehörige Instanz geändert werden soll
         /// </summary>

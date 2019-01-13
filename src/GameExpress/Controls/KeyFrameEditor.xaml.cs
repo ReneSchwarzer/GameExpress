@@ -1,5 +1,6 @@
 ﻿using GameExpress.Model.Item;
 using GameExpress.View;
+using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -46,29 +48,11 @@ namespace GameExpress.Controls
         }
 
         /// <summary>
-        /// Aktuallisiert den Inhalt des Steuerelementes
+        /// Zwingt das Control zum neuzeichnen
         /// </summary>
-        private void Refresh()
+        public void Invalidate()
         {
-            Content.Children.Clear();
-            var color = new UISettings();
-
-            foreach (var k in Items)
-            {
-                var r = new Rectangle()
-                {
-                    Fill = new SolidColorBrush(color.GetColorValue(UIColorType.AccentLight3)),
-                    Width = k.Duration,
-                    MinWidth = 10,
-                    Height = ActualHeight
-
-                };
-                r.SetValue(Canvas.TopProperty, 0);
-                r.SetValue(Canvas.LeftProperty, (double)(k.From - TimeOffset));
-                //r.PointerPressed += (s, e) => { ViewHelper.ChangePropertyPage(k); };
-
-                Content.Children.Add(r);
-            }
+            Content.Invalidate();
         }
 
         /// <summary>
@@ -82,7 +66,7 @@ namespace GameExpress.Controls
             TimePropertyToken = RegisterPropertyChangedCallback(TimeProperty, new DependencyPropertyChangedCallback((s, e) =>
             {
                 // Neuzeichnen erforderlich
-                Refresh();
+                Invalidate();
 
                 // Parent informieren
                 var parent = VisualTreeHelper.GetParent(this);
@@ -119,13 +103,6 @@ namespace GameExpress.Controls
             if (Items != null)
             {
                 Items.CollectionChanged += OnCollectionChanged;
-
-                //foreach(var v in Items)
-                //{
-                //    v.PropertyChanged += OnKeyFrameChanged;
-                //}
-
-                Refresh();
             }
         }
 
@@ -142,11 +119,6 @@ namespace GameExpress.Controls
             if (Items != null)
             {
                 Items.CollectionChanged -= OnCollectionChanged;
-
-                //foreach (var v in Items)
-                //{
-                //    v.PropertyChanged -= OnKeyFrameChanged;
-                //}
             }
 
             Unloaded -= OnUnloaded;
@@ -174,40 +146,59 @@ namespace GameExpress.Controls
         {
             if (args.NewItems != null)
             {
-                //foreach (ItemKeyFrame v in args.NewItems)
-                //{
-                //    v.PropertyChanged += OnKeyFrameChanged;
-                //}
+                foreach (ItemKeyFrame v in args.NewItems)
+                {
+                    v.Parent = v;
+                }
             }
 
             if (args.OldItems != null)
             {
-                //foreach (ItemStory v in args.OldItems)
-                //{
-                //    v.PropertyChanged -= OnKeyFrameChanged;
-                //}
+                foreach (ItemStory v in args.OldItems)
+                {
+                    v.Parent = null;
+                }
             }
 
-            Refresh();
+            Invalidate();
         }
 
+        ///// <summary>
+        ///// Wird aufgerufen, wenn die Werte eines KeyFrames sich geändert haben
+        ///// </summary>
+        ///// <param name="sender">Der Auslöser des Events</param>
+        ///// <param name="args">Das Eventargument</param>
+        //private void OnKeyFrameChanged(object sender, PropertyChangedEventArgs args)
+        //{
+        //    // Parent informieren
+        //    var parent = VisualTreeHelper.GetParent(this);
+        //    while (parent != null && !(parent is ObjectPage))
+        //    {
+        //        parent = VisualTreeHelper.GetParent(parent);
+        //    }
+
+        //    if (parent != null)
+        //    {
+        //        (parent as ObjectPage).Invalidate();
+        //    }
+        //}
+
         /// <summary>
-        /// Wird aufgerufen, wenn die Werte eines KeyFrames sich geändert haben
+        /// Zeichnet das Die Schlüsselbilder
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
         /// <param name="args">Das Eventargument</param>
-        private void OnKeyFrameChanged(object sender, PropertyChangedEventArgs args)
+        private void OnDraw(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            // Parent informieren
-            var parent = VisualTreeHelper.GetParent(this);
-            while (parent != null && !(parent is ObjectPage))
-            {
-                parent = VisualTreeHelper.GetParent(parent);
-            }
+            var white = Color.FromArgb(255, 255, 255, 255);
+            var lightGray = Color.FromArgb(255, 125, 125, 125);
+            var black = Color.FromArgb(255, 0, 0, 0);
+            var accent = new UISettings().GetColorValue(UIColorType.AccentLight3);
+            ulong count = TimeOffset;
 
-            if (parent != null)
+            foreach (var k in Items)
             {
-                (parent as ObjectPage).Invalidate();
+                args.DrawingSession.FillRectangle(k.From, 0, k.Duration, (float)ActualHeight, accent);
             }
         }
 

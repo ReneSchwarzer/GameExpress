@@ -16,7 +16,7 @@ namespace GameExpress.View
     public sealed partial class ObjectPage : Page
     {
         /// <summary>
-        /// Liefert das mit der Ansicht verbundene Bild
+        /// Liefert das mit der Ansicht verbundene Objekt
         /// </summary>
         private ItemObject Object { get { return DataContext as ItemObject; } }
         

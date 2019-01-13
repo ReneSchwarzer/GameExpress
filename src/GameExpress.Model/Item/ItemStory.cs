@@ -31,7 +31,7 @@ namespace GameExpress.Model.Item
         /// Liefert oder setzt den Verweis auf das zugehörige Objekt
         /// </summary>
         [XmlIgnore]
-        internal ItemAnimation Object { get; set; }
+        public ItemAnimation Object { get { return Parent as ItemAnimation; } }
 
         /// <summary>
         /// Die ID des mit der Instanz verbundenen Element

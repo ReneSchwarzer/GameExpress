@@ -7,6 +7,12 @@ namespace GameExpress.Model.Item
     [XmlType("keyframebase")]
     public abstract class ItemKeyFrameBase : ItemVisual
     {
+        /// <summary>
+        /// Liefert oder setzt den Verweis auf die zugehörige Story
+        /// </summary>
+        [XmlIgnore]
+        public ItemStory Story { get { return Parent as ItemStory; } }
+
         /// <summary>ItemKeyFrameBase
         /// Konstruktor
         /// </summary>

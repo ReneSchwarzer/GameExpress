@@ -52,7 +52,7 @@ namespace GameExpress.Model.Item
                 {
                     foreach (ItemStory v in e.NewItems)
                     {
-                        v.Object = this;
+                        v.Parent = this;
                         v.PropertyChanged += OnStoryPropertyChanged;
                     }
                 }
@@ -61,7 +61,7 @@ namespace GameExpress.Model.Item
                 {
                     foreach (ItemStory v in e.OldItems)
                     {
-                        v.Object = null;
+                        v.Parent = null;
                         v.PropertyChanged -= OnStoryPropertyChanged;
                     }
                 }
