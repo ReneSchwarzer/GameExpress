@@ -9,7 +9,7 @@ namespace GameExpress.Model.Item
     public class ItemKeyFrame : ItemKeyFrameBase
     {
         /// <summary>
-        /// Beginn
+        /// Relativer Beginn, ausgehend vom vorherigen Keyframe
         /// </summary>
         private ulong m_from;
 
@@ -117,7 +117,7 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
-        /// Liefert oder setzt die Startzeit
+        /// Liefert oder setzt die relative Startzeit, bezogen auf den Vorgänger
         /// </summary>
         [XmlAttribute("from")]
         public ulong From

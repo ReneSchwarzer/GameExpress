@@ -17,10 +17,10 @@ namespace GameExpress.Model.Structs
         None,
 
         /// <summary>
-        /// Standard
+        /// Wiederholung
         /// </summary>
-        [XmlEnum("default")]
-        Default,
+        [XmlEnum("repeat")]
+        Repeat,
 
         /// <summary>
         /// Schwingen

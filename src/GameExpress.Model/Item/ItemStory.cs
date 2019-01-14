@@ -22,6 +22,29 @@ namespace GameExpress.Model.Item
         private string m_item;
 
         /// <summary>
+        /// Bestimmt die Animationnach dem letzten KeyFrame  
+        /// </summary>
+        private Loop m_loop;
+
+        /// <summary>
+        /// Liefert oder setzt ob die Annimation in einer Schleife wiederholt werden soll
+        /// </summary>
+        [XmlAttribute("loop")]
+        public Loop Loop
+        {
+            get { return m_loop; }
+            set
+            {
+                if (m_loop != value)
+                {
+                    m_loop = value;
+
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
         /// Liefert oder setzt die Schlüselbilder
         /// </summary>
         [XmlElement("keyframe")]
@@ -89,18 +112,19 @@ namespace GameExpress.Model.Item
         {
             if (pc.Level > 10) return;
 
-            base.Presentation(pc);
+            var newPC = new PresentationContext(pc) { Level = pc.Level, Time = LocalTime(pc.Time) };
+
+            base.Presentation(newPC);
 
             if (Instance == null)
             {
                 AttachedInstance(Item);
             }
 
-            var currentKeyFrame = GetKeyFrame((ulong)pc.Time);
+            var currentKeyFrame = GetKeyFrame((ulong)newPC.Time);
 
             if (currentKeyFrame != null)
             {
-                var newPC = new PresentationContext(pc) { Level = pc.Level };
                 newPC.Matrix *= currentKeyFrame.Matrix;
 
                 if (Instance is ItemGraphics)
@@ -152,42 +176,51 @@ namespace GameExpress.Model.Item
         /// <returns>Das Schlüsselbid oder null</returns>
         public ItemKeyFrameBase GetKeyFrame(ulong time)
         {
-            ItemKeyFrame prevKeyFrame = null;
-            ItemKeyFrame nextKeyFrame = null;
+            ItemKeyFrame predecessorKeyFrame = null;
+            ulong absolutePredecessorEndTime = 0;
+
+            ItemKeyFrame successorKeyFrame = null;
+            ulong absoluteSuccessorStartTime = 0;
+
+            ulong absoluteTime = 0;
 
             foreach (var k in KeyFrames)
             {
-                if (k.From <= time && time <= k.From + k.Duration)
+                absoluteTime += k.From;
+
+                if (absoluteTime <= time && time <= absoluteTime + k.Duration)
                 {
                     return k;
                 }
-                else if (k.From + k.Duration < time)
+                else if (absoluteTime + k.Duration < time)
                 {
-                    prevKeyFrame = k;
+                    predecessorKeyFrame = k;
+                    absolutePredecessorEndTime = absoluteTime + k.Duration;
                 }
-                else if (time < k.From + k.Duration)
+                else if (time < absoluteTime + k.Duration)
                 {
-                    nextKeyFrame = k;
+                    successorKeyFrame = k;
+                    absoluteSuccessorStartTime = absoluteTime;
 
                     break;
                 }
+
+                absoluteTime += k.Duration;
             }
 
             // Tweening
-            if (prevKeyFrame != null && nextKeyFrame != null && prevKeyFrame.Tweening)
+            if (predecessorKeyFrame != null && successorKeyFrame != null && predecessorKeyFrame.Tweening)
             {
-                ulong from = prevKeyFrame.From + prevKeyFrame.Duration;
-                ulong till = nextKeyFrame.From;
+                var from = absolutePredecessorEndTime;
+                var till = absoluteSuccessorStartTime;
 
-                Matrix3D mt = prevKeyFrame.Matrix.Invert * nextKeyFrame.Matrix;
+                var mt = predecessorKeyFrame.Matrix.Invert * successorKeyFrame.Matrix;
 
-                float t = (time - from) / (float)(till - from); //in %
+                var t = (time - from) / (float)(till - from); //in %
 
                 return new ItemKeyFrameTweening()
                 {
-                    //From = from,
-                    //Duration = till - from,
-                    Matrix = prevKeyFrame.Matrix * new Matrix3D
+                    Matrix = predecessorKeyFrame.Matrix * new Matrix3D
                     (
                         (mt.M11 - 1) * t + 1, mt.M12 * t, 0,
                         mt.M21 * t, (mt.M22 - 1) * t + 1, 0,
@@ -198,6 +231,60 @@ namespace GameExpress.Model.Item
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Berechnet die lokale Zeit
+        /// </summary>
+        /// <param name="time">Die globale Zeit</param>
+        /// <returns>Die interne Zeit</returns>
+        public Time LocalTime(Time time)
+        {
+            var local = new Time();
+
+            if (EndTime < ulong.MaxValue && Loop == Loop.None && (ulong)time > EndTime)
+            {
+                // Zeit begrenzen
+                local.AddTick(EndTime);
+            }
+            else if (EndTime < ulong.MaxValue && Loop == Loop.Repeat)
+            {
+                // Schleife
+                local.AddTick((ulong)time % (ulong)EndTime);
+            }
+            else if (EndTime < ulong.MaxValue && Loop == Loop.Oscillate)
+            {
+                // Schwingen
+                var direction = ((ulong)time / (ulong)EndTime) % 2;
+                switch (direction)
+                {
+                    case 0:
+                        local.AddTick((ulong)time % (ulong)EndTime);
+                        break;
+                    default:
+                        local.AddTick((ulong)EndTime - (ulong)time % (ulong)EndTime);
+                        break;
+                }
+
+            }
+            else
+            {
+                local.AddTick((ulong)time);
+            }
+
+            return local;
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die Zeit, bei dem die Annimation beendet wird
+        /// </summary>
+        [XmlIgnore]
+        public ulong EndTime
+        {
+            get
+            {
+                return (ulong)KeyFrames.Sum(x => (decimal)x.From + x.Duration);
+            }
         }
 
         /// <summary>

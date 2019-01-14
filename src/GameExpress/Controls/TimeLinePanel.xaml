@@ -73,6 +73,7 @@
                                 <Button.Flyout>
                                     <MenuFlyout>
                                         <MenuFlyoutItem Text="Schlüsselbild" Icon="Add" Click="OnAddKeyFrame" Tag="{Binding ID}"/>
+                                        <MenuFlyoutItem Text="Schneiden" Icon="Trim" Click="OnAddKeyFrame" Tag="{Binding ID}"/>
                                         <MenuFlyoutItem Text="Instanz" Icon="Link" Click="OnChangeInstance" Tag="{Binding ID}"/>
                                         <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem Text="Löschen" Icon="Delete" Click="OnDeleteStory" Tag="{Binding ID}"/>

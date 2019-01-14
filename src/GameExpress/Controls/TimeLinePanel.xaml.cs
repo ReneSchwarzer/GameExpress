@@ -223,11 +223,11 @@ namespace GameExpress.Controls
             var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
             var black = Color.FromArgb(255, 0, 0, 0);
             var accent = new UISettings().GetColorValue(UIColorType.AccentDark3);
-            ulong count = TimeOffset;
+            ulong count = TimeOffset / 10;
 
             args.DrawingSession.FillRectangle(new Rect(0, 0, Ruler.ActualWidth, Ruler.ActualHeight), lightGray);
 
-            for (int i = 0; i < Ruler.ActualWidth; i += 10)
+            for (float i = 0f - TimeOffset % 10; i < Ruler.ActualWidth; i += 10)
             {
                 if (count % 10 == 0)
                 {

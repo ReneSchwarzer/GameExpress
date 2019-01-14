@@ -17,31 +17,6 @@ namespace GameExpress.Model.Item
         public ObservableCollection<ItemStory> StoryBoard { get; set; } = new ObservableCollection<ItemStory>();
 
         /// <summary>
-        /// Liefert oder setzt die Zeit, bei dem die Annimation beendet wird
-        /// </summary>
-        ulong m_endTime;
-        [XmlAttribute("endtime")]
-        public ulong EndTime
-        {
-            get { return m_endTime; }
-            set
-            {
-                if (m_endTime != value)
-                {
-                    m_endTime = value;
-
-                    RaisePropertyChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Liefert oder setzt ob die Annimation in einer Schleife wiederholt werden soll
-        /// </summary>
-        [XmlAttribute("loop")]
-        public Loop Loop { get; set; }
-
-        /// <summary>
         /// Konstruktor
         /// </summary>
         public ItemAnimation()
@@ -104,7 +79,7 @@ namespace GameExpress.Model.Item
 
             foreach (var v in StoryBoard)
             {
-                v.Presentation(new PresentationContext(pc) { Time = LocalTime(pc.Time) });
+                v.Presentation(new PresentationContext(pc) { });
             }
         }
 
@@ -122,48 +97,6 @@ namespace GameExpress.Model.Item
             }
 
             return copy as T;
-        }
-
-        /// <summary>
-        /// Berechnet die lokale Zeit
-        /// </summary>
-        /// <param name="time">Die globale Zeit</param>
-        /// <returns>Die interne Zeit</returns>
-        public Time LocalTime(Time time)
-        {
-            var local = new Time();
-
-            if (EndTime < ulong.MaxValue && Loop == Loop.None && (ulong)time > EndTime)
-            {
-                // Zeit begrenzen
-                local.AddTick(EndTime);
-            }
-            else if (EndTime < ulong.MaxValue && Loop == Loop.Default)
-            {
-                // Schleife
-                local.AddTick((ulong)time % (ulong)EndTime);
-            }
-            else if (EndTime < ulong.MaxValue && Loop == Loop.Oscillate)
-            {
-                // Schwingen
-                var direction = ((ulong)time / (ulong)EndTime) % 2;
-                switch (direction)
-                {
-                    case 0:
-                        local.AddTick((ulong)time % (ulong)EndTime);
-                        break;
-                    default:
-                        local.AddTick((ulong)EndTime - (ulong)time % (ulong)EndTime);
-                        break;
-                }
-
-            }
-            else
-            {
-                local.AddTick((ulong)time);
-            }
-
-            return local;
         }
     }
 }

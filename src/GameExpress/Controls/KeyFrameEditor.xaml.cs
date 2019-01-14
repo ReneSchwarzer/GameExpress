@@ -163,26 +163,6 @@ namespace GameExpress.Controls
             Invalidate();
         }
 
-        ///// <summary>
-        ///// Wird aufgerufen, wenn die Werte eines KeyFrames sich geändert haben
-        ///// </summary>
-        ///// <param name="sender">Der Auslöser des Events</param>
-        ///// <param name="args">Das Eventargument</param>
-        //private void OnKeyFrameChanged(object sender, PropertyChangedEventArgs args)
-        //{
-        //    // Parent informieren
-        //    var parent = VisualTreeHelper.GetParent(this);
-        //    while (parent != null && !(parent is ObjectPage))
-        //    {
-        //        parent = VisualTreeHelper.GetParent(parent);
-        //    }
-
-        //    if (parent != null)
-        //    {
-        //        (parent as ObjectPage).Invalidate();
-        //    }
-        //}
-
         /// <summary>
         /// Zeichnet das Die Schlüsselbilder
         /// </summary>
@@ -191,22 +171,34 @@ namespace GameExpress.Controls
         private void OnDraw(CanvasControl sender, CanvasDrawEventArgs args)
         {
             var white = Color.FromArgb(255, 255, 255, 255);
-            var lightGray = Color.FromArgb(255, 125, 125, 125);
+            var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
             var black = Color.FromArgb(255, 0, 0, 0);
             var accent = new UISettings().GetColorValue(UIColorType.AccentLight3);
-            ulong count = TimeOffset;
+            ulong absoluteTime = 0;
+
+            // Hintergrundgitter
+            for (int j = 0; j < ActualWidth; j += 10)
+            {
+                var x = (float)TimeOffset % 10;
+                args.DrawingSession.DrawLine(j - x, 0, j - x, (float)ActualHeight, lightGray);
+            }
 
             foreach (var k in Items)
             {
-                args.DrawingSession.FillRectangle(k.From, 0, k.Duration, (float)ActualHeight, accent);
+                absoluteTime += k.From;
+
+                args.DrawingSession.FillRectangle(absoluteTime - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, accent);
+
+                absoluteTime += k.Duration;
             }
         }
 
         /// <summary>
-        /// Liefert oder setzt die KeyFrames
+        /// Liefert oder setzt die KeyFra
+        /// mes
         /// </summary>
         public ObservableCollection<ItemKeyFrame> Items
-        {
+        { 
             get { return (ObservableCollection<ItemKeyFrame>)GetValue(ItemsProperty); }
             set { SetValue(ItemsProperty, value); }
         }
