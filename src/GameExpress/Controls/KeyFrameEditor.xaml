@@ -15,5 +15,12 @@
     <controls:CanvasControl Name="Content"
                             VerticalAlignment="Stretch"
                             Background="{Binding Background, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                            Draw="OnDraw"/>
+                            Draw="OnDraw"
+                            CanDrag="False"
+                            PointerPressed="OnPointerPressed"
+                            PointerMoved="OnPointerMoved"
+                            PointerReleased="OnPointerReleased"
+                            PointerExited="OnPointerExited"
+                            PointerCanceled="OnPointerCanceled"
+                            DragStarting="OnDragStarting"/>
 </UserControl>

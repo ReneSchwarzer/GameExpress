@@ -40,6 +40,11 @@ namespace GameExpress.Controls
         private long TimeOffsetPropertyToken { get; set; }
 
         /// <summary>
+        /// Liefert oder setzt das ausgewählte Schlüsselbild
+        /// </summary>
+        private SelectionHelper<ItemKeyFrame> SelectedKeyFrame { get; set; }
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         public KeyFrameEditor()
@@ -170,10 +175,9 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnDraw(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            var white = Color.FromArgb(255, 255, 255, 255);
-            var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
-            var black = Color.FromArgb(255, 0, 0, 0);
+            var lightGray = (Color)Application.Current.Resources["SystemChromeLowColor"];
             var accent = new UISettings().GetColorValue(UIColorType.AccentLight3);
+            var accent1 = new UISettings().GetColorValue(UIColorType.AccentLight1);
             ulong absoluteTime = 0;
 
             // Hintergrundgitter
@@ -183,19 +187,186 @@ namespace GameExpress.Controls
                 args.DrawingSession.DrawLine(j - x, 0, j - x, (float)ActualHeight, lightGray);
             }
 
+            ItemKeyFrame lastKeyFrame = null;
+
+            foreach (var k in Items)
+            {
+                args.DrawingSession.FillRectangle(absoluteTime + k.From - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, accent);
+
+                if (lastKeyFrame != null && lastKeyFrame.Tweening)
+                {
+                    args.DrawingSession.DrawLine
+                    (
+                        (float)absoluteTime - TimeOffset,
+                        (float)(ActualHeight / 2),
+                        (float)absoluteTime + k.From - TimeOffset,
+                        (float)(ActualHeight / 2),
+                        accent1
+                    );
+
+                    args.DrawingSession.FillEllipse
+                    (
+                        (float)absoluteTime - TimeOffset,
+                        (float)(ActualHeight / 2),
+                        4,
+                        4,
+                        accent1
+                    );
+                    //args.DrawingSession.DrawEllipse
+                    //(
+                    //    (float)absoluteTime - TimeOffset,
+                    //    (float)(ActualHeight / 2),
+                    //    6,
+                    //    6,
+                    //    accent1
+                    //);
+
+                    args.DrawingSession.DrawLine
+                    (
+                        (float)absoluteTime + k.From - TimeOffset - 4,
+                        (float)(ActualHeight / 2) - 3,
+                        (float)absoluteTime + k.From - TimeOffset,
+                        (float)(ActualHeight / 2),
+                        accent1
+                    );
+                    args.DrawingSession.DrawLine
+                    (
+                        (float)absoluteTime + k.From - TimeOffset - 4,
+                        (float)(ActualHeight / 2) + 3,
+                        (float)absoluteTime + k.From - TimeOffset,
+                        (float)(ActualHeight / 2),
+                        accent1
+                    );
+                }
+
+                absoluteTime += k.From + k.Duration;
+
+                lastKeyFrame = k;
+            }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn auf das Steuerelement gedrückt wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            
+            var pointer = e.GetCurrentPoint(this);
+            var absoluteTime = (ulong)0;
+
+            e.Handled = true;
+
             foreach (var k in Items)
             {
                 absoluteTime += k.From;
 
-                args.DrawingSession.FillRectangle(absoluteTime - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, accent);
+                if (pointer.Position.X > absoluteTime - (float)TimeOffset &&
+                    pointer.Position.X < absoluteTime + k.Duration - (float)TimeOffset)
+                {
+                    var hasCapture = Content.CapturePointer(e.Pointer);
+                    if (hasCapture)
+                    {
+                        SelectedKeyFrame = new SelectionHelper<ItemKeyFrame>()
+                        {
+                            Item = k,
+                            OriginalPosition = pointer.Position,
+                            OriginalItemPosition = new Point(k.From, 0)
+                        };
+
+                        ViewHelper.ChangePropertyPage(k);
+
+                        return;
+                    }
+                }
 
                 absoluteTime += k.Duration;
             }
         }
 
         /// <summary>
-        /// Liefert oder setzt die KeyFra
-        /// mes
+        /// Wird aufgerufen, wenn innerhalb des Steuerelements die Position des Zeigegerätes sich ändert
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            var pointer = e.GetCurrentPoint(this);
+
+            if (SelectedKeyFrame != null )
+            {
+                var delta = pointer.Position.X - SelectedKeyFrame.OriginalPosition.X;
+
+                var value = SelectedKeyFrame.OriginalItemPosition.X + delta;
+
+                if (value < 0)
+                {
+                    value = 0;
+                }
+
+                // Verschieben
+                SelectedKeyFrame.Item.From = (ulong)Math.Abs(value);
+
+                Invalidate();
+            }
+
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn das Zeigegeräte nicht mehr gedrückt wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            if (SelectedKeyFrame != null)
+            {
+                SelectedKeyFrame = null;
+
+                Invalidate();
+
+                Content.ReleasePointerCapture(e.Pointer);
+            }
+
+        }
+        
+        /// <summary>
+        /// Wird aufgerufen, wenn das Zeigegeräte aus dem Steuerelement bewegt wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn das Zeigegeräte nicht mehr gültig ist
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPointerCanceled(object sender, PointerRoutedEventArgs e)
+        {
+           
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn mit dem Drag & Drop begonnen werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnDragStarting(object sender, DragStartingEventArgs e)
+        {
+            e.AllowedOperations = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
+        }
+
+        /// <summary>
+        /// Liefert oder setzt die KeyFrames
         /// </summary>
         public ObservableCollection<ItemKeyFrame> Items
         { 
@@ -239,5 +410,9 @@ namespace GameExpress.Controls
         public static readonly DependencyProperty TimeOffsetProperty =
             DependencyProperty.Register("TimeOffset", typeof(ulong), typeof(KeyFrameEditor), new PropertyMetadata(new ulong()));
 
+        private void Content_DragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+
+        }
     }
 }

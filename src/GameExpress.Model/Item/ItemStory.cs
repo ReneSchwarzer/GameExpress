@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -77,16 +78,26 @@ namespace GameExpress.Model.Item
         {
             base.Init();
 
-            //KeyFrames.CollectionChanged += (s, e) =>
-            //{
-            //    if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            //    {
-            //        foreach (Item v in e.NewItems)
-            //        {
-            //            //AddChild(v);
-            //        }
-            //    }
-            //};
+            KeyFrames.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (ItemKeyFrame v in e.NewItems)
+                    {
+                        v.Parent = this;
+                        v.PropertyChanged += OnKeyFramePropertyChanged;
+                    }
+                }
+
+                if (e.OldItems != null)
+                {
+                    foreach (ItemKeyFrame v in e.OldItems)
+                    {
+                        v.Parent = null;
+                        v.PropertyChanged -= OnKeyFramePropertyChanged;
+                    }
+                }
+            };
         }
 
         /// <summary>
@@ -273,6 +284,16 @@ namespace GameExpress.Model.Item
             }
 
             return local;
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn sich eine Story geändert hat
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnKeyFramePropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            RaisePropertyChanged("KeyFrames");
         }
 
         /// <summary>

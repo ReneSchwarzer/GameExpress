@@ -43,11 +43,11 @@ namespace GameExpress.Model
         /// <param name="file">Die Datei, aus dem die Daten lelesen werden sollen</param>
         public async void LoadAsync(StorageFile file)
         {
-            var serializer = new XmlSerializer(typeof(ItemGame));
-
             using (var stream = await file.OpenStreamForReadAsync())
             {
+                var serializer = new XmlSerializer(typeof(ItemGame));
                 var game = serializer.Deserialize(stream) as ItemGame;
+
                 Tree.Clear();
                 Tree.Add(game);
             }

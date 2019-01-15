@@ -66,14 +66,30 @@ namespace GameExpress.Controls
                     (c as KeyFrameEditor).Time = Time;
                 }
 
-                // Prüfe, ob Zeit außerhalb des sichtbaren bereiches ist oder kurz davor ist
+                // Prüfe, ob Zeit außerhalb des sichtbaren Bereiches ist oder kurz davor ist
                 if (Time > TimeOffset + Ruler.ActualWidth - 45)
                 {
-                    var dif = Time - TimeOffset - Ruler.ActualWidth + 90;
+                    var lamda = Time - (TimeOffset + Ruler.ActualWidth - 45);
 
-                    if (dif >= 45)
+                    if (lamda >= 1)
                     {
-                        TimeOffset += (ulong)dif;
+                        TimeOffset += (ulong)lamda;
+                    }
+                }
+                else if (Time < TimeOffset + 45)
+                {
+                    var lamda = 45 - (Time - TimeOffset);
+
+                    if (lamda >= 1)
+                    {
+                        if ((decimal)TimeOffset - lamda > 1)
+                        {
+                            TimeOffset -= (ulong)lamda;
+                        }
+                        else
+                        {
+                            TimeOffset = 0;
+                        }
                     }
                 }
                 else if (Time == 0)
@@ -164,19 +180,9 @@ namespace GameExpress.Controls
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
         /// <param name="e">Das Eventargument</param>
-        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        private void OnRulerPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-
-        }
-
-        /// <summary>
-        /// Wird aufgerufen, wenn ein Zeigegerät bewegt wird
-        /// </summary>
-        /// <param name="sender">Der Auslöser des Events</param>
-        /// <param name="args">Das Eventargument</param>
-        private void OnRulerPointerMoved(CoreWindow sender, PointerEventArgs args)
-        {
-
+            Ruler.ReleasePointerCapture(e.Pointer);
         }
 
         /// <summary>
@@ -190,6 +196,7 @@ namespace GameExpress.Controls
             if (pointer.IsInContact)
             {
                 Time = (ulong)pointer.Position.X + TimeOffset;
+                Ruler.CapturePointer(e.Pointer);
             }
 
             e.Handled = true;
@@ -201,12 +208,20 @@ namespace GameExpress.Controls
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
         /// <param name="e">Das Eventargument</param>
-        private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        private void OnRulerPointerMoved(object sender, PointerRoutedEventArgs e)
         {
             var pointer = e.GetCurrentPoint(Ruler);
             if (pointer.IsInContact)
             {
-                Time = (ulong)pointer.Position.X + TimeOffset;
+                if (pointer.Position.X + TimeOffset > 0)
+                {
+                    Time = (ulong)pointer.Position.X + TimeOffset;
+                }
+                else
+                {
+                    Time = 0;
+                }
+
             }
 
             e.Handled = true;

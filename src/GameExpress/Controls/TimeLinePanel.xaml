@@ -42,17 +42,19 @@
                         Background="{StaticResource SystemChromeHighColor}"
                         Grid.Column="1" Grid.Row="0"
                         PointerPressed="OnRulerPointerPressed"
-                        PointerMoved="OnPointerMoved"
-                        PointerReleased="OnPointerReleased"
+                        PointerMoved="OnRulerPointerMoved"
+                        PointerReleased="OnRulerPointerReleased"
                         Height="23"
                         HorizontalAlignment="Stretch"
                         Draw="OnDrawRuler"/>
             </Grid>
 
             <ListView x:Name="Table" 
-                    Grid.Row="1"
-                    ItemsSource="{x:Bind Item.StoryBoard, Mode=OneWay}"
-                    SelectionChanged="OnSelectionChanged">
+                      Grid.Row="1"
+                      ItemsSource="{x:Bind Item.StoryBoard, Mode=OneWay}"
+                      ReorderMode="Enabled"
+                      CanReorderItems="True"
+                      SelectionChanged="OnSelectionChanged">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="Padding" Value="0,0,0,0"/>
@@ -93,8 +95,7 @@
                                 Width="10" 
                                 Canvas.Left="194" 
                                 Canvas.Top="0" 
-                                Canvas.ZIndex="998"
-                                PointerPressed="OnRulerPointerPressed">
+                                Canvas.ZIndex="998">
         </Rectangle>
 
         <Border x:Name="TimePosition" Background="{ThemeResource SystemControlAccentDark1AcrylicElementAccentDark1Brush}"

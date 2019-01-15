@@ -121,6 +121,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\AnimationEditorPanel.cs" />
+    <Compile Include="Controls\SelectionHelper.cs" />
     <Compile Include="Controls\EditorPanel.cs" />
     <Compile Include="Controls\KeyFrameEditor.xaml.cs">
       <DependentUpon>KeyFrameEditor.xaml</DependentUpon>
