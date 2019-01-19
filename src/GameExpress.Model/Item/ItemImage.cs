@@ -6,6 +6,8 @@ using System;
 using System.Threading.Tasks;
 using System.Numerics;
 using Microsoft.Graphics.Canvas.Effects;
+using Windows.Storage;
+using System.IO;
 
 namespace GameExpress.Model.Item
 {
@@ -73,6 +75,8 @@ namespace GameExpress.Model.Item
         /// <param name="pc">Der Präsentationskontext</param>
         public override void Presentation(PresentationContext pc)
         {
+            if (!Enable) return;
+
             if (Image == null)
             {
                 // Bild laden
@@ -192,7 +196,21 @@ namespace GameExpress.Model.Item
         {
             Image = Task.Run(async () =>
             {
-                return await CanvasBitmap.LoadAsync(g, Source);
+                var source = Source;
+
+                try
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(source);
+
+                }
+                catch/* (FileNotFoundException)*/
+                {
+                    // Releative Datei
+                    source = System.IO.Path.Combine(Project.Path, source);
+                }
+
+                return await CanvasBitmap.LoadAsync(g, source);
+               
             }).Result;
 
             RaisePropertyChanged("Image");

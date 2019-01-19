@@ -86,33 +86,25 @@ namespace GameExpress.View
         /// <param name="e">Das Eventargument</param>
         private void OnPlay(object sender, RoutedEventArgs e)
         {
-            var locking = false;
             var isChecked = Play.IsChecked.Value;
-            ulong time = Editor.Time;
+            var ticks = DateTime.Now.Ticks;
 
             Task.Run(async () =>
             {
                 while (isChecked)
                 {
-                    if (!locking)
+                    var now = DateTime.Now.Ticks;
+                    var delta = (ulong)(now - ticks) / 10000;
+
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () =>
                     {
-                        locking = true;
+                        Editor.Time = delta;
+                        Editor.Invalidate();
+                        isChecked = Play.IsChecked.Value;
+                    });
 
-                        time++;
-
-                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        () =>
-                        {
-                            Editor.Time = time;
-                            Editor.Invalidate();
-                            isChecked = Play.IsChecked.Value;
-
-                            locking = false;
-                        });
-
-                    }
-
-                    Thread.Sleep(10);
+                    Thread.Sleep(20);
                 }
             });
 

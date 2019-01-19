@@ -56,6 +56,25 @@ namespace GameExpress.View
         }
 
         /// <summary>
+        /// Wechselt die Eigenschaftsseite
+        /// </summary>
+        /// <param name="page">Die Seite, zu der gewechselt werden soll</param>
+        /// <param name="item">Das Item</param>
+        public void ChangePage(Type page, Item item)
+        {
+            Titel.DataContext = item;
+
+            if (page == null && PropertyFrame.CurrentSourcePageType != typeof(GeneralPage))
+            {
+                ItemFrame.Navigate(typeof(GeneralPage), Model);
+            }
+            else if (PropertyFrame.CurrentSourcePageType != page || PropertyFrame.DataContext != item)
+            {
+                ItemFrame.Navigate(page, item);
+            }
+        }
+
+        /// <summary>
         /// Tritt ein, wenn ein Item aus dem Baum aufgerufen wird
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
@@ -63,32 +82,8 @@ namespace GameExpress.View
         private void OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
         {
             var item = args.InvokedItem as Item;
-            Titel.DataContext = item;
-
-            if (item is ItemGame)
-            {
-                ItemFrame.Navigate(typeof(GamePage), item);
-            }
-            else if (item is ItemScene)
-            {
-                ItemFrame.Navigate(typeof(ObjectPage), item);
-            }
-            else if (item is ItemObject)
-            {
-                ItemFrame.Navigate(typeof(ObjectPage), item);
-            }
-            else if (item is ItemMap)
-            {
-                ItemFrame.Navigate(typeof(MapPage), item);
-            }
-            else if (item is ItemImage)
-            {
-                ItemFrame.Navigate(typeof(ImagePage), item);
-            }
-            else if (item is ItemSound)
-            {
-                ItemFrame.Navigate(typeof(SoundPage), item);
-            }
+            
+            ViewHelper.ChangePage(item);
         }
 
         /// <summary>

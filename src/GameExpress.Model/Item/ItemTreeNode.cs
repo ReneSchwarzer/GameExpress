@@ -29,6 +29,24 @@ namespace GameExpress.Model.Item
         public ItemTreeNode Parent { get; set; }
 
         /// <summary>
+        /// Liefert einen Verweis auf das aktuelle Projekt
+        /// </summary>
+        [XmlIgnore]
+        public Project Project
+        {
+            get
+            {
+                var root = Root;
+                if (root is ItemGame)
+                {
+                    return (root as ItemGame).Project;
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Liefert die Wurzel
         /// </summary>
         [XmlIgnore]

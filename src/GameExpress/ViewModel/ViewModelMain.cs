@@ -26,14 +26,12 @@ namespace GameExpress.ViewModel
         public override async void InitAsync()
         {
 #if DEBUG
-            var storageFolder = KnownFolders.DocumentsLibrary;
-            var folder = await storageFolder.CreateFolderAsync("Lost On Omicron", CreationCollisionOption.OpenIfExists);
+            var appInstalledFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+            var assets = await appInstalledFolder.GetFolderAsync("Assets");
+            var project = await assets.GetFolderAsync("TestProject");
+            var file = await project.GetFileAsync("lostonomicron.gx");
 
-            var file1 = await folder.CreateFileAsync("lostonomicron.gx", CreationCollisionOption.OpenIfExists);
-            LoadProject(file1);
-
-            var file = await folder.CreateFileAsync("lostonomicron1.gx", CreationCollisionOption.ReplaceExisting);
-            SaveProject(file);
+            LoadProject(file);
 #endif
         }
 

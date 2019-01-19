@@ -14,6 +14,11 @@ namespace GameExpress.Controls
     public class SelectionHelper<T> where T : Item
     {
         /// <summary>
+        /// Die verschiedenen Änderungsarten
+        /// </summary>
+        public enum SelectionEditMode { Move, From, Duration }
+
+        /// <summary>
         /// Liefert oder setzt das ausgewählte Item
         /// </summary>
         public T Item { get; set; }
@@ -27,5 +32,15 @@ namespace GameExpress.Controls
         /// Liefert oder setzt die orignalen Koordinaten des Items, die bei der Auswahl vorlagen
         /// </summary>
         public Point OriginalItemPosition { get; set; }
+
+        /// <summary>
+        /// Liefert oder setzt den Änderungsmodus
+        /// </summary>
+        public SelectionEditMode EditMode { get; set; }
+
+        /// <summary>
+        /// Ist true, wenn sich das Zeigegerät außerhalb des aktuellen Steuerelementes befindet
+        /// </summary>
+        public bool Outside { get; set; }
     }
 }

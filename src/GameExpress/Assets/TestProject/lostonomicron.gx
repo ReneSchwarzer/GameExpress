@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Lost on Omicron" id="e7cc6e48-8c26-4822-8e85-8d1093d129d7" enable="true" lock="false" width="1024" height="768">
+  <note>Adventurespiel</note>
+  <item xsi:type="scene" name="Szene 1" id="c71a0e1c-19bd-46b7-bca9-093d572be91e" enable="true" lock="false">
+    <note />
+    <item xsi:type="image" name="Hintergrund" id="edb96474-f5d6-4cee-8835-2cdefbfac695" enable="true" lock="false">
+      <note />
+      <hotspot x="0" y="0" />
+      <gamma value="0" />
+      <alpha value="255" />
+      <blur value="0" />
+      <source>./scene1.png</source>
+    </item>
+    <item xsi:type="map" name="Map" id="9df5b3b9-45ed-4857-98ad-30cc28cbeb7b" enable="true" lock="false">
+      <vertex id="75B82404-5DAA-49CB-BF78-407C9DC8DB3D">
+        <vector x="100" y="900"/>
+      </vertex>
+      <vertex id="80EE8F74-843F-4553-A02F-5F05AFDFE35C">
+        <vector x="500" y="900"/>
+      </vertex>
+      <vertex id="2256FD05-7025-41F3-9DAF-F6836DA49F6C">
+        <vector x="100" y="1200"/>
+      </vertex>
+      <mesh vertext1="75B82404-5DAA-49CB-BF78-407C9DC8DB3D" vertext2="80EE8F74-843F-4553-A02F-5F05AFDFE35C" vertext3="2256FD05-7025-41F3-9DAF-F6836DA49F6C"/>
+      <note />
+    </item>
+    <hotspot x="0" y="0" />
+    <gamma value="0" />
+    <alpha value="255" />
+    <blur value="0" />
+    <story name="Hintergrund" id="ddffc276-f894-4653-bba6-a3704e6c2d61" enable="true" lock="false" item="Hintergrund">
+      <note />
+      <keyframe name="" id="ae4db681-d031-4fd4-aad9-1e4f835d820d" enable="true" lock="false" from="0" duration="99999999" tweening="false" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0">
+        <note />
+      </keyframe>
+    </story>
+    <story name="UFO" id="adffc276-f894-4653-bba6-a370436c2d61" enable="true" lock="false" item="UFO" loop="freeze">
+      <note />
+      <keyframe id="ae4db681-d031-4fd4-aad9-1e4f832d820a" enable="true" lock="false" from="0" duration="100" tweening="true" rotationx="0" rotationy="0" rotationz="45" translationx="500" translationy="-500" sclaex="1" scaley="1" shearx="0" sheary="0" />
+      <keyframe id="5e6db681-d031-4fd4-aad9-1e4f832d820b" enable="true" lock="false" from="3000" duration="1000" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="800" translationy="300" sclaex="100" scaley="100" shearx="0" sheary="0" />
+      <keyframe id="be6db681-d031-4fd4-aad9-1e4f832d820b" enable="true" lock="false" from="3000" duration="10000" tweening="false" rotationx="0" rotationy="0" rotationz="351" translationx="800" translationy="700" sclaex="100" scaley="100" shearx="0" sheary="0" />
+    </story>
+  </item>
+  <item xsi:type="object" name="Fliegendes UFO" id="4a6ba17c-05fc-4538-a092-6ef6cda6086d" enable="true" lock="false">
+    <note />
+    <item xsi:type="image" name="UFO" id="1f235524-5d77-44cb-bdfd-cbf170160c89" enable="true" lock="false">
+      <note />
+      <hotspot x="288" y="194" />
+      <gamma value="0" />
+      <alpha value="255" />
+      <blur value="0" />
+      <source>ufo.png</source>
+    </item>
+    <hotspot x="0" y="0" />
+    <gamma value="0" />
+    <alpha value="255" />
+    <blur value="0" />
+    <story name="Erstes Schlüsselbild" id="5afc2d97-2666-4b0f-81ed-c8e3b77fdf45" enable="true" lock="false" item="UFO" loop="oscillate">
+      <note />
+      <keyframe name="" id="0b47212d-c971-472b-8f2f-26bf6e4828b5" enable="true" lock="false" from="0" duration="10" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0">
+        <note />
+      </keyframe>
+      <keyframe name="" id="ee87b05d-4eb6-4012-a4c6-bd857ca601cc" enable="true" lock="false" from="100" duration="1" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="10" scaley="10" shearx="0" sheary="0">
+        <note />
+      </keyframe>
+      <keyframe name="" id="5675c1f2-8c75-4628-83c5-6c7f01b9ecec" enable="true" lock="false" from="200" duration="10" tweening="true" rotationx="0" rotationy="0" rotationz="40" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0">
+        <note />
+      </keyframe>
+    </story>
+    <story name="Zweites Schlüsselbild" id="558c5774-2817-4c09-83d2-fe01532f6809" enable="true" lock="false" item="Omicron" loop="repeat">
+      <note />
+      <keyframe name="" id="3bccb90a-8c5a-4938-8af7-800c7fd0dda6" enable="true" lock="false" from="0" duration="210" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0">
+        <note />
+      </keyframe>
+    </story>
+  </item>
+  <item xsi:type="image" name="Sputnik" id="960e35a1-0bbc-4245-9f41-cbaf2109aaea" enable="true" lock="false">
+    <note />
+    <hotspot x="0" y="0" />
+    <gamma value="0" />
+    <alpha value="255" />
+    <blur value="0" />
+    <source>sputnik.png</source>
+  </item>
+  <item xsi:type="image" name="Omicron" id="f53f7739-5196-4af3-89e5-83c069074c0f" enable="true" lock="false">
+    <note />
+    <hotspot x="0" y="0" />
+    <gamma value="0" />
+    <alpha value="255" />
+    <blur value="0" />
+    <source>omicron.png</source>
+  </item>
+  <item xsi:type="sound" name="Boom" id="fcd70f22-33fc-4391-b7f6-f21bb130d33e" enable="true" lock="false">
+    <note />
+    <source>boom.m4a</source>
+  </item>
+</game>

@@ -17,6 +17,12 @@ namespace GameExpress.Model.Structs
         None,
 
         /// <summary>
+        /// Am Ende einfrieren
+        /// </summary>
+        [XmlEnum("freeze")]
+        Freeze,
+
+        /// <summary>
         /// Wiederholung
         /// </summary>
         [XmlEnum("repeat")]

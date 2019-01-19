@@ -266,7 +266,7 @@ namespace GameExpress.Controls
         {
             ViewHelper.ChangePropertyPage(e.AddedItems.FirstOrDefault() as Item);
         }
-        
+
         /// <summary>
         /// Wird aufgerufen, wenn ein neuer KeyFrame hinzugefügt werden soll
         /// </summary>

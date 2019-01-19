@@ -8,17 +8,34 @@
     mc:Ignorable="d">
 
     <StackPanel Padding="10,10,10,10">
-        <TextBox Header="Startzeit:" Name="From" Margin="0,10,0,10" Text="{Binding From, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Header="Dauer:" Name="Duration" Margin="0,10,0,10" Text="{Binding Duration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <ToggleButton Margin="0,0,10,0" IsChecked="{Binding Lock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE1F7;" />
+                </ToggleButton>
+                <ToggleButton Margin="0,0,30,0" IsChecked="{Binding Tweening, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEA52;" />
+                </ToggleButton>
+            </StackPanel>
+            <Button Grid.Column="1" Click="OnDeleteKeyFrame" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                <SymbolIcon Symbol="Delete"/>
+            </Button>
+        </Grid>
+        <TextBox Header="Startzeit:" Name="From" Margin="0,10,0,10" Text="{Binding From, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+        <TextBox Header="Dauer:" Name="Duration" Margin="0,10,0,10" Text="{Binding Duration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
         <!--<Slider Header="Rotation um die x-Achse:" Name="RotationX" Margin="0,10,0,10" Value="{Binding RotationX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="360"/>
         <Slider Header="Rotation um die y-Achse:" Name="RotationY" Margin="0,10,0,10" Value="{Binding RotationY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="360"/>-->
-        <Slider Header="Rotation:" Name="RotationZ" Margin="0,10,0,10" Value="{Binding RotationZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="360"/>
-        <Slider Header="Verschiebung entlang der x-Achse:" Name="TranslationX" Margin="0,10,0,10" Value="{Binding TranslationX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-1024" Maximum="1024"/>
-        <Slider Header="Verschiebung entlang der y-Achse:" Name="TranslationY" Margin="0,10,0,10" Value="{Binding TranslationY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-1024" Maximum="1024"/>
-        <Slider Header="Skalierung der x-Achse:" Name="ScaleX" Margin="0,10,0,10" Value="{Binding ScaleX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="400"/>
-        <Slider Header="Skalierung der y-Achse:" Name="ScaleY" Margin="0,10,0,10" Value="{Binding ScaleY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="400"/>
-        <Slider Header="Scherung der x-Achse:" Name="ShearX" Margin="0,10,0,10" Value="{Binding ShearX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-400" Maximum="400"/>
-        <Slider Header="Scherung der y-Achse:" Name="ShearY" Margin="0,10,0,10" Value="{Binding ShearY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-400" Maximum="400"/>
+        <Slider Header="Rotation:" Name="RotationZ" Margin="0,10,0,10" Value="{Binding RotationZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="360" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+        <Slider Header="Verschiebung entlang der x-Achse:" Name="TranslationX" Margin="0,10,0,10" Value="{Binding TranslationX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-1024" Maximum="1024" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+        <Slider Header="Verschiebung entlang der y-Achse:" Name="TranslationY" Margin="0,10,0,10" Value="{Binding TranslationY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-1024" Maximum="1024" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+        <Slider Header="Skalierung der x-Achse:" Name="ScaleX" Margin="0,10,0,10" Value="{Binding ScaleX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="400" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+        <Slider Header="Skalierung der y-Achse:" Name="ScaleY" Margin="0,10,0,10" Value="{Binding ScaleY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="400" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+        <Slider Header="Scherung der x-Achse:" Name="ShearX" Margin="0,10,0,10" Value="{Binding ShearX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-400" Maximum="400" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+        <Slider Header="Scherung der y-Achse:" Name="ShearY" Margin="0,10,0,10" Value="{Binding ShearY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-400" Maximum="400" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
         
     </StackPanel>
 </Page>

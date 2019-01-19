@@ -33,6 +33,8 @@ namespace GameExpress.Model.Item
         /// <param name="pc"></param>
         public override void Presentation(PresentationContext pc)
         {
+            if (!Enable) return;
+
             var transform = pc.Graphics.Transform;
 
             base.Presentation(pc);

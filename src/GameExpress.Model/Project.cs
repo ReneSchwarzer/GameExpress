@@ -31,10 +31,26 @@ namespace GameExpress.Model
         public ObservableCollection<ItemTreeNode> Tree { get; private set; } = new ObservableCollection<ItemTreeNode>();
 
         /// <summary>
+        /// Liefert oder setzt den Projektpfad
+        /// </summary>
+        public string Path { get; private set; }
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         public Project()
         {
+        }
+
+        /// <summary>
+        /// Erstellt ein neues Projekt
+        /// </summary>
+        public void New()
+        {
+            var game = new ItemGame() { Project = this };
+
+            Tree.Clear();
+            Tree.Add(game);
         }
 
         /// <summary>
@@ -47,9 +63,12 @@ namespace GameExpress.Model
             {
                 var serializer = new XmlSerializer(typeof(ItemGame));
                 var game = serializer.Deserialize(stream) as ItemGame;
+                game.Project = this;
 
                 Tree.Clear();
                 Tree.Add(game);
+
+                Path = System.IO.Path.GetDirectoryName(file.Path);
             }
         }
 

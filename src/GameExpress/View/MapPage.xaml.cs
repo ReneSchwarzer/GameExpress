@@ -42,5 +42,25 @@ namespace GameExpress.View
 
             ViewHelper.ChangePropertyPage(e.Parameter as Item);
         }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn das Control geladen wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnLoaded(object sender, RoutedEventArgs args)
+        {
+            Editor.MergeCommandBar(ToolBar, false);
+            ToolBar.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn das Control entladen wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnUnloaded(object sender, RoutedEventArgs args)
+        {
+        }
     }
 }

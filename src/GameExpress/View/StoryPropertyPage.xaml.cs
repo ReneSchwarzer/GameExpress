@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -44,6 +45,24 @@ namespace GameExpress.View
             base.OnNavigatedTo(e);
 
             DataContext = e.Parameter;
+
+            Loop.ItemsSource = new string[] { "Ohne", "Einfrieren", "Einfach", "Pendeln" };
+
+            switch (Story.Loop)
+            {
+                case Model.Structs.Loop.Freeze:
+                    Loop.SelectedValue = "Einfrieren";
+                    break;
+                case Model.Structs.Loop.Repeat:
+                    Loop.SelectedValue = "Einfach";
+                    break;
+                case Model.Structs.Loop.Oscillate:
+                    Loop.SelectedValue = "Pendeln";
+                    break;
+                default:
+                    Loop.SelectedValue = "Ohne";
+                    break;
+            }
         }
 
         /// <summary>
@@ -72,6 +91,55 @@ namespace GameExpress.View
                     break;
             }
 
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn sich die Wiederholungsauswahl ändert
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnLoopSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch ((sender as ComboBox).SelectedValue)
+            {
+                case "Einfrieren":
+                    Story.Loop = Model.Structs.Loop.Freeze;
+                    break;
+                case "Einfach":
+                    Story.Loop = Model.Structs.Loop.Repeat;
+                    break;
+                case "Pendeln":
+                    Story.Loop = Model.Structs.Loop.Oscillate;
+                    break;
+                default:
+                    Story.Loop = Model.Structs.Loop.None;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn eine Story gelöscht werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private async void OnDeleteStory(object sender, RoutedEventArgs e)
+        {
+            var dialog = new MessageDialog("Möchten Sie die Story wirklich löschen?", "Löschen");
+            var yesCommand = new UICommand("Ja");
+            var noCommand = new UICommand("Nein");
+            dialog.Commands.Add(yesCommand);
+            dialog.Commands.Add(noCommand);
+            dialog.DefaultCommandIndex = 1;
+            dialog.CancelCommandIndex = 1;
+
+            var command = await dialog.ShowAsync();
+            if (command == yesCommand)
+            {
+                var obj = Story.Object;
+                obj.StoryBoard.Remove(Story);
+
+                ViewHelper.ChangePropertyPage(obj);
+            }
         }
     }
 }

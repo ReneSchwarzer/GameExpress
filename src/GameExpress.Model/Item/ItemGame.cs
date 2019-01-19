@@ -48,6 +48,12 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Liefert oder setzt einen Verweis auf das aktuelle Projekt
+        /// </summary>
+        [XmlIgnore]
+        public new Project Project { get; set; }
+
+        /// <summary>
         /// Liefert oser setzt die Weite des Spielbereiches
         /// </summary>
         [XmlAttribute("width")]
@@ -101,10 +107,10 @@ namespace GameExpress.Model.Item
         /// <param name="g">Der Zeichenkontext</param>
         public override void CreateResources(ICanvasResourceCreator g)
         {
-            Parallel.ForEach(Children, (v) => 
+            foreach(var c in Children)
             {
-                v.CreateResources(g);
-            });
+                c.CreateResources(g);
+            };
 
         }
     }

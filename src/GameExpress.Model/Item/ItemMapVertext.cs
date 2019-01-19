@@ -23,23 +23,29 @@ namespace GameExpress.Model.Item
         /// <summary>
         /// Der Gammawert von 0-1
         /// </summary>
-        private Structs.Gamma m_gamma;
+        private Gamma m_gamma;
 
         /// <summary>
         /// Der Alphawert von 0-255
         /// </summary>
-        private Structs.Alpha m_alpha;
+        private Alpha m_alpha;
 
         /// <summary>
         /// Der Farbton
         /// </summary>
-        private Structs.Hue m_hue;
+        private Hue m_hue;
 
         /// <summary>
         /// Die Matrix
         /// </summary>
         [XmlElement("matrix")]
         private Matrix3D m_matrix = Matrix3D.Identity;
+
+        /// <summary>
+        /// Liefert oder setzt die Map
+        /// </summary>
+        [XmlIgnore]
+        public ItemMap Map { get; set; }
 
         /// <summary>
         /// Konstruktor

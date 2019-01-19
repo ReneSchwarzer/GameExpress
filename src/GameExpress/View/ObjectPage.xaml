@@ -27,7 +27,7 @@
             <AppBarButton Name="Previous" Label="Zurücksetzen" Icon="Previous" Click="OnPrevious"/>
             <AppBarToggleButton Name="Play" Label="Abspielen" Icon="Play" Click="OnPlay"/>
             <AppBarSeparator/>
-            <AppBarButton Name="Stroy" Label="Story" Icon="Add" Click="OnAddStory"/>
+            <AppBarButton Name="Stroy" Label="Story" Icon="Add" Click="OnAddStory" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
             <AppBarSeparator/>
         </CommandBar>
         

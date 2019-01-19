@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,7 +38,49 @@ namespace GameExpress.Model.Item
         /// </summary>
         public override void Init()
         {
+            base.Init();
 
+            Vertices.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (ItemMapVertext v in e.NewItems)
+                    {
+                        v.Map = this;
+                        v.PropertyChanged += OnVertextPropertyChanged;
+                    }
+                }
+
+                if (e.OldItems != null)
+                {
+                    foreach (ItemMapVertext v in e.OldItems)
+                    {
+                        v.Map = null;
+                        v.PropertyChanged -= OnVertextPropertyChanged;
+                    }
+                }
+            };
+
+            Mesh.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (ItemMapMesh v in e.NewItems)
+                    {
+                        v.Map = this;
+                        v.PropertyChanged += OnMeshPropertyChanged;
+                    }
+                }
+
+                if (e.OldItems != null)
+                {
+                    foreach (ItemMapMesh v in e.OldItems)
+                    {
+                        v.Map = null;
+                        v.PropertyChanged -= OnMeshPropertyChanged;
+                    }
+                }
+            };
         }
 
         /// <summary>
@@ -67,6 +110,9 @@ namespace GameExpress.Model.Item
             // wird er visualisiert
             if (pc.Designer)
             {
+                // Hintergrund
+                Parent.Presentation(pc);
+
                 foreach (var v in Mesh)
                 {
                     v.Presentation(new PresentationContext(pc));
@@ -88,6 +134,26 @@ namespace GameExpress.Model.Item
             var copy = base.Copy<T>() as ItemMap;
 
             return copy as T;
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn sich ein Mesh geändert hat
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnVertextPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            RaisePropertyChanged("Vertices");
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn sich ein Mesh geändert hat
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnMeshPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            RaisePropertyChanged("Mesh");
         }
     }
 }

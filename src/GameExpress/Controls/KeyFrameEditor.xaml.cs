@@ -105,9 +105,10 @@ namespace GameExpress.Controls
             }));
 
             // Eigenschaften des Items haben sich geändert
-            if (Items != null)
+            if (Story != null)
             {
-                Items.CollectionChanged += OnCollectionChanged;
+                Story.KeyFrames.CollectionChanged += OnCollectionChanged;
+                Story.PropertyChanged += OnKeyFramePropertyChanged;
             }
         }
 
@@ -121,9 +122,10 @@ namespace GameExpress.Controls
             UnregisterPropertyChangedCallback(TimeProperty, TimePropertyToken);
             UnregisterPropertyChangedCallback(TimeOffsetProperty, TimeOffsetPropertyToken);
 
-            if (Items != null)
+            if (Story != null)
             {
-                Items.CollectionChanged -= OnCollectionChanged;
+                Story.KeyFrames.CollectionChanged -= OnCollectionChanged;
+                Story.PropertyChanged -= OnKeyFramePropertyChanged;
             }
 
             Unloaded -= OnUnloaded;
@@ -159,7 +161,7 @@ namespace GameExpress.Controls
 
             if (args.OldItems != null)
             {
-                foreach (ItemStory v in args.OldItems)
+                foreach (ItemKeyFrame v in args.OldItems)
                 {
                     v.Parent = null;
                 }
@@ -176,8 +178,9 @@ namespace GameExpress.Controls
         private void OnDraw(CanvasControl sender, CanvasDrawEventArgs args)
         {
             var lightGray = (Color)Application.Current.Resources["SystemChromeLowColor"];
-            var accent = new UISettings().GetColorValue(UIColorType.AccentLight3);
+            var accent3 = new UISettings().GetColorValue(UIColorType.AccentLight3);
             var accent1 = new UISettings().GetColorValue(UIColorType.AccentLight1);
+            var accentDark = new UISettings().GetColorValue(UIColorType.AccentDark1);
             ulong absoluteTime = 0;
 
             // Hintergrundgitter
@@ -187,13 +190,39 @@ namespace GameExpress.Controls
                 args.DrawingSession.DrawLine(j - x, 0, j - x, (float)ActualHeight, lightGray);
             }
 
-            ItemKeyFrame lastKeyFrame = null;
+            ItemKeyFrame predecessor = null;
 
-            foreach (var k in Items)
+            foreach (var k in Story.KeyFrames)
             {
-                args.DrawingSession.FillRectangle(absoluteTime + k.From - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, accent);
+                if (SelectedKeyFrame != null && SelectedKeyFrame.Item == k)
+                {
+                    if (SelectedKeyFrame.Outside)
+                    {
+                        var red = Color.FromArgb(125, 255, 10, 10);
+                        args.DrawingSession.FillRectangle(absoluteTime + k.From - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, red);
+                    }
+                    else
+                    {
+                        var accent2 = new UISettings().GetColorValue(UIColorType.AccentLight2);
+                        accent2.A = 125;
+                        args.DrawingSession.FillRectangle(absoluteTime + k.From - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, accent2);
+                    }
+                }
+                else
+                {
+                    args.DrawingSession.FillRectangle(absoluteTime + k.From - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, accent3);
+                }
 
-                if (lastKeyFrame != null && lastKeyFrame.Tweening)
+                args.DrawingSession.DrawRectangle(absoluteTime + k.From - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, accent1);
+
+                if (k.Duration > 15)
+                {
+                    args.DrawingSession.FillRectangle(absoluteTime + k.From - (float)TimeOffset, 0, 10, 10, accentDark);
+                    args.DrawingSession.FillRectangle(absoluteTime + k.From + k.Duration - (float)TimeOffset, (float)ActualHeight, -10, -10, accentDark);
+                }
+
+                // Tweening
+                if (predecessor != null && predecessor.Tweening)
                 {
                     args.DrawingSession.DrawLine
                     (
@@ -241,7 +270,7 @@ namespace GameExpress.Controls
 
                 absoluteTime += k.From + k.Duration;
 
-                lastKeyFrame = k;
+                predecessor = k;
             }
         }
 
@@ -252,37 +281,57 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            
             var pointer = e.GetCurrentPoint(this);
             var absoluteTime = (ulong)0;
+            var x = pointer.Position.X;
+            var y = pointer.Position.Y;
 
             e.Handled = true;
 
-            foreach (var k in Items)
+            // Story ist für Bearbeitung gesperrt
+            if (Story.Lock) return;
+
+            foreach (var k in Story.KeyFrames)
             {
                 absoluteTime += k.From;
+                var from = absoluteTime - (float)TimeOffset;
+                var to = absoluteTime + k.Duration - (float)TimeOffset;
 
-                if (pointer.Position.X > absoluteTime - (float)TimeOffset &&
-                    pointer.Position.X < absoluteTime + k.Duration - (float)TimeOffset)
+                if (x > from &&  x < to)
                 {
-                    var hasCapture = Content.CapturePointer(e.Pointer);
-                    if (hasCapture)
+                    ViewHelper.ChangePropertyPage(k);
+                    SelectedKeyFrame = null;
+
+                    if (k.Lock) return;
+
+                    Content.CapturePointer(e.Pointer);
+                    SelectedKeyFrame = new SelectionHelper<ItemKeyFrame>()
                     {
-                        SelectedKeyFrame = new SelectionHelper<ItemKeyFrame>()
-                        {
-                            Item = k,
-                            OriginalPosition = pointer.Position,
-                            OriginalItemPosition = new Point(k.From, 0)
-                        };
+                        Item = k,
+                        OriginalPosition = pointer.Position,
+                        OriginalItemPosition = new Point(k.From, k.Duration)
+                    };
 
-                        ViewHelper.ChangePropertyPage(k);
-
-                        return;
+                    if (x <= from + 10 && y < 10)
+                    {
+                        SelectedKeyFrame.EditMode = SelectionHelper<ItemKeyFrame>.SelectionEditMode.From;
                     }
+                    else if (x >= to - 10 && y > ActualHeight - 10)
+                    {
+                        SelectedKeyFrame.EditMode = SelectionHelper<ItemKeyFrame>.SelectionEditMode.Duration;
+                    }
+                    else
+                    {
+                        SelectedKeyFrame.EditMode = SelectionHelper<ItemKeyFrame>.SelectionEditMode.Move;
+                    }
+
+                    return;
                 }
 
                 absoluteTime += k.Duration;
             }
+
+            ViewHelper.ChangePropertyPage(Story);
         }
 
         /// <summary>
@@ -299,7 +348,6 @@ namespace GameExpress.Controls
             if (SelectedKeyFrame != null )
             {
                 var delta = pointer.Position.X - SelectedKeyFrame.OriginalPosition.X;
-
                 var value = SelectedKeyFrame.OriginalItemPosition.X + delta;
 
                 if (value < 0)
@@ -307,8 +355,42 @@ namespace GameExpress.Controls
                     value = 0;
                 }
 
-                // Verschieben
-                SelectedKeyFrame.Item.From = (ulong)Math.Abs(value);
+                // Prüfe, ob im aktuellen Steuerelement
+                SelectedKeyFrame.Outside = !(pointer.Position.X >= 0 && pointer.Position.X <= ActualWidth &&
+                                             pointer.Position.Y >= 0 && pointer.Position.Y <= ActualHeight);
+
+                if (SelectedKeyFrame.EditMode == SelectionHelper<ItemKeyFrame>.SelectionEditMode.Move)
+                {
+                    // Verschieben
+                    SelectedKeyFrame.Item.From = (ulong)Math.Abs(value);
+                }
+                else if (SelectedKeyFrame.EditMode == SelectionHelper<ItemKeyFrame>.SelectionEditMode.From)
+                {
+                    var duration = SelectedKeyFrame.Item.From + SelectedKeyFrame.Item.Duration;
+                    
+                    // Größe Ändern
+                    SelectedKeyFrame.Item.From = (ulong)Math.Abs(value);
+                    if ((double)duration - SelectedKeyFrame.Item.From > 2)
+                    {
+                        SelectedKeyFrame.Item.Duration = duration - SelectedKeyFrame.Item.From;
+                    }
+                    else
+                    {
+                        SelectedKeyFrame.Item.Duration = 1;
+                    }
+                }
+                else if (SelectedKeyFrame.EditMode == SelectionHelper<ItemKeyFrame>.SelectionEditMode.Duration)
+                {
+                    // Größe Ändern
+                    if (SelectedKeyFrame.OriginalItemPosition.Y + delta > 2f)
+                    {
+                        SelectedKeyFrame.Item.Duration = (ulong)(SelectedKeyFrame.OriginalItemPosition.Y + delta);
+                    }
+                    else
+                    {
+                        SelectedKeyFrame.Item.Duration = 1;
+                    }
+                }
 
                 Invalidate();
             }
@@ -324,8 +406,19 @@ namespace GameExpress.Controls
         {
             e.Handled = true;
 
+            var pointer = e.GetCurrentPoint(this);
+
             if (SelectedKeyFrame != null)
             {
+                // Prüfe, ob im aktuellen Steuerelement
+                if (!(pointer.Position.X >= 0 &&  pointer.Position.X <= ActualWidth &&
+                      pointer.Position.Y >= 0 && pointer.Position.Y <= ActualHeight))
+                {
+                    // Orginalposition wiederherstellen
+                    SelectedKeyFrame.Item.From = (ulong)SelectedKeyFrame.OriginalItemPosition.X;
+                    SelectedKeyFrame.Item.Duration = (ulong)SelectedKeyFrame.OriginalItemPosition.Y;
+                }
+
                 SelectedKeyFrame = null;
 
                 Invalidate();
@@ -356,29 +449,29 @@ namespace GameExpress.Controls
         }
 
         /// <summary>
-        /// Wird aufgerufen, wenn mit dem Drag & Drop begonnen werden soll
+        /// Wird aufgerufen, wenn sich eine Story geändert hat
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
         /// <param name="args">Das Eventargument</param>
-        private void OnDragStarting(object sender, DragStartingEventArgs e)
+        private void OnKeyFramePropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            e.AllowedOperations = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
+            Invalidate();
         }
 
         /// <summary>
         /// Liefert oder setzt die KeyFrames
         /// </summary>
-        public ObservableCollection<ItemKeyFrame> Items
+        public ItemStory Story
         { 
-            get { return (ObservableCollection<ItemKeyFrame>)GetValue(ItemsProperty); }
-            set { SetValue(ItemsProperty, value); }
+            get { return (ItemStory)GetValue(StoryProperty); }
+            set { SetValue(StoryProperty, value); }
         }
 
         /// <summary>
         /// Using a DependencyProperty as the backing store for KeyFrames.
         /// </summary>
-        public static readonly DependencyProperty ItemsProperty =
-            DependencyProperty.Register("Items", typeof(ObservableCollection<ItemKeyFrame>), typeof(KeyFrameEditor), new PropertyMetadata(new ObservableCollection<ItemKeyFrame>()));
+        public static readonly DependencyProperty StoryProperty =
+            DependencyProperty.Register("Story", typeof(ItemStory), typeof(KeyFrameEditor), new PropertyMetadata(null));
 
         /// <summary>
         /// Liefert oder setzt die Animationszeit
@@ -410,9 +503,5 @@ namespace GameExpress.Controls
         public static readonly DependencyProperty TimeOffsetProperty =
             DependencyProperty.Register("TimeOffset", typeof(ulong), typeof(KeyFrameEditor), new PropertyMetadata(new ulong()));
 
-        private void Content_DragStarting(UIElement sender, DragStartingEventArgs args)
-        {
-
-        }
     }
 }

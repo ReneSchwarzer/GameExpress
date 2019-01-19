@@ -21,6 +21,5 @@
                             PointerMoved="OnPointerMoved"
                             PointerReleased="OnPointerReleased"
                             PointerExited="OnPointerExited"
-                            PointerCanceled="OnPointerCanceled"
-                            DragStarting="OnDragStarting"/>
+                            PointerCanceled="OnPointerCanceled"/>
 </UserControl>

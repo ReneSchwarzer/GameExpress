@@ -74,16 +74,27 @@
                             <Button Grid.Column="1" Margin="0,0,4,0">
                                 <Button.Flyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem Text="Schlüsselbild" Icon="Add" Click="OnAddKeyFrame" Tag="{Binding ID}"/>
-                                        <MenuFlyoutItem Text="Schneiden" Icon="Trim" Click="OnAddKeyFrame" Tag="{Binding ID}"/>
-                                        <MenuFlyoutItem Text="Instanz" Icon="Link" Click="OnChangeInstance" Tag="{Binding ID}"/>
+                                        <MenuFlyoutItem Text="Schlüsselbild" Icon="Add" Click="OnAddKeyFrame" Tag="{Binding ID}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+                                        <MenuFlyoutItem Text="Schneiden" Icon="Trim" Click="OnAddKeyFrame" Tag="{Binding ID}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+                                        <ToggleMenuFlyoutItem Text="Speeren" IsChecked="{Binding Lock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE1F7;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </ToggleMenuFlyoutItem>
+                                        <ToggleMenuFlyoutItem Text="Sichtbar" IsChecked="{Binding Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE052;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </ToggleMenuFlyoutItem>
                                         <MenuFlyoutSeparator/>
-                                        <MenuFlyoutItem Text="Löschen" Icon="Delete" Click="OnDeleteStory" Tag="{Binding ID}"/>
+                                        <MenuFlyoutItem Text="Instanz" Icon="Link" Click="OnChangeInstance" Tag="{Binding ID}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem Text="Löschen" Icon="Delete" Click="OnDeleteStory" Tag="{Binding ID}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                                 <SymbolIcon Symbol="More" />
                             </Button>
-                            <local:KeyFrameEditor Grid.Column="2" Items="{Binding KeyFrames, Mode=TwoWay}"/>
+                            <local:KeyFrameEditor Grid.Column="2" Story="{Binding Self, Mode=TwoWay}"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

@@ -1,8 +1,11 @@
 ﻿using GameExpress.Model.Structs;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -49,6 +52,12 @@ namespace GameExpress.Model.Item
         /// </summary>
         [XmlIgnore]
         private ItemMapVertext VertextItem3 { get; set; }
+
+        /// <summary>
+        /// Liefert oder setzt die Map
+        /// </summary>
+        [XmlIgnore]
+        public ItemMap Map { get; set; }
 
         /// <summary>
         /// Liefert oder setzt den Namen des ersten Vertext
@@ -108,7 +117,7 @@ namespace GameExpress.Model.Item
         /// Liefert den Schwerpunkt des Dreiecks
         /// </summary>
         [XmlIgnore]
-        public Point Centroid
+        public Structs.Vector Centroid
         {
             get
             {
@@ -117,12 +126,10 @@ namespace GameExpress.Model.Item
                     return new Point();
                 }
 
-                //var x = (VertextItem1.Point.X + VertextItem2.Point.X + VertextItem3.Point.X) / 3f;
-                //var y = (VertextItem1.Point.Y + VertextItem2.Point.Y + VertextItem3.Point.Y) / 3f;
+                var x = (VertextItem1.Vector.X + VertextItem2.Vector.X + VertextItem3.Vector.X) / 3f;
+                var y = (VertextItem1.Vector.Y + VertextItem2.Vector.Y + VertextItem3.Vector.Y) / 3f;
 
-                //return new Point((int)x, (int)y);
-
-                return new Point();
+                return new Structs.Vector((int)x, (int)y);
             }
         }
 
@@ -147,20 +154,20 @@ namespace GameExpress.Model.Item
         /// <param name="uc">Der Updatekontext</param>
         public override void Update(UpdateContext uc)
         {
-            //if (VertextItem1 == null)
-            //{
-            //    VertextItem1 = Parent.FindItem<ItemMapVertext>(Vertext1, oneLevel: true).FirstOrDefault();
-            //}
+            if (VertextItem1 == null)
+            {
+                VertextItem1 = Map.Vertices.Where(x => x.ID.Equals(Vertext1, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            }
 
-            //if (VertextItem2 == null)
-            //{
-            //    VertextItem2 = Parent.FindItem<ItemMapVertext>(Vertext2, oneLevel: true).FirstOrDefault();
-            //}
+            if (VertextItem2 == null)
+            {
+                VertextItem2 = Map.Vertices.Where(x => x.ID.Equals(Vertext2, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            }
 
-            //if (VertextItem3 == null)
-            //{
-            //    VertextItem3 = Parent.FindItem<ItemMapVertext>(Vertext3, oneLevel: true).FirstOrDefault();
-            //}
+            if (VertextItem3 == null)
+            {
+                VertextItem3 = Map.Vertices.Where(x => x.ID.Equals(Vertext3, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            }
         }
 
         /// <summary>
@@ -173,38 +180,36 @@ namespace GameExpress.Model.Item
             // wird er visualisiert
             if (pc.Designer && VertextItem1 != null && VertextItem2 != null && VertextItem3 != null)
             {
-                //var black = Color.FromArgb(200, 0, 0, 0);
-                //var white = Color.FromArgb(200, 255, 255, 255);
+                var black = Color.FromArgb(200, 0, 0, 0);
+                var white = Color.FromArgb(200, 255, 255, 255);
 
-                //// Vertex im Weltkoordinaten transformieren
-                //var p1 = pc.Transform(VertextItem1 != null ? VertextItem1.Point : new Point());
-                //var p2 = pc.Transform(VertextItem2 != null ? VertextItem2.Point : new Point());
-                //var p3 = pc.Transform(VertextItem3 != null ? VertextItem3.Point : new Point());
+                // Vertex im Weltkoordinaten transformieren
+                var p1 = pc.Transform(VertextItem1 != null ? VertextItem1.Vector : new Structs.Vector());
+                var p2 = pc.Transform(VertextItem2 != null ? VertextItem2.Vector : new Structs.Vector());
+                var p3 = pc.Transform(VertextItem3 != null ? VertextItem3.Vector : new Structs.Vector());
 
-                //pc.Graphics.DrawLine(p1, p2, black);
-                //pc.Graphics.DrawLine(p1, p2, white);
+                pc.Graphics.DrawLine(p1.X, p1.Y, p2.X, p2.Y, black, 3);
+                pc.Graphics.DrawLine(p1.X, p1.Y, p2.X, p2.Y, white);
 
-                //pc.Graphics.DrawLine(p2, p3, black);
-                //pc.Graphics.DrawLine(p2, p3, white);
+                pc.Graphics.DrawLine(p2.X, p2.Y, p3.X, p3.Y, black, 2);
+                pc.Graphics.DrawLine(p2.X, p2.Y, p3.X, p3.Y, white);
 
-                //pc.Graphics.DrawLine(p3, p1, black);
-                //pc.Graphics.DrawLine(p3, p1, white);
+                pc.Graphics.DrawLine(p3.X, p3.Y, p1.X, p1.Y, black);
+                pc.Graphics.DrawLine(p3.X, p3.Y, p1.X, p1.Y, white);
 
-                //var centroid = Centroid;
-                //var points = new PointF[]
-                //{
-                //    new Point(centroid.X, centroid.Y - 3),
-                //    new Point(centroid.X + 4, centroid.Y + 4),
-                //    new Point(centroid.X - 4, centroid.Y + 4)
-                //};
+                var centroid = pc.Transform(Centroid);
+                var triangle = new Vector2[]
+                {
+                    new Vector2((float)centroid.X, (float)centroid.Y - 3),
+                    new Vector2((float)centroid.X + 4, (float)centroid.Y + 4),
+                    new Vector2((float)centroid.X - 4, (float)centroid.Y + 4)
+                };
 
-                //using (var whiteBrush = new SolidBrush(Color.White))
-                //{
-                //    pc.Graphics.FillPolygon(whiteBrush, points);
-                //}
-
-                //blackPen.Width = 1;
-                //pc.Graphics.DrawPolygon(blackPen, points);
+                using (var geometry = CanvasGeometry.CreatePolygon(pc.Graphics, triangle))
+                { 
+                    pc.Graphics.FillGeometry(geometry, white);
+                    pc.Graphics.DrawGeometry(geometry, black);
+                }
             }
         }
 

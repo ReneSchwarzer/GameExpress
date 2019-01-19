@@ -76,6 +76,76 @@ namespace GameExpress.View
         }
 
         /// <summary>
+        /// Wechselt die Ansichtsseite
+        /// </summary>
+        /// <param name="item">Das Item</param>
+        public static void ChangePage(Item item)
+        {
+            if (item is ItemGame)
+            {
+                MainPage?.ChangePage(typeof(GamePage), item);
+            }
+            else if (item is ItemScene)
+            {
+                MainPage?.ChangePage(typeof(ObjectPage), item);
+            }
+            else if (item is ItemObject)
+            {
+                MainPage?.ChangePage(typeof(ObjectPage), item);
+            }
+            else if (item is ItemMap)
+            {
+                MainPage?.ChangePage(typeof(MapPage), item);
+            }
+            else if (item is ItemImage)
+            {
+                MainPage?.ChangePage(typeof(ImagePage), item);
+            }
+            else if (item is ItemSound)
+            {
+                MainPage?.ChangePage(typeof(SoundPage), item);
+            }
+
+            if (item is ItemGame)
+            {
+                MainPage?.ChangePropertyPage(typeof(GamePropertyPage), item);
+            }
+            else if (item is ItemScene)
+            {
+                MainPage?.ChangePropertyPage(typeof(ScenePropertyPage), item);
+            }
+            else if (item is ItemObject)
+            {
+                MainPage?.ChangePropertyPage(typeof(ObjectPropertyPage), item);
+            }
+            else if (item is ItemMap)
+            {
+                MainPage?.ChangePropertyPage(typeof(MapPropertyPage), item);
+            }
+            else if (item is ItemStory)
+            {
+                MainPage?.ChangePropertyPage(typeof(StoryPropertyPage), item);
+            }
+            else if (item is ItemKeyFrame)
+            {
+                MainPage?.ChangePropertyPage(typeof(KeyFramePropertyPage), item);
+            }
+            else if (item is ItemImage)
+            {
+                MainPage?.ChangePropertyPage(typeof(ImagePropertyPage), item);
+            }
+            else if (item is ItemSound)
+            {
+                MainPage?.ChangePropertyPage(typeof(SoundPropertyPage), item);
+            }
+            else
+            {
+                MainPage?.ChangePropertyPage(null, item);
+            }
+
+        }
+
+        /// <summary>
         /// Liefert das aktuelle Projekt
         /// </summary>
         public static Project Project

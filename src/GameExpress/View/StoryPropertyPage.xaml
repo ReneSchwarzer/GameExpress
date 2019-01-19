@@ -5,22 +5,43 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:converter="using:GameExpress.Converter"
     mc:Ignorable="d">
 
     <StackPanel Padding="10,10,10,10" HorizontalAlignment="Stretch">
-        <TextBox Header="Name:" Name="Name" Margin="0,10,0,10" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <controls:HeaderedContentControl Margin="0,10,0,10" Header="Instanz:" HorizontalAlignment="Stretch">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <!-- Lock -->
+                <ToggleButton Margin="0,0,10,0" IsChecked="{Binding Lock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE1F7;" />
+                </ToggleButton>
+                <!-- Enable -->
+                <ToggleButton Margin="0,0,10,0" IsChecked="{Binding Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE052;" />
+                </ToggleButton>
+            </StackPanel>
+            <Button Grid.Column="1" Click="OnDeleteStory" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                <SymbolIcon Symbol="Delete"/>
+            </Button>
+        </Grid>
+        <TextBox Header="Name:" Name="Name" Margin="0,10,0,10" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+        <controls:HeaderedContentControl Margin="0,10,0,10" Header="Instanz:" HorizontalAlignment="Stretch" IsEnabled="{Binding Unlock, Mode=OneWay}">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Name="Instance" Margin="0,0,10,0" Text="{Binding Item, Mode=TwoWay}"/>
-                <Button Grid.Column="1" Click="OnChangeInstance">
+                <TextBlock Grid.Column="0" Name="Instance" Margin="0,0,10,0" Text="{Binding Item, Mode=TwoWay}" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Click="OnChangeInstance" VerticalAlignment="Center" IsEnabled="{Binding Unlock, Mode=OneWay}">
                     <SymbolIcon Symbol="Link"/>
                 </Button>
             </Grid>
         </controls:HeaderedContentControl>
+        <ComboBox Name="Loop" Header="Wiederholung" Margin="0,10,0,10" SelectionChanged="OnLoopSelectionChanged" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
 
     </StackPanel>
 </Page>

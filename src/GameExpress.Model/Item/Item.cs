@@ -107,8 +107,18 @@ namespace GameExpress.Model.Item
                     m_lock = value;
 
                     RaisePropertyChanged();
+                    RaisePropertyChanged("Unlock");
                 }
             }
+        }
+
+        /// <summary>
+        /// Prüft, ob Eingaben erlaubt sind
+        /// </summary>
+        [XmlIgnore]
+        public bool Unlock
+        {
+            get { return !Lock; }
         }
 
         /// <summary>

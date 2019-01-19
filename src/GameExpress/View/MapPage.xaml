@@ -6,6 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:GameExpress.Controls"
     mc:Ignorable="d"
+    Loaded="OnLoaded"
+    Unloaded="OnUnloaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
@@ -15,6 +17,27 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
+        <CommandBar Grid.Column="0" Grid.Row="0" Name="ToolBar" Visibility="Collapsed" >
+            <AppBarButton Name="New" Label="Neu" Icon="Add" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Vertext" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE139;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Masche" Tag="{Binding ID}" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE879;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarSeparator/>
+        </CommandBar>
+        
         <controls:EditorPanel Grid.Column="0" Grid.Row="0" x:Name="Editor"/>
     </Grid>
 </Page>

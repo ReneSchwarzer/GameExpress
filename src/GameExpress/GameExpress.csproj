@@ -130,6 +130,7 @@
       <DependentUpon>TimeLinePanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Panel.cs" />
+    <Compile Include="Converter\NegationConverter.cs" />
     <Compile Include="Converter\ItemToItemAnimationConverter.cs" />
     <Compile Include="Converter\ULongToDoubleConverter.cs" />
     <Compile Include="Converter\GammaToIntConverter.cs" />
@@ -141,6 +142,9 @@
     </Compile>
     <Compile Include="ViewModel\ViewModel.cs" />
     <Compile Include="ViewModel\ViewModelMain.cs" />
+    <Compile Include="View\GeneralPage.xaml.cs">
+      <DependentUpon>GeneralPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\GeneralPropertyPage.xaml.cs">
       <DependentUpon>GeneralPropertyPage.xaml</DependentUpon>
     </Compile>
@@ -194,21 +198,15 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\TestProject\boom.m4a" />
+    <Content Include="Assets\TestProject\lostonomicron.gx" />
     <None Include="GameExpress_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Items\omicron.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Items\scene1.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Items\sputnik.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Items\ufo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Assets\TestProject\omicron.png" />
+    <Content Include="Assets\TestProject\scene1.png" />
+    <Content Include="Assets\TestProject\sputnik.png" />
+    <Content Include="Assets\TestProject\ufo.png" />
     <Content Include="Assets\Tile\LargeTile.scale-100.png" />
     <Content Include="Assets\Tile\LargeTile.scale-125.png" />
     <Content Include="Assets\Tile\LargeTile.scale-150.png" />
@@ -280,6 +278,10 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\GeneralPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\GeneralPropertyPage.xaml">
       <SubType>Designer</SubType>

@@ -135,6 +135,27 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Liefert die absolute Startzeit
+        /// </summary>
+        [XmlIgnore]
+        public ulong AbsoluteFrom
+        {
+            get
+            {
+                var index = Story.KeyFrames.IndexOf(this);
+                if (index > 0)
+                {
+                    var predecessor = Story.KeyFrames[index - 1];
+                    var from = predecessor.AbsoluteFrom + predecessor.Duration + From;
+
+                    return from;
+                }
+
+                return From;
+            }
+        }
+
+        /// <summary>
         /// Liefert oder setzt die Dauer in 1/40 Sekunden
         /// </summary>
         [XmlAttribute("duration")]

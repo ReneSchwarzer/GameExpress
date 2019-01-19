@@ -64,6 +64,11 @@ namespace GameExpress.Model.Item
         public Item Instance { get; private set; }
 
         /// <summary>
+        /// Liefert einen Verweis auf die aktuelle Story
+        /// </summary>
+        public ItemStory Self { get { return this; } }
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         public ItemStory()
@@ -121,7 +126,7 @@ namespace GameExpress.Model.Item
         /// <param name="pc">Der Präsentationskontext</param>
         public override void Presentation(PresentationContext pc)
         {
-            if (pc.Level > 10) return;
+            if (pc.Level > 10 || !Enable) return;
 
             var newPC = new PresentationContext(pc) { Level = pc.Level, Time = LocalTime(pc.Time) };
 
@@ -253,7 +258,11 @@ namespace GameExpress.Model.Item
         {
             var local = new Time();
 
-            if (EndTime < ulong.MaxValue && Loop == Loop.None && (ulong)time > EndTime)
+            if (KeyFrames.Count == 0 || EndTime == 0)
+            {
+
+            }
+            else if (EndTime < ulong.MaxValue && Loop == Loop.Freeze && (ulong)time > EndTime)
             {
                 // Zeit begrenzen
                 local.AddTick(EndTime);
