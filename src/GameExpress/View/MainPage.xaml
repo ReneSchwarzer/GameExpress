@@ -7,7 +7,7 @@
     xmlns:Item="using:GameExpress.Model.Item"
     xmlns:View="using:GameExpress.View"
     xmlns:controls="using:Windows.UI.Xaml.Controls"
-    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -179,8 +179,14 @@
 
                 <ScrollViewer Grid.Row="0">
                     <StackPanel>
-                        <controls:TreeView Name="Tree" ItemsSource="{Binding Tree}" ItemTemplateSelector="{StaticResource ItemTemplateSelector}" ItemInvoked="OnItemInvoked"/>
-                        <Frame Name="PropertyFrame" Visibility="Collapsed"/>
+                        <controls:TreeView Name="Tree" 
+                                           ItemsSource="{Binding Tree}" 
+                                           ItemTemplateSelector="{StaticResource ItemTemplateSelector}" 
+                                           ItemInvoked="OnItemInvoked" 
+                                           SelectionMode="Single"/>
+                        
+                        <Frame Name="PropertyFrame" 
+                               Visibility="Collapsed"/>
                     </StackPanel>
 
                 </ScrollViewer>
@@ -188,7 +194,37 @@
                 <CommandBar Grid.Row="1">
                     <CommandBar.PrimaryCommands>
                         <AppBarButton Name="Save" Label="Speichern" Icon="Save" Click="OnSave"/>
-                        <AppBarButton Name="Add" Label="Hinzufügen" Icon="Add" Click="OnAdd"/>
+                        <AppBarButton Name="Add" Label="Hinzufügen" Icon="Add">
+                            <AppBarButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Szene" Click="OnAddScene">
+                                        <MenuFlyoutItem.Icon>
+                                            <SymbolIcon Symbol="Street"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Objekt" Click="OnAddObject">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xEBD2;" Margin="0,0,5,0"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Karte" Click="OnAddMap">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE707;" Margin="0,0,5,0"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Bild" Click="OnAddImage">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xF69E;" Margin="0,0,5,0"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Sound" Click="OnAddSound">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8D6;" Margin="0,0,5,0"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                 </MenuFlyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
                         <AppBarToggleButton Name="Edit" Label="Bearbeiten" Icon="Edit" Click="OnEdit"/>
                     </CommandBar.PrimaryCommands>
                     <CommandBar.SecondaryCommands>
@@ -215,16 +251,16 @@
                 <Frame Grid.Column="0" Grid.Row="1" Name="ItemFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </Grid>
 
-            <controls1:GridSplitter Background="Transparent" ResizeDirection="Columns"
+            <toolkit:GridSplitter Background="Transparent" ResizeDirection="Columns"
                 Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Width="16">
-                <controls1:GridSplitter.RenderTransform>
+                <toolkit:GridSplitter.RenderTransform>
                     <TranslateTransform X="-8" />
-                </controls1:GridSplitter.RenderTransform>
-                <controls1:GridSplitter.Element>
+                </toolkit:GridSplitter.RenderTransform>
+                <toolkit:GridSplitter.Element>
                     <Grid>
                     </Grid>
-                </controls1:GridSplitter.Element>
-            </controls1:GridSplitter>
+                </toolkit:GridSplitter.Element>
+            </toolkit:GridSplitter>
         </Grid>
 
     </Grid>

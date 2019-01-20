@@ -3,6 +3,7 @@ using GameExpress.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
@@ -176,13 +177,103 @@ namespace GameExpress.View
         }
 
         /// <summary>
-        /// Wird aufgerufen, wenn ein neues Item erstellt werden soll
+        /// Wird aufgerufen, wenn eine neue Szene erstellt werden soll
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
         /// <param name="e">Das Eventargument</param>
-        private void OnAdd(object sender, RoutedEventArgs e)
+        private void OnAddScene(object sender, RoutedEventArgs e)
         {
+            var select = Tree.SelectedNodes.FirstOrDefault();
 
+            //if (select != null)
+            //{
+
+            //}
+            //else
+            {
+                var game = Model.Tree.FirstOrDefault();
+                game.Children.Add(new ItemScene() { Name = "Neue Szene" });
+            }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn eine neues Objekt erstellt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnAddObject(object sender, RoutedEventArgs e)
+        {
+            var select = Tree.SelectedNodes.FirstOrDefault();
+
+            //if (select != null)
+            //{
+
+            //}
+            //else
+            {
+                var game = Model.Tree.FirstOrDefault();
+                game.Children.Add(new ItemObject() { Name = "Neues Objekt" });
+            }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn eine neue Karte erstellt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnAddMap(object sender, RoutedEventArgs e)
+        {
+            var select = Tree.SelectedNodes.FirstOrDefault();
+
+            //if (select != null)
+            //{
+
+            //}
+            //else
+            {
+                var game = Model.Tree.FirstOrDefault();
+                game.Children.Add(new ItemMap() { Name = "Neue Karte" });
+            }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn eine neues Bild erstellt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnAddImage(object sender, RoutedEventArgs e)
+        {
+            var select = Tree.SelectedNodes.FirstOrDefault();
+
+            //if (select != null)
+            //{
+
+            //}
+            //else
+            {
+                var game = Model.Tree.FirstOrDefault();
+                game.Children.Add(new ItemImage() { Name = "Neues Bild" });
+            }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn eine neuer Sound erstellt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnAddSound(object sender, RoutedEventArgs e)
+        {
+            var select = Tree.SelectedNodes.FirstOrDefault();
+
+            //if (select != null)
+            //{
+
+            //}
+            //else
+            {
+                var game = Model.Tree.FirstOrDefault();
+                game.Children.Add(new ItemSound() { Name = "Neuer Sound" });
+            }
         }
     }
 }
