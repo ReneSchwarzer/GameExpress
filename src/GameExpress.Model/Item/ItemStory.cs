@@ -190,42 +190,52 @@ namespace GameExpress.Model.Item
         /// </summary>
         /// <param name="time">Die Zeit</param>
         /// <returns>Das Schlüsselbid oder null</returns>
-        public ItemKeyFrameBase GetKeyFrame(ulong time)
+        public ItemKeyFrame GetKeyFrame(ulong time)
         {
-            ItemKeyFrame predecessorKeyFrame = null;
+            ItemKeyFrameAct predecessorKeyFrame = null;
             ulong absolutePredecessorEndTime = 0;
 
-            ItemKeyFrame successorKeyFrame = null;
+            ItemKeyFrameAct successorKeyFrame = null;
             ulong absoluteSuccessorStartTime = 0;
+
+            ItemKeyFrameTweening tweening = null;
 
             ulong absoluteTime = 0;
 
             foreach (var k in KeyFrames)
             {
-                absoluteTime += k.From;
-
-                if (absoluteTime <= time && time <= absoluteTime + k.Duration)
+                if (k is ItemKeyFrameAct act)
                 {
-                    return k;
-                }
-                else if (absoluteTime + k.Duration < time)
-                {
-                    predecessorKeyFrame = k;
-                    absolutePredecessorEndTime = absoluteTime + k.Duration;
-                }
-                else if (time < absoluteTime + k.Duration)
-                {
-                    successorKeyFrame = k;
-                    absoluteSuccessorStartTime = absoluteTime;
+                    absoluteTime += act.From;
 
-                    break;
-                }
+                    if (absoluteTime <= time && time <= absoluteTime + act.Duration)
+                    {
+                        // Schlüsselbild 
+                        return act;
+                    }
+                    else if (absoluteTime + act.Duration < time)
+                    {
+                        predecessorKeyFrame = act;
+                        absolutePredecessorEndTime = absoluteTime + act.Duration;
+                    }
+                    else if (time < absoluteTime + act.Duration)
+                    {
+                        successorKeyFrame = act;
+                        absoluteSuccessorStartTime = absoluteTime;
 
-                absoluteTime += k.Duration;
+                        break;
+                    }
+
+                    absoluteTime += act.Duration;
+                }
+                else if (k is ItemKeyFrameTweening tween)
+                {
+                    tweening = tween;
+                }
             }
 
             // Tweening
-            if (predecessorKeyFrame != null && successorKeyFrame != null && predecessorKeyFrame.Tweening)
+            if (absolutePredecessorEndTime < time && time < absoluteSuccessorStartTime && tweening != null)
             {
                 var from = absolutePredecessorEndTime;
                 var till = absoluteSuccessorStartTime;
@@ -234,16 +244,16 @@ namespace GameExpress.Model.Item
 
                 var t = (time - from) / (float)(till - from); //in %
 
-                return new ItemKeyFrameTweening()
-                {
-                    Matrix = predecessorKeyFrame.Matrix * new Matrix3D
-                    (
-                        (mt.M11 - 1) * t + 1, mt.M12 * t, 0,
-                        mt.M21 * t, (mt.M22 - 1) * t + 1, 0,
-                        mt.M31 * t, mt.M32 * t, 1
-                    )
-                    // ToDo: Alpha, usw.
-                };
+                tweening.Matrix = predecessorKeyFrame.Matrix * new Matrix3D
+                (
+                    (mt.M11 - 1) * t + 1, mt.M12 * t, 0,
+                    mt.M21 * t, (mt.M22 - 1) * t + 1, 0,
+                    mt.M31 * t, mt.M32 * t, 1
+                );
+
+                // ToDo: Alpha, usw.
+
+                return tweening;
             }
 
             return null;
@@ -313,7 +323,7 @@ namespace GameExpress.Model.Item
         {
             get
             {
-                return (ulong)KeyFrames.Sum(x => (decimal)x.From + x.Duration);
+                return (ulong)KeyFrames.Where(x => x is ItemKeyFrameAct).Select(x => x as ItemKeyFrameAct).Sum(x => (decimal)x.From + x.Duration);
             }
         }
 

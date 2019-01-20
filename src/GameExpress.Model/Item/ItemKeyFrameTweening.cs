@@ -4,7 +4,8 @@ using Windows.Foundation;
 
 namespace GameExpress.Model.Item
 {
-    internal class ItemKeyFrameTweening : ItemKeyFrameBase
+    [XmlType("tweening")]
+    public class ItemKeyFrameTweening : ItemKeyFrame
     {
         /// <summary>
         /// Die Matrix

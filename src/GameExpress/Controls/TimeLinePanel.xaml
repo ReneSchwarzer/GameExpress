@@ -52,6 +52,7 @@
             <ListView x:Name="Table" 
                       Grid.Row="1"
                       ItemsSource="{x:Bind Item.StoryBoard, Mode=OneWay}"
+                      AllowDrop="True" 
                       ReorderMode="Enabled"
                       CanReorderItems="True"
                       SelectionChanged="OnSelectionChanged">

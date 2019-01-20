@@ -24,7 +24,7 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert das mit der Ansicht verbundene Schlüsselbild
         /// </summary>
-        private ItemKeyFrame KeyFrame { get { return DataContext as ItemKeyFrame; } }
+        private ItemKeyFrameAct KeyFrame { get { return DataContext as ItemKeyFrameAct; } }
 
         /// <summary>
         /// Konstruktor
@@ -64,6 +64,17 @@ namespace GameExpress.View
             if (command == yesCommand)
             {
                 var story = KeyFrame.Story;
+
+                var index = story.KeyFrames.IndexOf(KeyFrame);
+
+                if (index > 0)
+                {
+                    var predecessor = story.KeyFrames.ElementAt(index - 1);
+                    if (predecessor is ItemKeyFrameTweening)
+                    {
+                        story.KeyFrames.Remove(predecessor);
+                    }
+                }
                 story.KeyFrames.Remove(KeyFrame);
 
                 ViewHelper.ChangePropertyPage(story);

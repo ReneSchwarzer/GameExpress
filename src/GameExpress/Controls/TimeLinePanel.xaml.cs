@@ -280,7 +280,12 @@ namespace GameExpress.Controls
             var story = Item?.StoryBoard?.Where(x => x.ID.Equals(element.Tag))?.FirstOrDefault();
             if (story == null) return;
 
-            story.KeyFrames.Add(new ItemKeyFrame() { From = Time, Duration = 500 });
+            if (story.KeyFrames.Count > 0)
+            {
+                story.KeyFrames.Add(new ItemKeyFrameTweening() { });
+            }
+
+            story.KeyFrames.Add(new ItemKeyFrameAct() { From = Time, Duration = 500 });
         }
 
         /// <summary>

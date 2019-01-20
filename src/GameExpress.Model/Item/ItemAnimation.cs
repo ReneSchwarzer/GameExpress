@@ -1,6 +1,7 @@
 ﻿using GameExpress.Model.Structs;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -77,7 +78,7 @@ namespace GameExpress.Model.Item
 
             if (StoryBoard == null) return;
 
-            foreach (var v in StoryBoard)
+            foreach (var v in StoryBoard.Reverse())
             {
                 v.Presentation(new PresentationContext(pc) { });
             }

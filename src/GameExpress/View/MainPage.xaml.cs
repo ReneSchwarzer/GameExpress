@@ -50,7 +50,7 @@ namespace GameExpress.View
             {
                 PropertyFrame.Navigate(typeof(GeneralPropertyPage), Model);
             }
-            else if (PropertyFrame.CurrentSourcePageType != page || PropertyFrame.DataContext != item)
+            else if (page != null && PropertyFrame.CurrentSourcePageType != page || page != null && PropertyFrame.DataContext != item)
             {
                 PropertyFrame.Navigate(page, item);
             }
@@ -69,7 +69,7 @@ namespace GameExpress.View
             {
                 ItemFrame.Navigate(typeof(GeneralPage), Model);
             }
-            else if (PropertyFrame.CurrentSourcePageType != page || PropertyFrame.DataContext != item)
+            else if (page != null && PropertyFrame.CurrentSourcePageType != page || page != null && PropertyFrame.DataContext != item)
             {
                 ItemFrame.Navigate(page, item);
             }

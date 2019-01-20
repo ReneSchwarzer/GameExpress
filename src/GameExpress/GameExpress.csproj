@@ -192,6 +192,9 @@
     <Compile Include="View\StoryPropertyPage.xaml.cs">
       <DependentUpon>StoryPropertyPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\TweeningPropertyPage.xaml.cs">
+      <DependentUpon>TweeningPropertyPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ViewHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -340,6 +343,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\StoryPropertyPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TweeningPropertyPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

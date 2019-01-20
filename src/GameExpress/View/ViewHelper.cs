@@ -56,9 +56,13 @@ namespace GameExpress.View
             {
                 MainPage?.ChangePropertyPage(typeof(StoryPropertyPage), item);
             }
-            else if (item is ItemKeyFrame)
+            else if (item is ItemKeyFrameAct)
             {
                 MainPage?.ChangePropertyPage(typeof(KeyFramePropertyPage), item);
+            }
+            else if (item is ItemKeyFrameTweening)
+            {
+                MainPage?.ChangePropertyPage(typeof(TweeningPropertyPage), item);
             }
             else if (item is ItemImage)
             {
@@ -126,7 +130,7 @@ namespace GameExpress.View
             {
                 MainPage?.ChangePropertyPage(typeof(StoryPropertyPage), item);
             }
-            else if (item is ItemKeyFrame)
+            else if (item is ItemKeyFrameAct)
             {
                 MainPage?.ChangePropertyPage(typeof(KeyFramePropertyPage), item);
             }

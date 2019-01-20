@@ -42,7 +42,7 @@ namespace GameExpress.Controls
         /// <summary>
         /// Liefert oder setzt das ausgewählte Schlüsselbild
         /// </summary>
-        private SelectionHelper<ItemKeyFrame> SelectedKeyFrame { get; set; }
+        private SelectionHelper<ItemKeyFrameAct> SelectedKeyFrame { get; set; }
 
         /// <summary>
         /// Konstruktor
@@ -58,6 +58,61 @@ namespace GameExpress.Controls
         public void Invalidate()
         {
             Content.Invalidate();
+        }
+
+        /// <summary>
+        /// Liefert die fensterbezogenen Koordinaten der KeyFrames
+        /// </summary>
+        /// <returns>Eine Liste der Keyframes mit fensterbezogenen Koordinaten</returns>
+        private ICollection<Tuple<float, float, ItemKeyFrame>> GetWindowCoordinates()
+        {
+            var list = new List<Tuple<float, float, ItemKeyFrame>>();
+            {
+                var absoluteTime = (float)0;
+                var predecessorTweening = (Tuple<float, float, ItemKeyFrame>)null;
+
+                foreach (var k in Story?.KeyFrames)
+                {
+                    if (k is ItemKeyFrameAct act)
+                    {
+                        if (predecessorTweening != null)
+                        {
+                            predecessorTweening = new Tuple<float, float, ItemKeyFrame>
+                            (
+                                predecessorTweening.Item1,
+                                absoluteTime + act.From - TimeOffset,
+                                predecessorTweening.Item3
+                            );
+
+                            list.Add(predecessorTweening);
+                            predecessorTweening = null;
+                        }
+
+                        // Handlung
+                        var item = new Tuple<float, float, ItemKeyFrame>
+                        (
+                            absoluteTime + act.From - TimeOffset,
+                            absoluteTime + act.From + act.Duration - TimeOffset,
+                            act
+                        );
+
+                        absoluteTime += act.From + act.Duration;
+                        list.Add(item);
+                    }
+                    else if (k is ItemKeyFrameTweening tweening)
+                    {
+                        // Tweening
+                        predecessorTweening = new Tuple<float, float, ItemKeyFrame>
+                        (
+                            absoluteTime - TimeOffset,
+                            0,
+                            tweening
+                        );
+                    }
+                }
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -181,7 +236,6 @@ namespace GameExpress.Controls
             var accent3 = new UISettings().GetColorValue(UIColorType.AccentLight3);
             var accent1 = new UISettings().GetColorValue(UIColorType.AccentLight1);
             var accentDark = new UISettings().GetColorValue(UIColorType.AccentDark1);
-            ulong absoluteTime = 0;
 
             // Hintergrundgitter
             for (int j = 0; j < ActualWidth; j += 10)
@@ -190,87 +244,83 @@ namespace GameExpress.Controls
                 args.DrawingSession.DrawLine(j - x, 0, j - x, (float)ActualHeight, lightGray);
             }
 
-            ItemKeyFrame predecessor = null;
+            // Fenster Koordinaten ermitteln
+            var list = GetWindowCoordinates();
 
-            foreach (var k in Story.KeyFrames)
+            // Zeichnen
+            foreach (var item in list)
             {
-                if (SelectedKeyFrame != null && SelectedKeyFrame.Item == k)
+                if (item.Item2 < 0) continue;
+                else if (item.Item1 > Content.ActualWidth) break;
+
+                if (item.Item3 is ItemKeyFrameAct act)
                 {
-                    if (SelectedKeyFrame.Outside)
+                    // Handlung
+                    if (SelectedKeyFrame != null && SelectedKeyFrame.Item == item.Item3)
                     {
-                        var red = Color.FromArgb(125, 255, 10, 10);
-                        args.DrawingSession.FillRectangle(absoluteTime + k.From - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, red);
+                        if (SelectedKeyFrame.Outside)
+                        {
+                            var red = Color.FromArgb(125, 255, 10, 10);
+                            args.DrawingSession.FillRectangle(item.Item1, 0, act.Duration, (float)ActualHeight, red);
+                        }
+                        else
+                        {
+                            var accent2 = new UISettings().GetColorValue(UIColorType.AccentLight2);
+                            accent2.A = 125;
+                            args.DrawingSession.FillRectangle(item.Item1, 0, act.Duration, (float)ActualHeight, accent2);
+                        }
                     }
                     else
                     {
-                        var accent2 = new UISettings().GetColorValue(UIColorType.AccentLight2);
-                        accent2.A = 125;
-                        args.DrawingSession.FillRectangle(absoluteTime + k.From - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, accent2);
+                        args.DrawingSession.FillRectangle(item.Item1, 0, act.Duration, (float)ActualHeight, accent3);
+                    }
+
+                    args.DrawingSession.DrawRectangle(item.Item1, 0, act.Duration, (float)ActualHeight, accent1);
+
+                    if (act.Duration > 15)
+                    {
+                        args.DrawingSession.FillRectangle(item.Item1, 0, 10, 10, accentDark);
+                        args.DrawingSession.FillRectangle(item.Item2, (float)ActualHeight, -10, -10, accentDark);
                     }
                 }
-                else
+                else if (item.Item3 is ItemKeyFrameTweening tweening && item.Item3.Enable)
                 {
-                    args.DrawingSession.FillRectangle(absoluteTime + k.From - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, accent3);
-                }
-
-                args.DrawingSession.DrawRectangle(absoluteTime + k.From - (float)TimeOffset, 0, k.Duration, (float)ActualHeight, accent1);
-
-                if (k.Duration > 15)
-                {
-                    args.DrawingSession.FillRectangle(absoluteTime + k.From - (float)TimeOffset, 0, 10, 10, accentDark);
-                    args.DrawingSession.FillRectangle(absoluteTime + k.From + k.Duration - (float)TimeOffset, (float)ActualHeight, -10, -10, accentDark);
-                }
-
-                // Tweening
-                if (predecessor != null && predecessor.Tweening)
-                {
+                    // Tweening
                     args.DrawingSession.DrawLine
                     (
-                        (float)absoluteTime - TimeOffset,
+                        (float)item.Item1,
                         (float)(ActualHeight / 2),
-                        (float)absoluteTime + k.From - TimeOffset,
+                        (float)item.Item2,
                         (float)(ActualHeight / 2),
                         accent1
                     );
 
                     args.DrawingSession.FillEllipse
                     (
-                        (float)absoluteTime - TimeOffset,
+                        (float)item.Item1,
                         (float)(ActualHeight / 2),
                         4,
                         4,
                         accent1
                     );
-                    //args.DrawingSession.DrawEllipse
-                    //(
-                    //    (float)absoluteTime - TimeOffset,
-                    //    (float)(ActualHeight / 2),
-                    //    6,
-                    //    6,
-                    //    accent1
-                    //);
 
                     args.DrawingSession.DrawLine
                     (
-                        (float)absoluteTime + k.From - TimeOffset - 4,
+                        (float)item.Item2 - 4,
                         (float)(ActualHeight / 2) - 3,
-                        (float)absoluteTime + k.From - TimeOffset,
+                        (float)item.Item2,
                         (float)(ActualHeight / 2),
                         accent1
                     );
                     args.DrawingSession.DrawLine
                     (
-                        (float)absoluteTime + k.From - TimeOffset - 4,
+                        (float)item.Item2 - 4,
                         (float)(ActualHeight / 2) + 3,
-                        (float)absoluteTime + k.From - TimeOffset,
+                        (float)item.Item2,
                         (float)(ActualHeight / 2),
                         accent1
                     );
                 }
-
-                absoluteTime += k.From + k.Duration;
-
-                predecessor = k;
             }
         }
 
@@ -282,7 +332,6 @@ namespace GameExpress.Controls
         private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var pointer = e.GetCurrentPoint(this);
-            var absoluteTime = (ulong)0;
             var x = pointer.Position.X;
             var y = pointer.Position.Y;
 
@@ -291,44 +340,52 @@ namespace GameExpress.Controls
             // Story ist für Bearbeitung gesperrt
             if (Story.Lock) return;
 
-            foreach (var k in Story.KeyFrames)
+            // Fenster Koordinaten ermitteln
+            var list = GetWindowCoordinates();
+
+            // Zeichnen
+            foreach (var item in list)
             {
-                absoluteTime += k.From;
-                var from = absoluteTime - (float)TimeOffset;
-                var to = absoluteTime + k.Duration - (float)TimeOffset;
+                if (item.Item2 < 0) continue;
+                else if (item.Item1 > Content.ActualWidth) break;
 
-                if (x > from &&  x < to)
+                if (x > item.Item1 && x < item.Item2)
                 {
-                    ViewHelper.ChangePropertyPage(k);
-                    SelectedKeyFrame = null;
-
-                    if (k.Lock) return;
-
-                    Content.CapturePointer(e.Pointer);
-                    SelectedKeyFrame = new SelectionHelper<ItemKeyFrame>()
+                    if (item.Item3 is ItemKeyFrameAct act)
                     {
-                        Item = k,
-                        OriginalPosition = pointer.Position,
-                        OriginalItemPosition = new Point(k.From, k.Duration)
-                    };
+                        ViewHelper.ChangePropertyPage(act);
 
-                    if (x <= from + 10 && y < 10)
-                    {
-                        SelectedKeyFrame.EditMode = SelectionHelper<ItemKeyFrame>.SelectionEditMode.From;
+                        if (act.Lock) return;
+
+                        Content.CapturePointer(e.Pointer);
+                        SelectedKeyFrame = new SelectionHelper<ItemKeyFrameAct>()
+                        {
+                            Item = act,
+                            OriginalPosition = pointer.Position,
+                            OriginalItemPosition = new Point(act.From, act.Duration)
+                        };
+
+                        if (x <= item.Item1 + 10 && y < 10)
+                        {
+                            SelectedKeyFrame.EditMode = SelectionHelper<ItemKeyFrameAct>.SelectionEditMode.From;
+                        }
+                        else if (x >= item.Item2 - 10 && y > ActualHeight - 10)
+                        {
+                            SelectedKeyFrame.EditMode = SelectionHelper<ItemKeyFrameAct>.SelectionEditMode.Duration;
+                        }
+                        else
+                        {
+                            SelectedKeyFrame.EditMode = SelectionHelper<ItemKeyFrameAct>.SelectionEditMode.Move;
+                        }
+
                     }
-                    else if (x >= to - 10 && y > ActualHeight - 10)
+                    else if (item.Item3 is ItemKeyFrameTweening tweening)
                     {
-                        SelectedKeyFrame.EditMode = SelectionHelper<ItemKeyFrame>.SelectionEditMode.Duration;
-                    }
-                    else
-                    {
-                        SelectedKeyFrame.EditMode = SelectionHelper<ItemKeyFrame>.SelectionEditMode.Move;
+                        ViewHelper.ChangePropertyPage(tweening);
                     }
 
                     return;
                 }
-
-                absoluteTime += k.Duration;
             }
 
             ViewHelper.ChangePropertyPage(Story);
@@ -359,12 +416,12 @@ namespace GameExpress.Controls
                 SelectedKeyFrame.Outside = !(pointer.Position.X >= 0 && pointer.Position.X <= ActualWidth &&
                                              pointer.Position.Y >= 0 && pointer.Position.Y <= ActualHeight);
 
-                if (SelectedKeyFrame.EditMode == SelectionHelper<ItemKeyFrame>.SelectionEditMode.Move)
+                if (SelectedKeyFrame.EditMode == SelectionHelper<ItemKeyFrameAct>.SelectionEditMode.Move)
                 {
                     // Verschieben
                     SelectedKeyFrame.Item.From = (ulong)Math.Abs(value);
                 }
-                else if (SelectedKeyFrame.EditMode == SelectionHelper<ItemKeyFrame>.SelectionEditMode.From)
+                else if (SelectedKeyFrame.EditMode == SelectionHelper<ItemKeyFrameAct>.SelectionEditMode.From)
                 {
                     var duration = SelectedKeyFrame.Item.From + SelectedKeyFrame.Item.Duration;
                     
@@ -379,7 +436,7 @@ namespace GameExpress.Controls
                         SelectedKeyFrame.Item.Duration = 1;
                     }
                 }
-                else if (SelectedKeyFrame.EditMode == SelectionHelper<ItemKeyFrame>.SelectionEditMode.Duration)
+                else if (SelectedKeyFrame.EditMode == SelectionHelper<ItemKeyFrameAct>.SelectionEditMode.Duration)
                 {
                     // Größe Ändern
                     if (SelectedKeyFrame.OriginalItemPosition.Y + delta > 2f)

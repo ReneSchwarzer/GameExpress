@@ -17,9 +17,6 @@
                 <ToggleButton Margin="0,0,10,0" IsChecked="{Binding Lock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE1F7;" />
                 </ToggleButton>
-                <ToggleButton Margin="0,0,30,0" IsChecked="{Binding Tweening, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Unlock, Mode=OneWay}">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEA52;" />
-                </ToggleButton>
             </StackPanel>
             <Button Grid.Column="1" Click="OnDeleteKeyFrame" IsEnabled="{Binding Unlock, Mode=OneWay}">
                 <SymbolIcon Symbol="Delete"/>
