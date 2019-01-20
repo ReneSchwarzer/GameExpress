@@ -4,6 +4,7 @@ using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Composition;
 using Microsoft.Graphics.Canvas.UI.Xaml;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -53,6 +54,11 @@ namespace GameExpress.Controls
         /// Liefert oder setzt den RulerButton
         /// </summary>
         protected ToggleButton RulerButton { get; set; }
+
+        /// <summary>
+        /// Liefert oder setzt den FitButton
+        /// </summary>
+        protected Button FitButton { get; set; }
 
         /// <summary>
         /// Liefert oder setzt den RulerButton
@@ -135,14 +141,19 @@ namespace GameExpress.Controls
 
             if (GridButton != null)
             {
-                GridButton.DataContext = this;
             }
 
             RulerButton = GetTemplateChild("RulerButton") as ToggleButton;
 
             if (RulerButton != null)
             {
-                RulerButton.DataContext = this;
+            }
+
+            FitButton = GetTemplateChild("FitButton") as Button;
+
+            if (FitButton != null)
+            {
+                FitButton.Click += OnFitButtonClick;
             }
 
             CommandBar = GetTemplateChild("CommandBar") as CommandBar;
@@ -171,6 +182,8 @@ namespace GameExpress.Controls
             {
                 Item.PropertyChanged += OnInvalidate;
             }
+
+            DataContext = this;
         }
 
         /// <summary>
@@ -499,6 +512,31 @@ namespace GameExpress.Controls
         }
 
         /// <summary>
+        /// Wird aufgerufen, wenn die Ansicht automatisch ausgerichtet werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnFitButtonClick(object sender, RoutedEventArgs e)
+        {
+            Zoom = 100;
+            var viewRect = GetItemViewRect(out bool infinity);
+
+            var sx = Content.ActualWidth / viewRect.Width;
+            var sy = Content.ActualHeight / viewRect.Height;
+            var zoom = (int)(Math.Max(sx, sy) * 100f);
+
+            Zoom = zoom;
+
+            ScrollViewer.ChangeView
+            (
+                ScrollViewer.ScrollableWidth / 2f,
+                ScrollViewer.ScrollableHeight / 2f,
+                1.0f,
+                false
+            );
+        }
+
+        /// <summary>
         /// Wird aufgerufen, wenn das Control geladen wird
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
@@ -545,6 +583,11 @@ namespace GameExpress.Controls
             {
                 ScrollViewer.ViewChanged -= OnViewChanged;
                 ScrollViewer.Loaded -= OnScrollViewerLoaded;
+            }
+
+            if (FitButton != null)
+            {
+                FitButton.Click -= OnFitButtonClick;
             }
 
             SizeChanged -= OnSizeChanged;
@@ -632,7 +675,7 @@ namespace GameExpress.Controls
             DependencyProperty.Register("GridVisibility", typeof(Visibility), typeof(EditorPanel), new PropertyMetadata(Visibility.Visible));
 
         /// <summary>
-        /// Liefert oder setzt die Sichtbarbkeit des Rasters
+        /// Liefert oder setzt die Sichtbarbkeit der Lineale
         /// </summary>
         public Visibility RulerVisibility
         {

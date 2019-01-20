@@ -21,13 +21,13 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <Canvas Grid.Column="0" Grid.Row="0" Background="{StaticResource SystemChromeHighColor}" Visibility="{Binding RulerVisibility}" />
-                        <controls:CanvasControl Grid.Column="0" Grid.Row="1" Name="VerticalRuler" Width="20" Visibility="{Binding RulerVisibility, Mode=TwoWay}"/>
-                        <controls:CanvasControl Grid.Column="1" Grid.Row="0" Name="HorizontalRuler" Height="20" HorizontalAlignment="Stretch" Visibility="{Binding RulerVisibility, Mode=TwoWay}"/>
+                        <Canvas Grid.Column="0" Grid.Row="0" Background="{StaticResource SystemChromeHighColor}" Visibility="{Binding RulerVisibility, Mode=OneWay}" />
+                        <controls:CanvasControl Grid.Column="0" Grid.Row="1" Name="VerticalRuler" Width="20" Visibility="{Binding RulerVisibility, Mode=OneWay}"/>
+                        <controls:CanvasControl Grid.Column="1" Grid.Row="0" Name="HorizontalRuler" Height="20" HorizontalAlignment="Stretch" Visibility="{Binding RulerVisibility, Mode=OneWay}"/>
                         <ScrollViewer Name="ScrollViewer" 
                                       Grid.Column="1" Grid.Row="1" 
                                       HorizontalScrollMode="Enabled" 
@@ -48,7 +48,7 @@
                             <CommandBar Name="CommandBar" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" >
                                 <CommandBar.Content>
                                     <StackPanel Orientation="Horizontal">
-                                        <Slider Name="ZoomSlider" Minimum="10" Maximum="200" Value="100" Width="200" HorizontalAlignment="Right" Margin="20,0,20,0" />
+                                        <Slider Name="ZoomSlider" Minimum="10" Maximum="200" Value="{Binding Zoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" HorizontalAlignment="Right" Margin="20,0,20,0" />
                                     </StackPanel>
                                 </CommandBar.Content>
 
@@ -58,7 +58,7 @@
                                             <FontIcon Glyph="&#xE80A;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                                         </AppBarToggleButton.Icon>
                                     </AppBarToggleButton>
-                                    <AppBarToggleButton Name="RulerButton" Label="Lineal" IsChecked="{Binding RulerVisibility, Mode=TwoWay, Converter={StaticResource VisibilityToBoolean}}">
+                                    <AppBarToggleButton Name="RulerButton" Label="Lineal" IsChecked="{Binding RulerVisibility, Mode=TwoWay, Converter={StaticResource VisibilityToBoolean}, UpdateSourceTrigger=PropertyChanged}">
                                         <AppBarToggleButton.Icon>
                                             <FontIcon Glyph="&#xED5E;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                                         </AppBarToggleButton.Icon>
