@@ -35,5 +35,10 @@ namespace GameExpress.Model.Item
                 return new Size();
             }
         }
+
+        /// <summary>
+        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
+        /// </summary>
+        public override string Symbol { get { return "\uE1C3"; } }
     }
 }

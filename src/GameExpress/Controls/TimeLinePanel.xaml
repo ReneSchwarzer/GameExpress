@@ -28,7 +28,7 @@
 
             <Grid Grid.Column="0" Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="194"/>
+                    <ColumnDefinition Width="232"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -66,17 +66,18 @@
                     <DataTemplate x:DataType="model:ItemStory">
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="150"/>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" Margin="4,0,4,0"/>
-                            <Button Grid.Column="1" Margin="0,0,4,0">
+                            <FontIcon Grid.Column="0" Glyph="{Binding Symbol, Mode=OneWay}" Margin="4,0,4,0" MinWidth="30" MaxWidth="30"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" Margin="4,0,4,0"/>
+                            <Button Grid.Column="2" Margin="0,0,4,0">
                                 <Button.Flyout>
                                     <MenuFlyout>
                                         <MenuFlyoutItem Text="Schlüsselbild" Icon="Add" Click="OnAddKeyFrame" Tag="{Binding ID}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
-                                        <MenuFlyoutItem Text="Schneiden" Icon="Trim" Click="OnAddKeyFrame" Tag="{Binding ID}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+                                        <!--<MenuFlyoutItem Text="Schneiden" Icon="Trim" Click="OnAddKeyFrame" Tag="{Binding ID}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>-->
                                         <ToggleMenuFlyoutItem Text="Speeren" IsChecked="{Binding Lock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE1F7;" />
@@ -95,7 +96,7 @@
                                 </Button.Flyout>
                                 <SymbolIcon Symbol="More" />
                             </Button>
-                            <local:KeyFrameEditor Grid.Column="2" Story="{Binding Self, Mode=TwoWay}"/>
+                            <local:KeyFrameEditor Grid.Column="3" Story="{Binding Self, Mode=TwoWay}"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -105,7 +106,7 @@
         <Rectangle x:Name="TimePositionLocator" 
                                 Fill="{ThemeResource SystemControlAccentDark1AcrylicElementAccentDark1Brush}" 
                                 Width="10" 
-                                Canvas.Left="194" 
+                                Canvas.Left="232" 
                                 Canvas.Top="0" 
                                 Canvas.ZIndex="998">
         </Rectangle>
@@ -113,7 +114,7 @@
         <Border x:Name="TimePosition" Background="{ThemeResource SystemControlAccentDark1AcrylicElementAccentDark1Brush}"
                             Height="{x:Bind Path=Ruler.Height, Mode=OneWay}"
                             Canvas.Top="0" 
-                            Canvas.Left="194" 
+                            Canvas.Left="232" 
                             VerticalAlignment="Center"
                             Padding="0,0,5,0"
                             Canvas.ZIndex="999">

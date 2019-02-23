@@ -41,6 +41,24 @@
     </item>
   <item xsi:type="object" name="Fliegendes UFO" id="4a6ba17c-05fc-4538-a092-6ef6cda6086d" enable="true" lock="false">
     <note />
+    <state name="Standard" id="9AA25CA0-9271-4DA2-8F80-F586C45A3E52" />
+    <state name="Parken" id="DCB90FF1-A7DD-4741-82D1-EE3EEB85392C" />
+    <item xsi:type="animation" name="Standard" id="9AA25CA0-9271-4DA2-8F80-F586C45A3E52">
+      <hotspot x="0" y="0" />
+      <gamma value="0" />
+      <alpha value="255" />
+      <blur value="0" />
+      <story name="Erstes Schlüsselbild" id="5afc2d97-2666-4b0f-81ed-c8e3b77fdf45" enable="true" lock="false" item="UFO" loop="oscillate">
+        <keyframe xsi:type="act"  name="" id="0b47212d-c971-472b-8f2f-26bf6e4828b5" enable="true" lock="false" from="0" duration="10" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0" />
+        <keyframe xsi:type="tweening" id="54567691-9EC0-401E-80DD-BB782E297834" enable="false"/>
+        <keyframe xsi:type="act"  name="" id="ee87b05d-4eb6-4012-a4c6-bd857ca601cc" enable="true" lock="false" from="100" duration="1" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="10" scaley="10" shearx="0" sheary="0" />
+        <keyframe xsi:type="tweening" id="CA5DFA42-419E-408A-B279-19D5D6A9BB7E" enable="true"/>
+        <keyframe xsi:type="act"  name="" id="5675c1f2-8c75-4628-83c5-6c7f01b9ecec" enable="true" lock="false" from="200" duration="10" tweening="true" rotationx="0" rotationy="0" rotationz="40" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0" />
+      </story>
+      <story name="Zweites Schlüsselbild" id="558c5774-2817-4c09-83d2-fe01532f6809" enable="true" lock="false" item="Omicron" loop="repeat">
+        <keyframe xsi:type="act"  name="" id="3bccb90a-8c5a-4938-8af7-800c7fd0dda6" enable="true" lock="false" from="0" duration="210" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0" />
+      </story>
+    </item>
     <item xsi:type="image" name="UFO" id="1f235524-5d77-44cb-bdfd-cbf170160c89" enable="true" lock="false">
       <note />
       <hotspot x="288" y="194" />
@@ -49,20 +67,6 @@
       <blur value="0" />
       <source>ufo.png</source>
     </item>
-    <hotspot x="0" y="0" />
-    <gamma value="0" />
-    <alpha value="255" />
-    <blur value="0" />
-    <story name="Erstes Schlüsselbild" id="5afc2d97-2666-4b0f-81ed-c8e3b77fdf45" enable="true" lock="false" item="UFO" loop="oscillate">
-      <keyframe xsi:type="act"  name="" id="0b47212d-c971-472b-8f2f-26bf6e4828b5" enable="true" lock="false" from="0" duration="10" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0" />
-      <keyframe xsi:type="tweening" id="54567691-9EC0-401E-80DD-BB782E297834" enable="false"/>
-      <keyframe xsi:type="act"  name="" id="ee87b05d-4eb6-4012-a4c6-bd857ca601cc" enable="true" lock="false" from="100" duration="1" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="10" scaley="10" shearx="0" sheary="0" />
-      <keyframe xsi:type="tweening" id="CA5DFA42-419E-408A-B279-19D5D6A9BB7E" enable="true"/>
-      <keyframe xsi:type="act"  name="" id="5675c1f2-8c75-4628-83c5-6c7f01b9ecec" enable="true" lock="false" from="200" duration="10" tweening="true" rotationx="0" rotationy="0" rotationz="40" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0" />
-    </story>
-    <story name="Zweites Schlüsselbild" id="558c5774-2817-4c09-83d2-fe01532f6809" enable="true" lock="false" item="Omicron" loop="repeat">
-      <keyframe xsi:type="act"  name="" id="3bccb90a-8c5a-4938-8af7-800c7fd0dda6" enable="true" lock="false" from="0" duration="210" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0" />
-    </story>
   </item>
   <item xsi:type="image" name="Sputnik" id="960e35a1-0bbc-4245-9f41-cbaf2109aaea" enable="true" lock="false">
     <note />

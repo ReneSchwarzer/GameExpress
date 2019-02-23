@@ -37,93 +37,6 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="28"/>
         </Style>
-
-        <DataTemplate 
-        x:Key="DefaultTemplate" 
-        x:DataType="Item:ItemTreeNode">
-            <TreeViewItem ItemsSource="{Binding Children}">
-                <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol="Placeholder" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding Name}" />
-                </StackPanel>
-            </TreeViewItem>
-        </DataTemplate>
-
-        <DataTemplate 
-        x:Key="GameTemplate" 
-        x:DataType="Item:ItemGame">
-            <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="True">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xE7FC;" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding Name}" />
-                </StackPanel>
-            </TreeViewItem>
-        </DataTemplate>
-
-        <DataTemplate 
-        x:Key="SceneTemplate" 
-        x:DataType="Item:ItemScene">
-            <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="True">
-                <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol="Street" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding Name}" />
-                </StackPanel>
-            </TreeViewItem>
-        </DataTemplate>
-
-        <DataTemplate 
-        x:Key="ObjectTemplate" 
-        x:DataType="Item:ItemObject">
-            <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="True">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xEBD2;" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding Name}" />
-                </StackPanel>
-            </TreeViewItem>
-        </DataTemplate>
-
-        <DataTemplate 
-        x:Key="MapTemplate" 
-        x:DataType="Item:ItemMap">
-            <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="True">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xE707;" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding Name}" />
-                </StackPanel>
-            </TreeViewItem>
-        </DataTemplate>
-
-        <DataTemplate 
-        x:Key="ImageTemplate" 
-        x:DataType="Item:ItemImage">
-            <TreeViewItem ItemsSource="{Binding Children}">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xF69E;" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding Name}" />
-                </StackPanel>
-            </TreeViewItem>
-        </DataTemplate>
-
-        <DataTemplate 
-        x:Key="SoundTemplate" 
-        x:DataType="Item:ItemSound">
-            <TreeViewItem ItemsSource="{Binding Children}">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xE8D6;" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding Name}" />
-                </StackPanel>
-            </TreeViewItem>
-        </DataTemplate>
-
-        <View:ItemTemplateSelector x:Key="ItemTemplateSelector"
-                                   DefaultTemplate="{StaticResource DefaultTemplate}" 
-                                   GameTemplate="{StaticResource GameTemplate}" 
-                                   SceneTemplate="{StaticResource SceneTemplate}" 
-                                   ObjectTemplate="{StaticResource ObjectTemplate}"
-                                   MapTemplate="{StaticResource MapTemplate}"
-                                   ImageTemplate="{StaticResource ImageTemplate}"
-                                   SoundTemplate="{StaticResource SoundTemplate}" 
-            />
     </Page.Resources>
     
     <Grid Margin="0">
@@ -162,7 +75,8 @@
                        Grid.Row="0" Grid.Column="1"    
                        x:Uid="PageInventoryItemEditLabel"
                        Style="{StaticResource TitelBarText}"  
-                       Text="{Binding Name}" TabFocusNavigation="Cycle"/>
+                       Text="{Binding Name}" TabFocusNavigation="Cycle"
+                       PointerPressed="OnTitelPointerPressed"/>
         </Grid>
 
         <Grid Grid.Column="0" Grid.Row="1" >
@@ -180,11 +94,21 @@
                 <ScrollViewer Grid.Row="0">
                     <StackPanel>
                         <controls:TreeView Name="Tree" 
-                                           ItemsSource="{Binding Tree}" 
-                                           ItemTemplateSelector="{StaticResource ItemTemplateSelector}" 
+                                           ItemsSource="{Binding Tree}"
                                            ItemInvoked="OnItemInvoked" 
-                                           SelectionMode="Single"/>
-                        
+                                           SelectionMode="Single">
+                            <controls:TreeView.ItemTemplate>
+                                <DataTemplate x:DataType="Item:Item">
+                                    <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="True">
+                                        <StackPanel Orientation="Horizontal">
+                                            <FontIcon Glyph="{Binding Symbol}" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </StackPanel>
+                                    </TreeViewItem>
+                                </DataTemplate>
+                            </controls:TreeView.ItemTemplate>
+                        </controls:TreeView>
+
                         <Frame Name="PropertyFrame" 
                                Visibility="Collapsed"/>
                     </StackPanel>
@@ -227,9 +151,9 @@
                         </AppBarButton>
                         <AppBarToggleButton Name="Edit" Label="Bearbeiten" Icon="Edit" Click="OnEdit"/>
                     </CommandBar.PrimaryCommands>
-                    <CommandBar.SecondaryCommands>
+                    <!--<CommandBar.SecondaryCommands>
                         <AppBarButton Name="Delete" Label="Löschen" Icon="Delete" Click="OnDelete"/>
-                    </CommandBar.SecondaryCommands>
+                    </CommandBar.SecondaryCommands>-->
                 </CommandBar>
             </Grid>
 

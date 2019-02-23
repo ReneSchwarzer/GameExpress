@@ -122,6 +122,11 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
+        /// </summary>
+        public virtual string Symbol { get { return "\uE18A"; } }
+
+        /// <summary>
         /// Event zum Mitteilen, dass sich eine Eigenschaften geändert hat
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;

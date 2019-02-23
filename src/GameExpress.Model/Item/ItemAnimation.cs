@@ -9,7 +9,7 @@ using Windows.UI.Xaml;
 namespace GameExpress.Model.Item
 {
     [XmlType("animation")]
-    public abstract class ItemAnimation : ItemGraphics
+    public class ItemAnimation : ItemGraphics
     {
         /// <summary>
         /// Liefert oder setzt die Instanzen
@@ -90,7 +90,7 @@ namespace GameExpress.Model.Item
         /// <returns>Die Tiefenkopie</returns>
         public override T Copy<T>()
         {
-            var copy = base.Copy<T>() as ItemObject;
+            var copy = base.Copy<T>() as ItemAnimation;
 
             foreach (var i in StoryBoard)
             {
@@ -99,5 +99,22 @@ namespace GameExpress.Model.Item
 
             return copy as T;
         }
+
+        /// <summary>
+        /// Liefert die Größe
+        /// </summary>
+        [XmlIgnore]
+        public override Size Size
+        {
+            get
+            {
+                return new Size();
+            }
+        }
+
+        /// <summary>
+        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
+        /// </summary>
+        public override string Symbol { get { return "\uE173"; } }
     }
 }

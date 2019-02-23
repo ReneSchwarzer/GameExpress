@@ -38,6 +38,11 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
+        /// </summary>
+        public override string Symbol { get { return "\uE8D6"; } }
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         public ItemSound()

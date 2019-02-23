@@ -130,6 +130,7 @@
       <DependentUpon>TimeLinePanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Panel.cs" />
+    <Compile Include="Converter\ObjectToItemAnimationConverter.cs" />
     <Compile Include="Converter\NegationConverter.cs" />
     <Compile Include="Converter\ItemToItemAnimationConverter.cs" />
     <Compile Include="Converter\ULongToDoubleConverter.cs" />
@@ -142,6 +143,12 @@
     </Compile>
     <Compile Include="ViewModel\ViewModel.cs" />
     <Compile Include="ViewModel\ViewModelMain.cs" />
+    <Compile Include="View\AnimationPage.xaml.cs">
+      <DependentUpon>AnimationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AnimationPropertyPage.xaml.cs">
+      <DependentUpon>AnimationPropertyPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\GeneralPage.xaml.cs">
       <DependentUpon>GeneralPage.xaml</DependentUpon>
     </Compile>
@@ -166,7 +173,6 @@
     <Compile Include="View\ImagePropertyPage.xaml.cs">
       <DependentUpon>ImagePropertyPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ItemTemplateSelector.cs" />
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -281,6 +287,14 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AnimationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AnimationPropertyPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\GeneralPage.xaml">
       <SubType>Designer</SubType>

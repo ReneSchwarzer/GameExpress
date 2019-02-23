@@ -46,16 +46,21 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
+        /// </summary>
+        public override string Symbol { get { return "\uE77C"; } }
+
+        /// <summary>
         /// Liefert oder setzt die Schlüselbilder
         /// </summary>
         [XmlElement("keyframe")]
         public ObservableCollection<ItemKeyFrame> KeyFrames { get; set; } = new ObservableCollection<ItemKeyFrame>();
 
         /// <summary>
-        /// Liefert oder setzt den Verweis auf das zugehörige Objekt
+        /// Liefert oder setzt den Verweis auf die übergeordnete Animation
         /// </summary>
         [XmlIgnore]
-        public ItemAnimation Object { get { return Parent as ItemAnimation; } }
+        public ItemAnimation Animation { get { return Parent as ItemAnimation; } }
 
         /// <summary>
         /// Die ID des mit der Instanz verbundenen Element
@@ -170,10 +175,10 @@ namespace GameExpress.Model.Item
         /// <param name="item">Das Item</param>
         protected void AttachedInstance(string item)
         {
-            if (Object == null) return;
+            if (Animation == null) return;
 
             // Suche Item
-            var orgin = Object.Root.FindItem(Item);
+            var orgin = Animation.Root.FindItem(Item);
 
             if (orgin != null)
             {

@@ -5,8 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:item="using:GameExpress.Model.Item"
-    xmlns:View="using:GameExpress.View"
-    xmlns:converter="using:GameExpress.Converter"
     mc:Ignorable="d"
     Loaded="OnLoaded"
     Unloaded="OnUnloaded"
@@ -15,103 +13,6 @@
     CloseButtonText="Abbrechen"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <ContentDialog.Resources>
-       
-        <DataTemplate 
-            x:Key="DefaultTemplate" 
-            x:DataType="item:ItemTreeNode">
-            <StackPanel Orientation="Horizontal" Margin="6">
-                <SymbolIcon Symbol="Placeholder" Margin="0,0,12,0"/>
-                <StackPanel>
-                    <TextBlock Text="{x:Bind Name}" FontWeight="Bold"/>
-                    <TextBlock Text="{x:Bind Path=Path}" Foreground="{ThemeResource SystemBaseMediumColor}"/>
-                </StackPanel>
-            </StackPanel>
-        </DataTemplate>
-
-        <DataTemplate 
-            x:Key="GameTemplate" 
-            x:DataType="item:ItemGame">
-            <StackPanel Orientation="Horizontal" Margin="6">
-                <FontIcon Glyph="&#xE7FC;" Margin="0,0,12,0"/>
-                <StackPanel>
-                    <TextBlock Text="{x:Bind Name}" FontWeight="Bold"/>
-                    <TextBlock Text="{x:Bind Path=Path}" Foreground="{ThemeResource SystemBaseMediumColor}"/>
-                </StackPanel>
-            </StackPanel>
-        </DataTemplate>
-
-        <DataTemplate 
-            x:Key="SceneTemplate" 
-            x:DataType="item:ItemScene">
-            <StackPanel Orientation="Horizontal" Margin="6">
-                <SymbolIcon Symbol="Street" Margin="0,0,12,0"/>
-                <StackPanel>
-                    <TextBlock Text="{x:Bind Name}" FontWeight="Bold"/>
-                    <TextBlock Text="{x:Bind Path=Path}" Foreground="{ThemeResource SystemBaseMediumColor}"/>
-                </StackPanel>
-            </StackPanel>
-        </DataTemplate>
-
-        <DataTemplate 
-            x:Key="ObjectTemplate" 
-            x:DataType="item:ItemObject">
-            <StackPanel Orientation="Horizontal" Margin="6">
-                <FontIcon Glyph="&#xEBD2;" Margin="0,0,12,0"/>
-                <StackPanel>
-                    <TextBlock Text="{x:Bind Name}" FontWeight="Bold"/>
-                    <TextBlock Text="{x:Bind Path=Path}" Foreground="{ThemeResource SystemBaseMediumColor}"/>
-                </StackPanel>
-            </StackPanel>
-        </DataTemplate>
-
-        <DataTemplate 
-            x:Key="MapTemplate" 
-            x:DataType="item:ItemMap">
-            <StackPanel Orientation="Horizontal" Margin="6">
-                <FontIcon Glyph="&#xE707;" Margin="0,0,12,0"/>
-                <StackPanel>
-                    <TextBlock Text="{x:Bind Name}" FontWeight="Bold"/>
-                    <TextBlock Text="{x:Bind Path=Path}" Foreground="{ThemeResource SystemBaseMediumColor}"/>
-                </StackPanel>
-            </StackPanel>
-        </DataTemplate>
-
-        <DataTemplate 
-            x:Key="ImageTemplate" 
-            x:DataType="item:ItemImage">
-            <StackPanel Orientation="Horizontal" Margin="6">
-                <FontIcon Glyph="&#xF69E;" Margin="0,0,12,0"/>
-                <StackPanel>
-                    <TextBlock Text="{x:Bind Name}" FontWeight="Bold"/>
-                    <TextBlock Text="{x:Bind Path=Path}" Foreground="{ThemeResource SystemBaseMediumColor}"/>
-                </StackPanel>
-            </StackPanel>
-        </DataTemplate>
-
-        <DataTemplate 
-            x:Key="SoundTemplate" 
-            x:DataType="item:ItemSound">
-            <StackPanel Orientation="Horizontal" Margin="6">
-                <FontIcon Glyph="&#xE8D6;" Margin="0,0,12,0"/>
-                <StackPanel>
-                    <TextBlock Text="{x:Bind Name}" FontWeight="Bold"/>
-                    <TextBlock Text="{x:Bind Path=Path}" Foreground="{ThemeResource SystemBaseMediumColor}"/>
-                </StackPanel>
-            </StackPanel>
-        </DataTemplate>
-
-        <View:ItemTemplateSelector x:Key="ItemTemplateSelector"
-                                   DefaultTemplate="{StaticResource DefaultTemplate}" 
-                                   GameTemplate="{StaticResource GameTemplate}" 
-                                   SceneTemplate="{StaticResource SceneTemplate}" 
-                                   ObjectTemplate="{StaticResource ObjectTemplate}"
-                                   MapTemplate="{StaticResource MapTemplate}"
-                                   ImageTemplate="{StaticResource ImageTemplate}"
-                                   SoundTemplate="{StaticResource SoundTemplate}" 
-            />
-    </ContentDialog.Resources>
-    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="450"/>
@@ -124,8 +25,19 @@
         <ListView x:Name="List" 
                   Grid.Row="0" 
                   SelectionMode="Single" 
-                  ItemTemplateSelector="{StaticResource ItemTemplateSelector}" 
-                  SelectionChanged="OnSelectionChanged"/>
+                  SelectionChanged="OnSelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="item:ItemTreeNode">
+                    <StackPanel Orientation="Horizontal" Margin="6">
+                        <FontIcon Glyph="{Binding Symbol}" Margin="0,0,12,0"/>
+                        <StackPanel>
+                            <TextBlock Text="{x:Bind Name}" FontWeight="Bold"/>
+                            <TextBlock Text="{x:Bind Path=Path}" Foreground="{ThemeResource SystemBaseMediumColor}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
 
         <CheckBox x:Name="CheckBox"

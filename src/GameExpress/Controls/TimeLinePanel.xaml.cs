@@ -38,6 +38,11 @@ namespace GameExpress.Controls
         private long TimeOffsetPropertyToken { get; set; }
 
         /// <summary>
+        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die derigistrierung benötigt wird
+        /// </summary>
+        private long ItemToken { get; set; }
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         public TimeLinePanel()
@@ -116,7 +121,10 @@ namespace GameExpress.Controls
 
             }));
 
-            Item.StoryBoard.CollectionChanged += OnInstancesCollectionChanged;
+            ItemToken = RegisterPropertyChangedCallback(ItemProperty, new DependencyPropertyChangedCallback((s, e) =>
+            {
+                Item.StoryBoard.CollectionChanged += OnInstancesCollectionChanged;
+            }));
         }
 
         /// <summary>
@@ -128,7 +136,11 @@ namespace GameExpress.Controls
         {
             UnregisterPropertyChangedCallback(TimeProperty, TimePropertyToken);
             UnregisterPropertyChangedCallback(TimeOffsetProperty, TimeOffsetPropertyToken);
-            Item.StoryBoard.CollectionChanged -= OnInstancesCollectionChanged;
+            UnregisterPropertyChangedCallback(ItemProperty, ItemToken);
+            if (Item != null)
+            {
+                Item.StoryBoard.CollectionChanged -= OnInstancesCollectionChanged;
+            }
         }
 
         /// <summary>

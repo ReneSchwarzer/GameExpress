@@ -48,6 +48,10 @@ namespace GameExpress.View
             {
                 MainPage?.ChangePropertyPage(typeof(ObjectPropertyPage), item);
             }
+            else if (item is ItemAnimation)
+            {
+                MainPage?.ChangePropertyPage(typeof(AnimationPropertyPage), item);
+            }
             else if (item is ItemMap)
             {
                 MainPage?.ChangePropertyPage(typeof(MapPropertyPage), item);
@@ -96,6 +100,10 @@ namespace GameExpress.View
             else if (item is ItemObject)
             {
                 MainPage?.ChangePage(typeof(ObjectPage), item);
+            }
+            else if (item is ItemAnimation)
+            {
+                MainPage?.ChangePage(typeof(AnimationPage), item);
             }
             else if (item is ItemMap)
             {

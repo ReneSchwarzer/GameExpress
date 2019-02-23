@@ -48,6 +48,19 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Lädt die Ressourcen des Items
+        /// </summary>
+        /// <param name="g">Der Zeichenkontext</param>
+        public override void CreateResources(ICanvasResourceCreator g)
+        {
+            foreach(var c in Children)
+            {
+                c.CreateResources(g);
+            };
+
+        }
+
+        /// <summary>
         /// Liefert oder setzt einen Verweis auf das aktuelle Projekt
         /// </summary>
         [XmlIgnore]
@@ -102,16 +115,8 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
-        /// Lädt die Ressourcen des Items
+        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
         /// </summary>
-        /// <param name="g">Der Zeichenkontext</param>
-        public override void CreateResources(ICanvasResourceCreator g)
-        {
-            foreach(var c in Children)
-            {
-                c.CreateResources(g);
-            };
-
-        }
+        public override string Symbol { get { return "\uE7FC"; } }
     }
 }

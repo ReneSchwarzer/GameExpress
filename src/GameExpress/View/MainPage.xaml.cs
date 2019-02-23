@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Controls;
 namespace GameExpress.View
 {
     /// <summary>
-    /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
+    /// Das Hauptfenster
     /// </summary>
     public sealed partial class MainPage : Page
     {
@@ -274,6 +274,17 @@ namespace GameExpress.View
                 var game = Model.Tree.FirstOrDefault();
                 game.Children.Add(new ItemSound() { Name = "Neuer Sound" });
             }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn auf der Titelleiste geklickt wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnTitelPointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            var item = (ItemFrame.Content as Page)?.DataContext as Item;
+            ViewHelper.ChangePropertyPage(item);
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿using GameExpress.Controls;
-using GameExpress.Model.Item;
+﻿using GameExpress.Model.Item;
 using GameExpress.Model.Structs;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +11,9 @@ using Windows.UI.Xaml.Data;
 namespace GameExpress.Converter
 {
     /// <summary>
-    /// Konvertiert von ItemObject zu ItemInctance
+    /// Konvertiert von Object zu Item und zurück
     /// </summary>
-    public class ItemToItemAnimationConverter : IValueConverter
+    public class ObjectToItemAnimationConverter : IValueConverter
     {
         /// <summary>
         /// Konvertieren
@@ -27,7 +25,12 @@ namespace GameExpress.Converter
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return value as ItemAnimation;
+            if (value is ItemAnimation)
+            {
+                return value as ItemAnimation;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -40,7 +43,7 @@ namespace GameExpress.Converter
         /// <returns></returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return value as Item;
+            return value;
         }
     }
 }

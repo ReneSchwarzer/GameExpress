@@ -45,29 +45,29 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <CommandBar Name="CommandBar" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" >
+                            <CommandBar Name="CommandBar" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" OverflowButtonVisibility="Collapsed" FlowDirection="RightToLeft">
                                 <CommandBar.Content>
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
                                         <Slider Name="ZoomSlider" Minimum="10" Maximum="200" Value="{Binding Zoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" HorizontalAlignment="Right" Margin="20,0,20,0" />
                                     </StackPanel>
                                 </CommandBar.Content>
 
                                 <CommandBar.PrimaryCommands>
-                                    <AppBarToggleButton Name="GridButton" Label="Raster" IsChecked="{Binding GridVisibility, Mode=TwoWay, Converter={StaticResource VisibilityToBoolean}}">
-                                        <AppBarToggleButton.Icon>
-                                            <FontIcon Glyph="&#xE80A;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
-                                        </AppBarToggleButton.Icon>
-                                    </AppBarToggleButton>
-                                    <AppBarToggleButton Name="RulerButton" Label="Lineal" IsChecked="{Binding RulerVisibility, Mode=TwoWay, Converter={StaticResource VisibilityToBoolean}, UpdateSourceTrigger=PropertyChanged}">
-                                        <AppBarToggleButton.Icon>
-                                            <FontIcon Glyph="&#xED5E;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
-                                        </AppBarToggleButton.Icon>
-                                    </AppBarToggleButton>
                                     <AppBarButton Name="FitButton" Label="Anpassen">
                                         <AppBarButton.Icon>
                                             <FontIcon Glyph="&#xECE9;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                                         </AppBarButton.Icon>
                                     </AppBarButton>
+                                    <AppBarToggleButton Name="RulerButton" Label="Lineal" IsChecked="{Binding RulerVisibility, Mode=TwoWay, Converter={StaticResource VisibilityToBoolean}, UpdateSourceTrigger=PropertyChanged}">
+                                        <AppBarToggleButton.Icon>
+                                            <FontIcon Glyph="&#xED5E;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                                        </AppBarToggleButton.Icon>
+                                    </AppBarToggleButton>
+                                    <AppBarToggleButton Name="GridButton" Label="Raster" IsChecked="{Binding GridVisibility, Mode=TwoWay, Converter={StaticResource VisibilityToBoolean}}">
+                                        <AppBarToggleButton.Icon>
+                                            <FontIcon Glyph="&#xE80A;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                                        </AppBarToggleButton.Icon>
+                                    </AppBarToggleButton>
                                 </CommandBar.PrimaryCommands>
                             </CommandBar>
 

@@ -1,59 +1,88 @@
 ﻿using GameExpress.Model.Item;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace GameExpress.View
 {
     /// <summary>
-    /// Ansichtsseite eines Objektes
+    /// Ansichtseite einer Animation
     /// </summary>
-    public sealed partial class ObjectPage : Page
+    public sealed partial class AnimationPage : Page
     {
         /// <summary>
-        /// Liefert das mit der Ansicht verbundene Objekt
+        /// Liefert die mit der Ansicht verbundene Animation
         /// </summary>
-        private ItemObject Object { get { return DataContext as ItemObject; } }
-        
+        private ItemAnimation Animation { get { return DataContext as ItemAnimation; } }
+
         /// <summary>
         /// Konstruktor
         /// </summary>
-        public ObjectPage()
+        public AnimationPage()
         {
             this.InitializeComponent();
         }
 
         /// <summary>
-        /// Zwingt das Control zum neuzeichnen
+        /// Wird aufgerufen, wenn zu dieser Seite gewechselt wird
         /// </summary>
-        public void Invalidate()
+        /// <param name="e">Das Eventargument</param>
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            DataContext = e.Parameter;
+            Editor.Item = Animation;
+
+            ViewHelper.ChangePropertyPage(e.Parameter as Item);
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn die Seite geladen wurde
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnLoading(Windows.UI.Xaml.FrameworkElement sender, object args)
+        {
+            Animation.PropertyChanged += OnPropertyChanged;
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn die Seite entladen wurde
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnUnloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            Animation.PropertyChanged -= OnPropertyChanged;
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn die Eigenschaften des Bildes geändert haben
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             Editor.Invalidate();
         }
 
-        /// <summary>
-        /// Wird aufgerufen, wenn zu dieser Seite gewechselt wird
-        /// </summary>
-        /// <param name="args">Das Eventargument</param>
-        protected override void OnNavigatedTo(NavigationEventArgs args)
-        {
-            base.OnNavigatedTo(args);
-
-            DataContext = args.Parameter as ItemObject;
-            ViewHelper.ChangePropertyPage(args.Parameter as Item);
-
-            Editor.Loaded += (s, e) =>
-            {
-                //Editor.MergeCommandBar(ToolBar, false);
-                //ToolBar.Visibility = Visibility.Collapsed;
-            };
-        }
-        
         /// <summary>
         /// Wird aufgerufen, wenn eine neue Story hinzugefügt werden soll
         /// </summary>

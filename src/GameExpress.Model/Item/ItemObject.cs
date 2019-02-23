@@ -6,8 +6,14 @@ using Windows.Foundation;
 namespace GameExpress.Model.Item
 {
     [XmlType("object")]
-    public class ItemObject : ItemAnimation
+    public class ItemObject : ItemVisual
     {
+        /// <summary>
+        /// Liefert oder setzt die Objektzustände
+        /// </summary>
+        [XmlElement("state")]
+        public ObservableCollection<ItemAnimation> States { get; set; } = new ObservableCollection<ItemAnimation>();
+
         /// <summary>
         /// Konstruktor
         /// </summary>
@@ -40,8 +46,6 @@ namespace GameExpress.Model.Item
             base.Presentation(pc);
 
             pc.Graphics.Transform = transform;
-
-            DrawHotspot(pc);
         }
 
         /// <summary>
@@ -66,5 +70,10 @@ namespace GameExpress.Model.Item
                 return new Size();
             }
         }
+
+        /// <summary>
+        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
+        /// </summary>
+        public override string Symbol { get { return "\uEBD2"; } }
     }
 }

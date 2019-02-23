@@ -49,7 +49,7 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         protected override void OnCreateResources(CanvasCreateResourcesEventArgs args)
         {
-            Parallel.Invoke(() => { Item.CreateResources(Content); });
+            Parallel.Invoke(() => { Item?.CreateResources(Content); });
         }
 
         /// <summary>

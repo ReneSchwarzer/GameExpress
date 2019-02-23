@@ -77,7 +77,7 @@ namespace GameExpress.View
 
             var dialog = new SelectInstanceDialog()
             {
-                CurrentItem = Story.Object as ItemAnimation,
+                CurrentItem = Story.Animation as ItemAnimation,
                 SelectedItem = Story.Instance
             };
 
@@ -135,7 +135,7 @@ namespace GameExpress.View
             var command = await dialog.ShowAsync();
             if (command == yesCommand)
             {
-                var obj = Story.Object;
+                var obj = Story.Animation;
                 obj.StoryBoard.Remove(Story);
 
                 ViewHelper.ChangePropertyPage(obj);
