@@ -25,14 +25,14 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert das mit der Ansicht verbundene Karte
         /// </summary>
-        private ItemSound Sound { get { return DataContext as ItemSound; } }
+        private ItemSound Sound => DataContext as ItemSound;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public SoundPropertyPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>

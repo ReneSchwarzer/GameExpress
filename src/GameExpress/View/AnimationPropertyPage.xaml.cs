@@ -25,14 +25,14 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert das mit der Ansicht verbundene Zustand
         /// </summary>
-        private ItemAnimation State { get { return DataContext as ItemAnimation; } }
+        private ItemAnimation State => DataContext as ItemAnimation;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public AnimationPropertyPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>

@@ -24,14 +24,14 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert das mit der Ansicht verbundene Schlüsselbild
         /// </summary>
-        private ItemKeyFrameAct KeyFrame { get { return DataContext as ItemKeyFrameAct; } }
+        private ItemKeyFrameAct KeyFrame => DataContext as ItemKeyFrameAct;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public KeyFramePropertyPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>

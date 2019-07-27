@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace GameExpress.Model.Structs
 {
@@ -32,7 +27,7 @@ namespace GameExpress.Model.Structs
         /// Implizite benutzerdefinierte Typkonvertierungsoperation 
         /// </summary>
         /// <param name="gamma">Der Gammawert</param>
-        static public implicit operator float(Gamma gamma)
+        public static implicit operator float(Gamma gamma)
         {
             return gamma.Value;
         }
@@ -41,7 +36,7 @@ namespace GameExpress.Model.Structs
         /// Implizite benutzerdefinierte Typkonvertierungsoperation 
         /// </summary>
         /// <param name="gamma">Der Gammawert</param>
-        static public implicit operator Gamma(byte alpha)
+        public static implicit operator Gamma(byte alpha)
         {
             return new Gamma(alpha);
         }
@@ -52,8 +47,11 @@ namespace GameExpress.Model.Structs
         /// <param name="gamma">Der Unschärfewert</param>
         public void Add(Gamma gamma)
         {
-            float f = Value + ((255.0f - (float)this) * ((float)gamma / 255.0f));
-            if (f > 255) f = 255;
+            var f = Value + ((255.0f - (this)) * (gamma / 255.0f));
+            if (f > 255)
+            {
+                f = 255;
+            }
 
             Value = (byte)f;
         }

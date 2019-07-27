@@ -120,6 +120,11 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Item\IItemClickable.cs" />
+    <Compile Include="Item\IItemScale.cs" />
+    <Compile Include="Item\IItemTranslation.cs" />
+    <Compile Include="Item\IItemHotSpot.cs" />
+    <Compile Include="Item\IItemVisual.cs" />
     <Compile Include="Item\Item.cs" />
     <Compile Include="Item\ItemGame.cs" />
     <Compile Include="Item\ItemGraphics.cs" />
@@ -136,14 +141,15 @@
     <Compile Include="Item\ItemStory.cs" />
     <Compile Include="Item\ItemTreeNode.cs" />
     <Compile Include="Item\ItemSound.cs" />
-    <Compile Include="Item\ItemVisual.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structs\HitTestContext.cs" />
     <Compile Include="Structs\Hotspot.cs" />
     <Compile Include="Structs\Blur.cs" />
     <Compile Include="Structs\Alpha.cs" />
     <Compile Include="Structs\Gamma.cs" />
     <Compile Include="Structs\Hue.cs" />
+    <Compile Include="Structs\IContext.cs" />
     <Compile Include="Structs\Loop.cs" />
     <Compile Include="Structs\Matrix3D.cs" />
     <Compile Include="Structs\PresentationContext.cs" />

@@ -3,16 +3,14 @@ using Windows.Foundation;
 
 namespace GameExpress.Model.Structs
 {
-    public class PresentationContext
+    public class PresentationContext : IContext
     {
         /// <summary>
         /// Konstruktor
         /// </summary>
         public PresentationContext()
         {
-            Time = new Structs.Time();
-            Matrix = Matrix3D.Identity;
-            Level = 1;
+
         }
 
         /// <summary>
@@ -93,7 +91,7 @@ namespace GameExpress.Model.Structs
         /// <param name="points">Array von Points</param>
         public void Transform(Point[] points)
         {
-            for (int i = 0; i < points.Length; i++)
+            for (var i = 0; i < points.Length; i++)
             {
                 points[i] = Matrix.Transform(points[i]);
             }
@@ -188,19 +186,19 @@ namespace GameExpress.Model.Structs
         private Gamma Gamma { get; set; }
 
         /// <summary>
-        /// eine 3x3 Matrix
+        /// Die 3x3 Matrix
         /// </summary>
-        public Matrix3D Matrix { get; set; }
+        public Matrix3D Matrix { get; set; } = Matrix3D.Identity;
 
         /// <summary>
         /// Tiefe
         /// </summary>
-        public int Level { get; set; }
+        public int Level { get; set; } = 1;
 
         /// <summary>
         /// Liefert oder setzt die Zeit
         /// </summary>
-        public Time Time { get; set; }
+        public Time Time { get; set; } = new Time();
 
         /// <summary>
         /// Zeichenkontext

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace GameExpress.Model.Structs
 {
@@ -33,7 +28,7 @@ namespace GameExpress.Model.Structs
         /// </summary>
         /// <param name="blur">Der Unschärfewert</param>
         /// <returns>Der umgewandelte Unschärfewert</returns>
-        static public implicit operator byte(Blur blur)
+        public static implicit operator byte(Blur blur)
         {
             return blur.Value;
         }
@@ -43,7 +38,7 @@ namespace GameExpress.Model.Structs
         /// </summary>
         /// <param name="blur">Der Unschärfewert</param>
         /// <returns>Der umgewandelte Unschärfewert</returns>
-        static public implicit operator Blur(byte blur)
+        public static implicit operator Blur(byte blur)
         {
             return new Blur(blur);
         }
@@ -54,8 +49,11 @@ namespace GameExpress.Model.Structs
         /// <param name="blur">Der Unschärfewert</param>
         public void Add(Blur blur)
         {
-            float f = Value + ((255.0f - (float)this) * ((float)blur / 255.0f));
-            if (f > 255) f = 255;
+            var f = Value + ((255.0f - (this)) * (blur / 255.0f));
+            if (f > 255)
+            {
+                f = 255;
+            }
 
             Value = (byte)f;
         }

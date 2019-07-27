@@ -1,8 +1,10 @@
-﻿using GameExpress.Model;
+﻿using GameExpress.Context;
+using GameExpress.Model;
 using GameExpress.Model.Item;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,51 +38,10 @@ namespace GameExpress.View
         /// <param name="item">Das Item</param>
         public static void ChangePropertyPage(Item item)
         {
-            if (item is ItemGame)
-            {
-                MainPage?.ChangePropertyPage(typeof(GamePropertyPage), item);
-            }
-            else if (item is ItemScene)
-            {
-                MainPage?.ChangePropertyPage(typeof(ScenePropertyPage), item);
-            }
-            else if (item is ItemObject)
-            {
-                MainPage?.ChangePropertyPage(typeof(ObjectPropertyPage), item);
-            }
-            else if (item is ItemAnimation)
-            {
-                MainPage?.ChangePropertyPage(typeof(AnimationPropertyPage), item);
-            }
-            else if (item is ItemMap)
-            {
-                MainPage?.ChangePropertyPage(typeof(MapPropertyPage), item);
-            }
-            else if (item is ItemStory)
-            {
-                MainPage?.ChangePropertyPage(typeof(StoryPropertyPage), item);
-            }
-            else if (item is ItemKeyFrameAct)
-            {
-                MainPage?.ChangePropertyPage(typeof(KeyFramePropertyPage), item);
-            }
-            else if (item is ItemKeyFrameTweening)
-            {
-                MainPage?.ChangePropertyPage(typeof(TweeningPropertyPage), item);
-            }
-            else if (item is ItemImage)
-            {
-                MainPage?.ChangePropertyPage(typeof(ImagePropertyPage), item);
-            }
-            else if (item is ItemSound)
-            {
-                MainPage?.ChangePropertyPage(typeof(SoundPropertyPage), item);
-            }
-            else
-            {
-                MainPage?.ChangePropertyPage(null, item);
-            }
+            // Kontext ermitteln
+            var context = ContextRepository.FindContext(item);
 
+            MainPage?.ChangePropertyPage(context?.Property, item);
         }
 
         /// <summary>
@@ -89,83 +50,44 @@ namespace GameExpress.View
         /// <param name="item">Das Item</param>
         public static void ChangePage(Item item)
         {
-            if (item is ItemGame)
+            // Kontext ermitteln
+            var context = ContextRepository.FindContext(item);
+
+            if (context.Page != null)
             {
-                MainPage?.ChangePage(typeof(GamePage), item);
-            }
-            else if (item is ItemScene)
-            {
-                MainPage?.ChangePage(typeof(ObjectPage), item);
-            }
-            else if (item is ItemObject)
-            {
-                MainPage?.ChangePage(typeof(ObjectPage), item);
-            }
-            else if (item is ItemAnimation)
-            {
-                MainPage?.ChangePage(typeof(AnimationPage), item);
-            }
-            else if (item is ItemMap)
-            {
-                MainPage?.ChangePage(typeof(MapPage), item);
-            }
-            else if (item is ItemImage)
-            {
-                MainPage?.ChangePage(typeof(ImagePage), item);
-            }
-            else if (item is ItemSound)
-            {
-                MainPage?.ChangePage(typeof(SoundPage), item);
+                MainPage?.ChangePage(context.Page, item);
             }
 
-            if (item is ItemGame)
-            {
-                MainPage?.ChangePropertyPage(typeof(GamePropertyPage), item);
-            }
-            else if (item is ItemScene)
-            {
-                MainPage?.ChangePropertyPage(typeof(ScenePropertyPage), item);
-            }
-            else if (item is ItemObject)
-            {
-                MainPage?.ChangePropertyPage(typeof(ObjectPropertyPage), item);
-            }
-            else if (item is ItemMap)
-            {
-                MainPage?.ChangePropertyPage(typeof(MapPropertyPage), item);
-            }
-            else if (item is ItemStory)
-            {
-                MainPage?.ChangePropertyPage(typeof(StoryPropertyPage), item);
-            }
-            else if (item is ItemKeyFrameAct)
-            {
-                MainPage?.ChangePropertyPage(typeof(KeyFramePropertyPage), item);
-            }
-            else if (item is ItemImage)
-            {
-                MainPage?.ChangePropertyPage(typeof(ImagePropertyPage), item);
-            }
-            else if (item is ItemSound)
-            {
-                MainPage?.ChangePropertyPage(typeof(SoundPropertyPage), item);
-            }
-            else
-            {
-                MainPage?.ChangePropertyPage(null, item);
-            }
-
+            ChangePropertyPage(item);
         }
 
         /// <summary>
         /// Liefert das aktuelle Projekt
         /// </summary>
-        public static Project Project
+        public static Project Project => MainPage.Model.Project;
+
+        /// <summary>
+        /// Liefert das Symbol zu einem Item
+        /// </summary>
+        /// <param name="item">Das Item</param>
+        /// <returns>Das Symbol</returns>
+        public static string GetSymbol(Item item)
         {
-            get
+            var context = ContextRepository.FindContext(item);
+
+            if (item is ItemStory story)
             {
-                return MainPage.Model.Project;
+                if (ContextRepository.FindContext(story.Instance) is IItemContext c)
+                {
+                    return c.Symbol;
+                }
             }
+            else if (context != null)
+            {
+                return context.Symbol;
+            }
+
+            return "\uE18A";
         }
     }
 }

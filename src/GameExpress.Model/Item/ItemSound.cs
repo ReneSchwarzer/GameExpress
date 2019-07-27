@@ -1,8 +1,6 @@
 ﻿using GameExpress.Model.Structs;
 using Microsoft.Graphics.Canvas;
 using System.Xml.Serialization;
-using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 
 namespace GameExpress.Model.Item
@@ -27,7 +25,7 @@ namespace GameExpress.Model.Item
         [XmlElement("source")]
         public string Source
         {
-            get { return m_source; }
+            get => m_source;
             set
             {
                 m_source = value;
@@ -36,11 +34,6 @@ namespace GameExpress.Model.Item
                 RaisePropertyChanged();
             }
         }
-
-        /// <summary>
-        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
-        /// </summary>
-        public override string Symbol { get { return "\uE8D6"; } }
 
         /// <summary>
         /// Konstruktor
@@ -72,7 +65,7 @@ namespace GameExpress.Model.Item
         /// <param name="pc">Der Präsentationskontext</param>
         public override void Presentation(PresentationContext pc)
         {
-            
+
         }
 
         /// <summary>

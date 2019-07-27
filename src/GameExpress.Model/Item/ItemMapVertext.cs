@@ -1,10 +1,6 @@
 ﻿using GameExpress.Model.Structs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Windows.Foundation;
 using Windows.UI;
 
 namespace GameExpress.Model.Item
@@ -13,7 +9,7 @@ namespace GameExpress.Model.Item
     ///  Eck- bzw. Scheitelpunkt eines Primitivs (Dreiecks)
     /// </summary>
     [XmlType("vertex")]
-    public class ItemMapVertext : Item
+    public class ItemMapVertext : Item, IItemClickable
     {
         /// <summary>
         /// Die Koordinaten
@@ -88,8 +84,8 @@ namespace GameExpress.Model.Item
                 var white = Color.FromArgb(200, 255, 255, 255);
 
                 // Create a Pen object.
-                pc.Graphics.FillEllipse(p.X - 4, p.Y - 4, 8, 8, white);
-                pc.Graphics.DrawEllipse(p.X - 4, p.Y - 4, 8, 8, black);
+                pc.Graphics.FillEllipse((float)p.X - 4, (float)p.Y - 4, 8, 8, white);
+                pc.Graphics.DrawEllipse((float)p.X - 4, (float)p.Y - 4, 8, 8, black);
             }
         }
 
@@ -110,12 +106,28 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Prüft ob der Punkt innerhalb eines Items liegt und gibt das Item zurück
+        /// </summary>
+        /// <param name="hc">Der Kontext</param>
+        /// <param name="point">Der zu überprüfende Punkt</param>
+        /// <returns>Das erste Item, welches gefunden wurde oder null</returns>
+        public virtual Item HitTest(HitTestContext hc, Vector point)
+        {
+            var invert = hc.Matrix.Invert;
+            var p = invert.Transform(point);
+
+            var rect = new Rect(new Point(), new Size(8, 8));
+
+            return rect.Contains(p) ? this : null;
+        }
+
+        /// <summary>
         /// Liefert oder setzt die Koordinaten
         /// </summary>
         [XmlElement("vector")]
         public Vector Vector
         {
-            get { return m_point; }
+            get => m_point;
             set
             {
                 if (!m_point.Equals(value))
@@ -133,7 +145,7 @@ namespace GameExpress.Model.Item
         [XmlElement("gamma")]
         public Gamma Gamma
         {
-            get { return m_gamma; }
+            get => m_gamma;
             set
             {
                 if (!m_gamma.Equals(value))
@@ -151,7 +163,7 @@ namespace GameExpress.Model.Item
         [XmlElement("alpha")]
         public Alpha Alpha
         {
-            get { return m_alpha; }
+            get => m_alpha;
             set
             {
                 if (!m_alpha.Equals(value))
@@ -169,7 +181,7 @@ namespace GameExpress.Model.Item
         [XmlIgnore]
         public Hue Hue
         {
-            get { return m_hue; }
+            get => m_hue;
             set
             {
                 if (!m_hue.Equals(value))
@@ -187,7 +199,7 @@ namespace GameExpress.Model.Item
         [XmlElement("matrix")]
         public Matrix3D Matrix
         {
-            get { return m_matrix; }
+            get => m_matrix;
             set
             {
                 if (!m_matrix.Equals(value))

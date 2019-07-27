@@ -2,15 +2,12 @@
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Windows.Foundation;
 using Windows.UI;
+using Vector = GameExpress.Model.Structs.Vector;
 
 namespace GameExpress.Model.Item
 {
@@ -18,7 +15,7 @@ namespace GameExpress.Model.Item
     ///  Dreieck eines Netzes
     /// </summary>
     [XmlType("mesh")]
-    public class ItemMapMesh : Item
+    public class ItemMapMesh : Item, IItemClickable
     {
         /// <summary>
         /// Der Name des ersten Vertext
@@ -57,7 +54,7 @@ namespace GameExpress.Model.Item
         /// Liefert oder setzt die Map
         /// </summary>
         [XmlIgnore]
-        public ItemMap Map { get; set; }
+        public ItemMap Map { get; set; } 
 
         /// <summary>
         /// Liefert oder setzt den Namen des ersten Vertext
@@ -65,7 +62,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("vertext1")]
         public string Vertext1
         {
-            get { return m_vertext1; }
+            get => m_vertext1;
             set
             {
                 if (m_vertext1 == null && value != null || m_vertext1 != null && value == null || !m_vertext1.Equals(value))
@@ -83,7 +80,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("vertext2")]
         public string Vertext2
         {
-            get { return m_vertext2; }
+            get => m_vertext2;
             set
             {
                 if (m_vertext2 == null && value != null || m_vertext2 != null && value == null || !m_vertext2.Equals(value))
@@ -101,7 +98,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("vertext3")]
         public string Vertext3
         {
-            get { return m_vertext3; }
+            get => m_vertext3;
             set
             {
                 if (m_vertext3 == null && value != null || m_vertext3 != null && value == null || !m_vertext3.Equals(value))
@@ -188,14 +185,14 @@ namespace GameExpress.Model.Item
                 var p2 = pc.Transform(VertextItem2 != null ? VertextItem2.Vector : new Structs.Vector());
                 var p3 = pc.Transform(VertextItem3 != null ? VertextItem3.Vector : new Structs.Vector());
 
-                pc.Graphics.DrawLine(p1.X, p1.Y, p2.X, p2.Y, black, 3);
-                pc.Graphics.DrawLine(p1.X, p1.Y, p2.X, p2.Y, white);
+                pc.Graphics.DrawLine((float)p1.X, (float)p1.Y, (float)p2.X, (float)p2.Y, black, 3);
+                pc.Graphics.DrawLine((float)p1.X, (float)p1.Y, (float)p2.X, (float)p2.Y, white);
 
-                pc.Graphics.DrawLine(p2.X, p2.Y, p3.X, p3.Y, black, 2);
-                pc.Graphics.DrawLine(p2.X, p2.Y, p3.X, p3.Y, white);
+                pc.Graphics.DrawLine((float)p2.X, (float)p2.Y, (float)p3.X, (float)p3.Y, black, 2);
+                pc.Graphics.DrawLine((float)p2.X, (float)p2.Y, (float)p3.X, (float)p3.Y, white);
 
-                pc.Graphics.DrawLine(p3.X, p3.Y, p1.X, p1.Y, black);
-                pc.Graphics.DrawLine(p3.X, p3.Y, p1.X, p1.Y, white);
+                pc.Graphics.DrawLine((float)p3.X, (float)p3.Y, (float)p1.X, (float)p1.Y, black);
+                pc.Graphics.DrawLine((float)p3.X, (float)p3.Y, (float)p1.X, (float)p1.Y, white);
 
                 var centroid = pc.Transform(Centroid);
                 var triangle = new Vector2[]
@@ -206,7 +203,7 @@ namespace GameExpress.Model.Item
                 };
 
                 using (var geometry = CanvasGeometry.CreatePolygon(pc.Graphics, triangle))
-                { 
+                {
                     pc.Graphics.FillGeometry(geometry, white);
                     pc.Graphics.DrawGeometry(geometry, black);
                 }
@@ -225,11 +222,27 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Prüft ob der Punkt innerhalb eines Items liegt und gibt das Item zurück
+        /// </summary>
+        /// <param name="hc">Der Kontext</param>
+        /// <param name="point">Der zu überprüfende Punkt</param>
+        /// <returns>Das erste Item, welches gefunden wurde oder null</returns>
+        public virtual Item HitTest(HitTestContext hc, Vector point)
+        {
+            var invert = hc.Matrix.Invert;
+            var p = invert.Transform(point);
+
+            var rect = new Rect(new Point(), new Size(8, 8));
+
+            return rect.Contains(p) ? this : null;
+        }
+
+        /// <summary>
         /// Lädt das Bild aus der gegebenen Quelle
         /// </summary>
         /// <param name="g">Der Zeichenkontext</param>
         public override void CreateResources(ICanvasResourceCreator g)
         {
-        }     
+        }
     }
 }

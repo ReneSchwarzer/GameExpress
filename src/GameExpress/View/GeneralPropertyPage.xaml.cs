@@ -24,7 +24,7 @@ namespace GameExpress.View
     {
         public GeneralPropertyPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

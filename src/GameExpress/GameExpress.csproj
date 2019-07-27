@@ -120,6 +120,17 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Context\ContextRepository.cs" />
+    <Compile Include="Context\ItemSoundContext.cs" />
+    <Compile Include="Context\ItemImageContext.cs" />
+    <Compile Include="Context\ItemTweeningContext.cs" />
+    <Compile Include="Context\ItemKeyFrameContext.cs" />
+    <Compile Include="Context\ItemStoryContext.cs" />
+    <Compile Include="Context\ItemMapContext.cs" />
+    <Compile Include="Context\ItemAnimationContext.cs" />
+    <Compile Include="Context\ItemObjectContext.cs" />
+    <Compile Include="Context\ItemSceneContext.cs" />
+    <Compile Include="Context\ItemGameContext.cs" />
     <Compile Include="Controls\AnimationEditorPanel.cs" />
     <Compile Include="Controls\SelectionHelper.cs" />
     <Compile Include="Controls\EditorPanel.cs" />
@@ -141,6 +152,26 @@
     <Compile Include="Dialog\SelectInstanceDialog.xaml.cs">
       <DependentUpon>SelectInstanceDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SelectionFrames\ISelectionFrameAnchor.cs" />
+    <Compile Include="SelectionFrames\ISelectionFrame.cs" />
+    <Compile Include="SelectionFrames\ISelectionFrameHandle.cs" />
+    <Compile Include="SelectionFrames\Orbit.cs" />
+    <Compile Include="SelectionFrames\Location.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameAnchor.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandle.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleMove.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleSizeW.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleSizeE.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleSizeS.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleSizeN.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleSizeSW.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleSizeSE.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleSizeNE.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleSizeNW.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleHotSpot.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameImage.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameStory.cs" />
+    <Compile Include="SelectionFrames\SelectionFrame.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
     <Compile Include="ViewModel\ViewModelMain.cs" />
     <Compile Include="View\AnimationPage.xaml.cs">
@@ -155,6 +186,7 @@
     <Compile Include="View\GeneralPropertyPage.xaml.cs">
       <DependentUpon>GeneralPropertyPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Context\IItemContext.cs" />
     <Compile Include="View\KeyFramePropertyPage.xaml.cs">
       <DependentUpon>KeyFramePropertyPage.xaml</DependentUpon>
     </Compile>

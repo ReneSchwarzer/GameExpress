@@ -26,7 +26,7 @@ namespace GameExpress.View
         /// </summary>
         public MapPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>
@@ -61,6 +61,11 @@ namespace GameExpress.View
         /// <param name="args">Das Eventargument</param>
         private void OnUnloaded(object sender, RoutedEventArgs args)
         {
+        }
+
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -32,7 +32,7 @@ namespace GameExpress.View
 
             DataContext = Model;
 
-            this.InitializeComponent();
+            InitializeComponent();
 
             Model.InitAsync();
 
@@ -83,7 +83,7 @@ namespace GameExpress.View
         private void OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
         {
             var item = args.InvokedItem as Item;
-            
+
             ViewHelper.ChangePage(item);
         }
 
@@ -103,7 +103,10 @@ namespace GameExpress.View
         /// </summary>
         /// <param name="sender">Der Auslöser der Nachricht</param>
         /// <param name="e">Das Eventargument</param>
-        private void OnExit(object sender, RoutedEventArgs e) => CoreApplication.Exit();
+        private void OnExit(object sender, RoutedEventArgs e)
+        {
+            CoreApplication.Exit();
+        }
 
         /// <summary>
         /// Öffnet den Dialog zum Laden eines Dokumentes

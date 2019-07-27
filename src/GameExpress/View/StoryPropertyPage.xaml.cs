@@ -26,14 +26,14 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert das mit der Ansicht verbundene Story
         /// </summary>
-        private ItemStory Story { get { return DataContext as ItemStory; } }
+        private ItemStory Story => DataContext as ItemStory;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public StoryPropertyPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>
@@ -73,7 +73,10 @@ namespace GameExpress.View
         private async void OnChangeInstance(object sender, RoutedEventArgs e)
         {
             var element = e.OriginalSource as Button;
-            if (element == null) return;
+            if (element == null)
+            {
+                return;
+            }
 
             var dialog = new SelectInstanceDialog()
             {

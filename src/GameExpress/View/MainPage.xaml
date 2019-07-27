@@ -4,8 +4,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Item="using:GameExpress.Model.Item"
-    xmlns:View="using:GameExpress.View"
+    xmlns:item="using:GameExpress.Model.Item"
+    xmlns:view="using:GameExpress.View"
     xmlns:controls="using:Windows.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
@@ -98,10 +98,10 @@
                                            ItemInvoked="OnItemInvoked" 
                                            SelectionMode="Single">
                             <controls:TreeView.ItemTemplate>
-                                <DataTemplate x:DataType="Item:Item">
+                                <DataTemplate x:DataType="item:Item">
                                     <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="True">
                                         <StackPanel Orientation="Horizontal">
-                                            <FontIcon Glyph="{Binding Symbol}" Margin="0,0,5,0"/>
+                                            <FontIcon Glyph="{x:Bind view:ViewHelper.GetSymbol(This), Mode=OneWay}" Margin="0,0,5,0"/>
                                             <TextBlock Text="{Binding Name}" />
                                         </StackPanel>
                                     </TreeViewItem>

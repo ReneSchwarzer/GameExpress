@@ -42,11 +42,13 @@
             x:Name="TimeLine" 
             Background="{ThemeResource SystemChromeMediumLowColor}" 
             Time="{x:Bind Path=Editor.Time, Mode=TwoWay}"
-            Item="{x:Bind Path=Editor.Item, Mode=OneWay, Converter={StaticResource ItemToItemAnimation}}"/>
+            Item="{x:Bind Path=Editor.Item, Mode=OneWay, Converter={StaticResource ItemToItemAnimation}}"
+            />
 
         <controls:AnimationEditorPanel Grid.Column="0" 
                                        Grid.Row="2" 
-                                       x:Name="Editor" 
+                                       x:Name="Editor"
+                                       SelectedItems="{x:Bind Path=TimeLine.SelectedItems, Mode=OneWay}"
                                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
 
         <toolkit:GridSplitter Background="Transparent"

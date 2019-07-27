@@ -39,7 +39,7 @@ namespace GameExpress.Controls
         public SelectionEditMode EditMode { get; set; }
 
         /// <summary>
-        /// Ist true, wenn sich das Zeigegerät außerhalb des aktuellen Steuerelementes befindet
+        /// Ist true, wenn sch das Zeigegerät außerhalb des aktuellen Steuerelementes befindet
         /// </summary>
         public bool Outside { get; set; }
     }

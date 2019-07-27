@@ -34,7 +34,7 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("x")]
         public int X
         {
-            get { return m_x; }
+            get => m_x;
             set
             {
                 if (!m_x.Equals(value))
@@ -52,7 +52,7 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("y")]
         public int Y
         {
-            get { return m_y; }
+            get => m_y;
             set
             {
                 if (!m_y.Equals(value))
@@ -68,7 +68,7 @@ namespace GameExpress.Model.Structs
         /// Konstruktor
         /// </summary>
         public Hotspot()
-            :this(0)
+            : this(0)
         {
         }
 
@@ -108,7 +108,7 @@ namespace GameExpress.Model.Structs
         /// </summary>
         /// <param name="hotspot">Der Hotspot</param>
         /// <returns>Der umgewandelte Hotspot</returns>
-        static public implicit operator Point(Hotspot hotspot)
+        public static implicit operator Point(Hotspot hotspot)
         {
             return new Point(hotspot.X, hotspot.Y);
         }
@@ -118,7 +118,7 @@ namespace GameExpress.Model.Structs
         /// </summary>
         /// <param name="point">Der Hotspot</param>
         /// <returns>Der umgewandelte Hotspot</returns>
-        static public implicit operator Hotspot(Point point)
+        public static implicit operator Hotspot(Point point)
         {
             return new Hotspot((int)point.X, (int)point.Y);
         }

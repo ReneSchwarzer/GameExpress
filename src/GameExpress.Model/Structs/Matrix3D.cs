@@ -91,10 +91,7 @@ namespace GameExpress.Model.Structs
         /// <summary>
         /// Liefert die Einheitsmatrix
         /// </summary>
-        public static Matrix3D Identity
-        {
-            get { return new Matrix3D(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
-        }
+        public static Matrix3D Identity => new Matrix3D(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
         /// <summary>
         /// Liefert die Rotationsmatrix der x-Achse
@@ -107,8 +104,8 @@ namespace GameExpress.Model.Structs
 
             return new Matrix3D
             (
-                1.0f, 0f, 0f, 
-                0f, Math.Cos(angle), Math.Sin(angle) * -1, 
+                1.0f, 0f, 0f,
+                0f, Math.Cos(angle), Math.Sin(angle) * -1,
                 0f, Math.Sin(angle), Math.Cos(angle)
             );
         }
@@ -195,25 +192,28 @@ namespace GameExpress.Model.Structs
         /// </summary>
         /// <param name="x">X-Komponente des Skalierungswertes</param>
         /// <param name="y">Y-Komponente des Skalierungswertes</param>
-        /// <returns>Sie Skalierungsmatrix</returns>
+        /// <returns>Die Skalierungsmatrix</returns>
         public static Matrix3D Scaling(double x, double y)
         {
             return new Matrix3D(x, 0.0f, 0.0f, 0.0f, y, 0.0f, 0.0f, 0.0f, 1.0f);
         }
 
         /// <summary>
+        /// Skalierungswerte berechnen
+        /// </summary>
+        /// <returns>Der Skalierungswert</returns>
+        public Vector GetScaling()
+        {
+            return new Vector(M11, M22);
+        }
+
+        /// <summary>
         /// Determinante berechnen
         /// </summary>
         /// <returns>Die Determinante</returns>
-        public double Determinant
-        {
-            get
-            {
-                return m_11 * (m_22 * m_33 - m_23 * m_32) -
+        public double Determinant => m_11 * (m_22 * m_33 - m_23 * m_32) -
                        m_12 * (m_21 * m_33 - m_23 * m_31) +
                        m_13 * (m_21 * m_32 - m_22 * m_31);
-            }
-        }
 
         /// <summary>
         /// Invertierte (umgekehrte) Matrix berechnen
@@ -225,21 +225,26 @@ namespace GameExpress.Model.Structs
             {
                 var fInvDet = Determinant;
 
-                if (fInvDet == 0.0f) return Matrix3D.Identity;
+                if (fInvDet == 0.0f)
+                {
+                    return Matrix3D.Identity;
+                }
+
                 fInvDet = 1.0f / fInvDet;
 
                 // Invertierte Matrix berechnen
-                Matrix3D mResult = new Matrix3D();
-
-                mResult.M11 = fInvDet * (M22 * M33 - M23 * M32);
-                mResult.M12 = -fInvDet * (M12 * M33 - M13 * M32);
-                mResult.M13 = fInvDet * (M12 * M23 - M13 * M22);
-                mResult.M21 = -fInvDet * (M21 * M33 - M23 * M31);
-                mResult.M22 = fInvDet * (M11 * M33 - M13 * M31);
-                mResult.M23 = -fInvDet * (M11 * M23 - M13 * M21);
-                mResult.M31 = fInvDet * (M21 * M32 - M22 * M31);
-                mResult.M32 = -fInvDet * (M11 * M32 - M12 * M31);
-                mResult.M33 = fInvDet * (M11 * M22 - M12 * M21);
+                var mResult = new Matrix3D
+                {
+                    M11 = fInvDet * (M22 * M33 - M23 * M32),
+                    M12 = -fInvDet * (M12 * M33 - M13 * M32),
+                    M13 = fInvDet * (M12 * M23 - M13 * M22),
+                    M21 = -fInvDet * (M21 * M33 - M23 * M31),
+                    M22 = fInvDet * (M11 * M33 - M13 * M31),
+                    M23 = -fInvDet * (M11 * M23 - M13 * M21),
+                    M31 = fInvDet * (M21 * M32 - M22 * M31),
+                    M32 = -fInvDet * (M11 * M32 - M12 * M31),
+                    M33 = fInvDet * (M11 * M22 - M12 * M21)
+                };
 
                 return mResult;
             }
@@ -269,6 +274,19 @@ namespace GameExpress.Model.Structs
         }
 
         /// <summary>
+        /// Transformiere einen Vektor
+        /// </summary>
+        /// <param name="p">Der zu transfomierende Punkt</param>
+        /// <returns>Der transformierte Punkt</returns>
+        public Vector Transform(Vector p)
+        {
+            var x = p.X * m_11 + p.Y * m_21 + m_31;
+            var y = p.X * m_12 + p.Y * m_22 + m_32;
+
+            return new Vector(x, y);
+        }
+
+        /// <summary>
         /// Vergleicht die aktuelle Matrix mit m 
         /// </summary>
         /// <param name="m">Die zu vergleichende Matrix</param>
@@ -295,8 +313,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("m11")]
         public double M11
         {
-            get { return m_11; }
-            set { m_11 = value; }
+            get => m_11;
+            set => m_11 = value;
         }
 
         /// <summary>
@@ -305,8 +323,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("m12")]
         public double M12
         {
-            get { return m_12; }
-            set { m_12 = value; }
+            get => m_12;
+            set => m_12 = value;
         }
 
         /// <summary>
@@ -315,8 +333,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("m13")]
         public double M13
         {
-            get { return m_13; }
-            set { m_13 = value; }
+            get => m_13;
+            set => m_13 = value;
         }
 
         /// <summary>
@@ -325,8 +343,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("m21")]
         public double M21
         {
-            get { return m_21; }
-            set { m_21 = value; }
+            get => m_21;
+            set => m_21 = value;
         }
 
         /// <summary>
@@ -335,8 +353,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("m22")]
         public double M22
         {
-            get { return m_22; }
-            set { m_22 = value; }
+            get => m_22;
+            set => m_22 = value;
         }
 
         /// <summary>
@@ -345,8 +363,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("m23")]
         public double M23
         {
-            get { return m_23; }
-            set { m_23 = value; }
+            get => m_23;
+            set => m_23 = value;
         }
 
         /// <summary>
@@ -355,8 +373,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("m31")]
         public double M31
         {
-            get { return m_31; }
-            set { m_31 = value; }
+            get => m_31;
+            set => m_31 = value;
         }
 
         /// <summary>
@@ -365,8 +383,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("m32")]
         public double M32
         {
-            get { return m_32; }
-            set { m_32 = value; }
+            get => m_32;
+            set => m_32 = value;
         }
 
         /// <summary>
@@ -375,8 +393,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("m33")]
         public double M33
         {
-            get { return m_33; }
-            set { m_33 = value; }
+            get => m_33;
+            set => m_33 = value;
         }
     }
 }

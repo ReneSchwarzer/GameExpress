@@ -32,7 +32,7 @@ namespace GameExpress.Dialog
         /// </summary>
         public SelectInstanceDialog()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace GameExpress.Dialog
 
             List.SelectedItem = SelectedItem;
 
-            CheckBox.Visibility = CurrentItem == null ? Visibility.Collapsed : Visibility.Visible; 
+            CheckBox.Visibility = CurrentItem == null ? Visibility.Collapsed : Visibility.Visible;
         }
 
         /// <summary>
@@ -95,8 +95,8 @@ namespace GameExpress.Dialog
         /// </summary>
         public Item SelectedItem
         {
-            get { return (Item)GetValue(SelectedItemProperty); }
-            set { SetValue(SelectedItemProperty, value); }
+            get => (Item)GetValue(SelectedItemProperty);
+            set => SetValue(SelectedItemProperty, value);
         }
 
         /// <summary>

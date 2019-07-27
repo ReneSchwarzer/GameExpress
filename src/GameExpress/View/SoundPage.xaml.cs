@@ -26,7 +26,7 @@ namespace GameExpress.View
         /// </summary>
         public SoundPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>

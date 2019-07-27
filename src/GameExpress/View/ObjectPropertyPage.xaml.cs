@@ -25,14 +25,14 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert das mit der Ansicht verbundene Objekt
         /// </summary>
-        private ItemObject Object { get { return DataContext as ItemObject; } }
+        private ItemObject Object => DataContext as ItemObject;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public ObjectPropertyPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>

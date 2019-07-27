@@ -1,13 +1,13 @@
 ﻿using GameExpress.Model.Structs;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Effects;
+using System;
+using System.Numerics;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Windows.Foundation;
-using System;
-using System.Threading.Tasks;
-using System.Numerics;
-using Microsoft.Graphics.Canvas.Effects;
 using Windows.Storage;
-using System.IO;
+using Vector = GameExpress.Model.Structs.Vector;
 
 namespace GameExpress.Model.Item
 {
@@ -31,7 +31,7 @@ namespace GameExpress.Model.Item
         [XmlElement("source")]
         public string Source
         {
-            get { return m_source; }
+            get => m_source;
             set
             {
                 m_source = value;
@@ -45,18 +45,7 @@ namespace GameExpress.Model.Item
         /// Liefert die Größe
         /// </summary>
         [XmlIgnore]
-        public override Size Size
-        {
-            get
-            {
-                return Image != null ? Image.Size : new Size();
-            }
-        }
-
-        /// <summary>
-        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
-        /// </summary>
-        public override string Symbol { get { return "\uF69E"; } }
+        public override Size Size => Image != null ? Image.Size : new Size();
 
         /// <summary>
         /// Konstruktor
@@ -66,12 +55,28 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Initialisiert das Item
+        /// </summary>
+        public override void Init()
+        {
+            base.Init();
+        }
+
+        /// <summary>
+        /// Entfernen nicht mehr benötigter Ressourcen des Items
+        /// </summary>
+        public override void Dispose()
+        {
+            Image?.Dispose();
+        }
+
+        /// <summary>
         /// Objekt aktualisieren
         /// </summary>
         /// <param name="uc">Der Updatekontext</param>
         public override void Update(UpdateContext uc)
         {
-
+            base.Update(uc);
         }
 
         /// <summary>
@@ -80,7 +85,10 @@ namespace GameExpress.Model.Item
         /// <param name="pc">Der Präsentationskontext</param>
         public override void Presentation(PresentationContext pc)
         {
-            if (!Enable) return;
+            if (!Enable)
+            {
+                return;
+            }
 
             if (Image == null)
             {
@@ -89,7 +97,10 @@ namespace GameExpress.Model.Item
             }
 
             // Nichts zum zeichnen vorhanden
-            if (Image == null) return;
+            if (Image == null)
+            {
+                return;
+            }
 
             var matrix = new Matrix3x2
             (
@@ -100,14 +111,6 @@ namespace GameExpress.Model.Item
 
             var transform = pc.Graphics.Transform;
             pc.Graphics.Transform = matrix;
-
-            //if (pc.Level > 1)
-            //{
-            //    pc.Graphics.Transform = Matrix3x2.CreateTranslation
-            //    ( 
-            //        new Vector2(Hotspot.X * -1, Hotspot.Y * -1)
-            //    ) * matrix;
-            //}
 
             // Alphawert umrechnen
             var opacity = Alpha / 255f;
@@ -155,30 +158,32 @@ namespace GameExpress.Model.Item
                 CanvasImageInterpolation.Linear
             );
 
-            //if (pc.Level == 2)
-            //{
-            //    //pc.Graphics.Transform = matrix;
-            //    //pc.Graphics.Transform = transform;
-
-            //    var p = pc.Matrix.Transform(Hotspot);
-            //    pc.Graphics.Transform = Matrix3x2.CreateTranslation((float)p.X * 1, (float)p.Y * 1);
-
-            //    pc.Graphics.Transform = Matrix3x2.CreateTranslation
-            //    (
-            //        new Vector2((float)p.X * 1, (float)p.Y * 1)
-            //    ) * matrix;
-
-            //    // Hotspot zeichnen
-            //    DrawHotspot(pc);
-            //}
-
             pc.Graphics.Transform = transform;
+        }
 
-            //if (pc.Level == 1)
-            //{
-                // Hotspot zeichnen
-                DrawHotspot(pc);
-            //}
+        /// <summary>
+        /// Liefert die Anzeigematrix des Items
+        /// </summary>
+        /// <returns>Die Matrix mit allen Transformationen des Items</returns>
+        public override Matrix3D GetMatrix()
+        {
+            return Matrix3D.Identity;
+        }
+
+        /// <summary>
+        /// Prüft ob der Punkt innerhalb eines Items liegt und gibt das Item zurück
+        /// </summary>
+        /// <param name="hc">Der Kontext</param>
+        /// <param name="point">Der zu überprüfende Punkt</param>
+        /// <returns>Das erste Item, welches gefunden wurde oder null</returns>
+        public override Item HitTest(HitTestContext hc, Vector point)
+        {
+            var invert = hc.Matrix.Invert;
+            var p = invert.Transform(point);
+
+            var rect = new Rect(new Point(), Size);
+
+            return rect.Contains(p) ? this : null;
         }
 
         /// <summary>
@@ -215,7 +220,7 @@ namespace GameExpress.Model.Item
                 }
 
                 return await CanvasBitmap.LoadAsync(g, source);
-               
+
             }).Result;
 
             RaisePropertyChanged("Image");

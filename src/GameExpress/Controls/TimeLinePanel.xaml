@@ -7,6 +7,7 @@
     xmlns:local="using:GameExpress.Controls"
     xmlns:converter="using:GameExpress.Converter"
     xmlns:model="using:GameExpress.Model.Item"
+    xmlns:view="using:GameExpress.View"
     xmlns:controls="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d"
     Loaded="OnLoaded"
@@ -53,6 +54,8 @@
                       Grid.Row="1"
                       ItemsSource="{x:Bind Item.StoryBoard, Mode=OneWay}"
                       AllowDrop="True" 
+                      SelectionMode="Extended"
+                      IsMultiSelectCheckBoxEnabled="False"
                       ReorderMode="Enabled"
                       CanReorderItems="True"
                       SelectionChanged="OnSelectionChanged">
@@ -71,7 +74,7 @@
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <FontIcon Grid.Column="0" Glyph="{Binding Symbol, Mode=OneWay}" Margin="4,0,4,0" MinWidth="30" MaxWidth="30"/>
+                            <FontIcon Grid.Column="0" Glyph="{x:Bind view:ViewHelper.GetSymbol(This), Mode=OneWay}" Margin="4,0,4,0" MinWidth="30" MaxWidth="30"/>
                             <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" Margin="4,0,4,0"/>
                             <Button Grid.Column="2" Margin="0,0,4,0">
                                 <Button.Flyout>

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace GameExpress.Model.Structs
@@ -44,7 +39,7 @@ namespace GameExpress.Model.Structs
         /// </summary>
         /// <param name="alpha">Der Alphawert</param>
         /// <returns>Der umgewandelte Alphawert</returns>
-        static public implicit operator byte(Alpha alpha)
+        public static implicit operator byte(Alpha alpha)
         {
             return alpha.Value;
         }
@@ -54,7 +49,7 @@ namespace GameExpress.Model.Structs
         /// </summary>
         /// <param name="alpha">Der Alphawert</param>
         /// <returns>Der umgewandelte Alphawert</returns>
-        static public implicit operator Alpha(byte alpha)
+        public static implicit operator Alpha(byte alpha)
         {
             return new Alpha(alpha);
         }
@@ -65,8 +60,11 @@ namespace GameExpress.Model.Structs
         /// <param name="alpha">Der Alphawert</param>
         public void Add(Alpha a)
         {
-            float f = this.Value + ((255.0f - (float)this) * ((float)a / 255.0f));
-            if (f > 255) f = 255;
+            var f = Value + ((255.0f - (this)) * (a / 255.0f));
+            if (f > 255)
+            {
+                f = 255;
+            }
 
             Value = (byte)f;
         }

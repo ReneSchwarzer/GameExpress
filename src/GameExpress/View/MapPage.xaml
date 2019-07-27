@@ -37,7 +37,7 @@
             </AppBarButton>
             <AppBarSeparator/>
         </CommandBar>
-        
-        <controls:EditorPanel Grid.Column="0" Grid.Row="0" x:Name="Editor"/>
+
+        <controls:EditorPanel Grid.Column="0" Grid.Row="0" x:Name="Editor" PointerPressed="OnPointerPressed"/>
     </Grid>
 </Page>

@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:item="using:GameExpress.Model.Item"
+    xmlns:view="using:GameExpress.View"
     mc:Ignorable="d"
     Loaded="OnLoaded"
     Unloaded="OnUnloaded"
@@ -29,7 +30,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="item:ItemTreeNode">
                     <StackPanel Orientation="Horizontal" Margin="6">
-                        <FontIcon Glyph="{Binding Symbol}" Margin="0,0,12,0"/>
+                        <FontIcon Glyph="{x:Bind view:ViewHelper.GetSymbol(This), Mode=OneWay}" Margin="0,0,12,0"/>
                         <StackPanel>
                             <TextBlock Text="{x:Bind Name}" FontWeight="Bold"/>
                             <TextBlock Text="{x:Bind Path=Path}" Foreground="{ThemeResource SystemBaseMediumColor}"/>

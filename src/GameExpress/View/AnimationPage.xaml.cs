@@ -29,14 +29,14 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert die mit der Ansicht verbundene Animation
         /// </summary>
-        private ItemAnimation Animation { get { return DataContext as ItemAnimation; } }
+        private ItemAnimation Animation => DataContext as ItemAnimation;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public AnimationPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>

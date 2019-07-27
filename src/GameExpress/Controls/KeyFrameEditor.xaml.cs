@@ -49,7 +49,7 @@ namespace GameExpress.Controls
         /// </summary>
         public KeyFrameEditor()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace GameExpress.Controls
             {
                 foreach (ItemKeyFrame v in args.NewItems)
                 {
-                    v.Parent = v;
+                    //v.Story = v;
                 }
             }
 
@@ -218,7 +218,7 @@ namespace GameExpress.Controls
             {
                 foreach (ItemKeyFrame v in args.OldItems)
                 {
-                    v.Parent = null;
+                    v.Story = null;
                 }
             }
 
@@ -238,7 +238,7 @@ namespace GameExpress.Controls
             var accentDark = new UISettings().GetColorValue(UIColorType.AccentDark1);
 
             // Hintergrundgitter
-            for (int j = 0; j < ActualWidth; j += 10)
+            for (var j = 0; j < ActualWidth; j += 10)
             {
                 var x = (float)TimeOffset % 10;
                 args.DrawingSession.DrawLine(j - x, 0, j - x, (float)ActualHeight, lightGray);
@@ -250,8 +250,14 @@ namespace GameExpress.Controls
             // Zeichnen
             foreach (var item in list)
             {
-                if (item.Item2 < 0) continue;
-                else if (item.Item1 > Content.ActualWidth) break;
+                if (item.Item2 < 0)
+                {
+                    continue;
+                }
+                else if (item.Item1 > Content.ActualWidth)
+                {
+                    break;
+                }
 
                 if (item.Item3 is ItemKeyFrameAct act)
                 {
@@ -288,16 +294,16 @@ namespace GameExpress.Controls
                     // Tweening
                     args.DrawingSession.DrawLine
                     (
-                        (float)item.Item1,
+                        item.Item1,
                         (float)(ActualHeight / 2),
-                        (float)item.Item2,
+                        item.Item2,
                         (float)(ActualHeight / 2),
                         accent1
                     );
 
                     args.DrawingSession.FillEllipse
                     (
-                        (float)item.Item1,
+                        item.Item1,
                         (float)(ActualHeight / 2),
                         4,
                         4,
@@ -306,17 +312,17 @@ namespace GameExpress.Controls
 
                     args.DrawingSession.DrawLine
                     (
-                        (float)item.Item2 - 4,
+                        item.Item2 - 4,
                         (float)(ActualHeight / 2) - 3,
-                        (float)item.Item2,
+                        item.Item2,
                         (float)(ActualHeight / 2),
                         accent1
                     );
                     args.DrawingSession.DrawLine
                     (
-                        (float)item.Item2 - 4,
+                        item.Item2 - 4,
                         (float)(ActualHeight / 2) + 3,
-                        (float)item.Item2,
+                        item.Item2,
                         (float)(ActualHeight / 2),
                         accent1
                     );
@@ -338,7 +344,10 @@ namespace GameExpress.Controls
             e.Handled = true;
 
             // Story ist für Bearbeitung gesperrt
-            if (Story.Lock) return;
+            if (Story.Lock)
+            {
+                return;
+            }
 
             // Fenster Koordinaten ermitteln
             var list = GetWindowCoordinates();
@@ -346,8 +355,14 @@ namespace GameExpress.Controls
             // Zeichnen
             foreach (var item in list)
             {
-                if (item.Item2 < 0) continue;
-                else if (item.Item1 > Content.ActualWidth) break;
+                if (item.Item2 < 0)
+                {
+                    continue;
+                }
+                else if (item.Item1 > Content.ActualWidth)
+                {
+                    break;
+                }
 
                 if (x > item.Item1 && x < item.Item2)
                 {
@@ -355,7 +370,10 @@ namespace GameExpress.Controls
                     {
                         ViewHelper.ChangePropertyPage(act);
 
-                        if (act.Lock) return;
+                        if (act.Lock)
+                        {
+                            return;
+                        }
 
                         Content.CapturePointer(e.Pointer);
                         SelectedKeyFrame = new SelectionHelper<ItemKeyFrameAct>()
@@ -402,7 +420,7 @@ namespace GameExpress.Controls
 
             var pointer = e.GetCurrentPoint(this);
 
-            if (SelectedKeyFrame != null )
+            if (SelectedKeyFrame != null)
             {
                 var delta = pointer.Position.X - SelectedKeyFrame.OriginalPosition.X;
                 var value = SelectedKeyFrame.OriginalItemPosition.X + delta;
@@ -424,7 +442,7 @@ namespace GameExpress.Controls
                 else if (SelectedKeyFrame.EditMode == SelectionHelper<ItemKeyFrameAct>.SelectionEditMode.From)
                 {
                     var duration = SelectedKeyFrame.Item.From + SelectedKeyFrame.Item.Duration;
-                    
+
                     // Größe Ändern
                     SelectedKeyFrame.Item.From = (ulong)Math.Abs(value);
                     if ((double)duration - SelectedKeyFrame.Item.From > 2)
@@ -468,7 +486,7 @@ namespace GameExpress.Controls
             if (SelectedKeyFrame != null)
             {
                 // Prüfe, ob im aktuellen Steuerelement
-                if (!(pointer.Position.X >= 0 &&  pointer.Position.X <= ActualWidth &&
+                if (!(pointer.Position.X >= 0 && pointer.Position.X <= ActualWidth &&
                       pointer.Position.Y >= 0 && pointer.Position.Y <= ActualHeight))
                 {
                     // Orginalposition wiederherstellen
@@ -484,7 +502,7 @@ namespace GameExpress.Controls
             }
 
         }
-        
+
         /// <summary>
         /// Wird aufgerufen, wenn das Zeigegeräte aus dem Steuerelement bewegt wird
         /// </summary>
@@ -502,7 +520,7 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnPointerCanceled(object sender, PointerRoutedEventArgs e)
         {
-           
+
         }
 
         /// <summary>
@@ -519,9 +537,9 @@ namespace GameExpress.Controls
         /// Liefert oder setzt die KeyFrames
         /// </summary>
         public ItemStory Story
-        { 
-            get { return (ItemStory)GetValue(StoryProperty); }
-            set { SetValue(StoryProperty, value); }
+        {
+            get => (ItemStory)GetValue(StoryProperty);
+            set => SetValue(StoryProperty, value);
         }
 
         /// <summary>
@@ -535,8 +553,8 @@ namespace GameExpress.Controls
         /// </summary>
         public ulong Time
         {
-            get { return (ulong)GetValue(TimeProperty); }
-            set { SetValue(TimeProperty, value); }
+            get => (ulong)GetValue(TimeProperty);
+            set => SetValue(TimeProperty, value);
         }
 
         /// <summary>
@@ -550,8 +568,8 @@ namespace GameExpress.Controls
         /// </summary>
         public ulong TimeOffset
         {
-            get { return (ulong)GetValue(TimeOffsetProperty); }
-            set { SetValue(TimeOffsetProperty, value); }
+            get => (ulong)GetValue(TimeOffsetProperty);
+            set => SetValue(TimeOffsetProperty, value);
         }
 
         /// <summary>

@@ -28,27 +28,34 @@ namespace GameExpress.Controls
     public sealed partial class TimeLinePanel : UserControl
     {
         /// <summary>
-        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die derigistrierung benötigt wird
+        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die Derigistrierung benötigt wird
         /// </summary>
         private long TimePropertyToken { get; set; }
 
         /// <summary>
-        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die derigistrierung benötigt wird
+        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die Derigistrierung benötigt wird
         /// </summary>
         private long TimeOffsetPropertyToken { get; set; }
 
         /// <summary>
-        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die derigistrierung benötigt wird
+        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die Derigistrierung benötigt wird
         /// </summary>
         private long ItemToken { get; set; }
+
+        /// <summary>
+        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die Derigistrierung benötigt wird
+        /// </summary>
+        //private long SelectedItemsToken { get; set; }
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public TimeLinePanel()
         {
-            this.InitializeComponent();
+            SelectedItems = new ObservableCollection<Item>();
+            InitializeComponent();
             Time = 0;
+
         }
 
         /// <summary>
@@ -89,7 +96,7 @@ namespace GameExpress.Controls
                     {
                         if ((decimal)TimeOffset - lamda > 1)
                         {
-                            TimeOffset -= (ulong)lamda;
+                            TimeOffset -= lamda;
                         }
                         else
                         {
@@ -125,6 +132,13 @@ namespace GameExpress.Controls
             {
                 Item.StoryBoard.CollectionChanged += OnInstancesCollectionChanged;
             }));
+
+            //SelectedItemsToken = RegisterPropertyChangedCallback(SelectedItemsProperty, new DependencyPropertyChangedCallback((s, e) =>
+            //{
+            //    SelectedItems.CollectionChanged += OnSelectedItemsCollectionChanged;
+            //}));
+
+            SelectedItems.CollectionChanged += OnSelectedItemsCollectionChanged;
         }
 
         /// <summary>
@@ -137,10 +151,13 @@ namespace GameExpress.Controls
             UnregisterPropertyChangedCallback(TimeProperty, TimePropertyToken);
             UnregisterPropertyChangedCallback(TimeOffsetProperty, TimeOffsetPropertyToken);
             UnregisterPropertyChangedCallback(ItemProperty, ItemToken);
+            //UnregisterPropertyChangedCallback(SelectedItemsProperty, SelectedItemsToken);
             if (Item != null)
             {
                 Item.StoryBoard.CollectionChanged -= OnInstancesCollectionChanged;
             }
+
+            SelectedItems.CollectionChanged -= OnSelectedItemsCollectionChanged;
         }
 
         /// <summary>
@@ -164,18 +181,60 @@ namespace GameExpress.Controls
         }
 
         /// <summary>
+        /// Wird aufgerufen, wenn die Instanz-Auflistung geändert wurde
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnSelectedItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                Table.SelectedItems.Clear();
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (Item add in e.NewItems)
+                {
+                    // Bereits vorhanden
+                    var count = Table.SelectedItems.Where(x => x == add).Count();
+
+                    if (count == 0)
+                    {
+                        Table.SelectedItems.Add(add);
+                    }
+
+                }
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (Item remove in e.OldItems)
+                {
+                    var items = Table.SelectedItems.Where(x => x == remove);
+                    foreach (var item in items.ToList())
+                    {
+                        Table.SelectedItems.Remove(item);
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
         /// Liefert den VisualTree ab dem Element in preorder
         /// </summary>
         /// <param name="element">Begin des </param>
         /// <returns>Eine Liste in preorder des VisualTrees</returns>
         private ICollection<DependencyObject> GetVisualTreePreorder(DependencyObject element)
         {
-            var list = new List<DependencyObject>();
-
-            list.Add(element);
+            var list = new List<DependencyObject>
+            {
+                element
+            };
 
             var childsCount = VisualTreeHelper.GetChildrenCount(element);
-            for (int i = 0; i < childsCount; i++)
+            for (var i = 0; i < childsCount; i++)
             {
                 var child = VisualTreeHelper.GetChild(element, i);
                 if (child != null)
@@ -250,11 +309,11 @@ namespace GameExpress.Controls
             var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
             var black = Color.FromArgb(255, 0, 0, 0);
             var accent = new UISettings().GetColorValue(UIColorType.AccentDark3);
-            ulong count = TimeOffset / 10;
+            var count = TimeOffset / 10;
 
             args.DrawingSession.FillRectangle(new Rect(0, 0, Ruler.ActualWidth, Ruler.ActualHeight), lightGray);
 
-            for (float i = 0f - TimeOffset % 10; i < Ruler.ActualWidth; i += 10)
+            for (var i = 0f - TimeOffset % 10; i < Ruler.ActualWidth; i += 10)
             {
                 if (count % 10 == 0)
                 {
@@ -277,6 +336,22 @@ namespace GameExpress.Controls
         private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ViewHelper.ChangePropertyPage(e.AddedItems.FirstOrDefault() as Item);
+
+            foreach (var add in e.AddedItems.ToList())
+            {
+                // Bereits vorhanden
+                var count = SelectedItems.Where(x => x == add).Count();
+
+                if (count == 0)
+                {
+                    SelectedItems.Add(add as Item);
+                }
+            }
+
+            foreach (var remove in e.RemovedItems.ToList())
+            {
+                SelectedItems.Remove(remove as Item);
+            }
         }
 
         /// <summary>
@@ -287,10 +362,16 @@ namespace GameExpress.Controls
         private void OnAddKeyFrame(object sender, RoutedEventArgs e)
         {
             var element = e.OriginalSource as MenuFlyoutItem;
-            if (element == null) return;
+            if (element == null)
+            {
+                return;
+            }
 
             var story = Item?.StoryBoard?.Where(x => x.ID.Equals(element.Tag))?.FirstOrDefault();
-            if (story == null) return;
+            if (story == null)
+            {
+                return;
+            }
 
             if (story.KeyFrames.Count > 0)
             {
@@ -308,10 +389,16 @@ namespace GameExpress.Controls
         private async void OnChangeInstance(object sender, RoutedEventArgs e)
         {
             var element = e.OriginalSource as MenuFlyoutItem;
-            if (element == null) return;
+            if (element == null)
+            {
+                return;
+            }
 
             var story = Item?.StoryBoard?.Where(x => x.ID.Equals(element.Tag))?.FirstOrDefault();
-            if (story == null) return;
+            if (story == null)
+            {
+                return;
+            }
 
             var dialog = new SelectInstanceDialog()
             {
@@ -364,8 +451,8 @@ namespace GameExpress.Controls
         /// </summary>
         public ulong Time
         {
-            get { return (ulong)GetValue(TimeProperty); }
-            set { SetValue(TimeProperty, value); }
+            get => (ulong)GetValue(TimeProperty);
+            set => SetValue(TimeProperty, value);
         }
 
         /// <summary>
@@ -379,8 +466,8 @@ namespace GameExpress.Controls
         /// </summary>
         public ItemAnimation Item
         {
-            get { return (ItemAnimation)GetValue(ItemProperty); }
-            set { SetValue(ItemProperty, value); }
+            get => (ItemAnimation)GetValue(ItemProperty);
+            set => SetValue(ItemProperty, value);
         }
 
         /// <summary>
@@ -394,8 +481,8 @@ namespace GameExpress.Controls
         /// </summary>
         public ulong TimeOffset
         {
-            get { return (ulong)GetValue(TimeOffsetProperty); }
-            set { SetValue(TimeOffsetProperty, value); }
+            get => (ulong)GetValue(TimeOffsetProperty);
+            set => SetValue(TimeOffsetProperty, value);
         }
 
         /// <summary>
@@ -404,6 +491,19 @@ namespace GameExpress.Controls
         public static readonly DependencyProperty TimeOffsetProperty =
             DependencyProperty.Register("TimeOffset", typeof(ulong), typeof(TimeLinePanel), new PropertyMetadata(new ulong()));
 
+        /// <summary>
+        /// Liefert oder setzt die Liste der ausgewählten Items
+        /// </summary>
+        public ObservableCollection<Item> SelectedItems
+        {
+            get => (ObservableCollection<Item>)GetValue(SelectedItemsProperty);
+            set => SetValue(SelectedItemsProperty, value);
+        }
 
+        /// <summary>
+        /// Using a DependencyProperty as the backing store for Item.  This enables animation, styling, binding, etc...
+        /// </summary>
+        public static readonly DependencyProperty SelectedItemsProperty =
+            DependencyProperty.Register("SelectedItems", typeof(ObservableCollection<Item>), typeof(TimeLinePanel), new PropertyMetadata(null));
     }
 }

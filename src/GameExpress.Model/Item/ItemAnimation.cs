@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Xml.Serialization;
 using Windows.Foundation;
-using Windows.UI.Xaml;
 
 namespace GameExpress.Model.Item
 {
@@ -45,6 +44,19 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Initialisierung
+        /// </summary>
+        public override void Init()
+        {
+            base.Init();
+
+            foreach (var story in StoryBoard)
+            {
+                story.Init();
+            }
+        }
+
+        /// <summary>
         /// Wird aufgerufen, wenn sich eine Story geändert hat
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
@@ -62,26 +74,66 @@ namespace GameExpress.Model.Item
         {
             base.Update(uc);
 
-            foreach (var v in StoryBoard)
+            foreach (var story in StoryBoard)
             {
-                v.Update(new UpdateContext(uc));
+                var newUC = new UpdateContext(uc);
+                story.Update(new UpdateContext(newUC));
             }
         }
 
         /// <summary>
         /// Objekt darstllen
         /// </summary>
-        /// <param name="pc"></param>
+        /// <param name="pc">Der Präsentationskontext</param>
         public override void Presentation(PresentationContext pc)
         {
             base.Presentation(pc);
 
-            if (StoryBoard == null) return;
+            if (StoryBoard == null)
+            {
+                return;
+            }
 
             foreach (var v in StoryBoard.Reverse())
             {
-                v.Presentation(new PresentationContext(pc) { });
+                var newPC = new PresentationContext(pc);
+                v.Presentation(new PresentationContext(newPC) { });
             }
+        }
+
+        /// <summary>
+        /// Liefert die Anzeigematrix des Items
+        /// </summary>
+        /// <returns>Die Matrix mit allen Transformationen des Items</returns>
+        public override Matrix3D GetMatrix()
+        {
+            return Matrix3D.Identity;
+        }
+
+        /// <summary>
+        /// Prüft ob der Punkt innerhalb eines Items liegt und gibt das Item zurück
+        /// </summary>
+        /// <param name="hc">Der Kontext</param>
+        /// <param name="point">Der zu überprüfende Punkt</param>
+        /// <returns>Das erste Item, welches gefunden wurde oder null</returns>
+        public override Item HitTest(HitTestContext hc, Vector point)
+        {
+            foreach (var story in StoryBoard)
+            {
+                if (story.GetKeyFrame((ulong)hc.Time) is IItemClickable frame)
+                {
+                    var newHC = new HitTestContext(hc);
+                    var item = frame.HitTest(newHC, point);
+
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+                
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -104,17 +156,6 @@ namespace GameExpress.Model.Item
         /// Liefert die Größe
         /// </summary>
         [XmlIgnore]
-        public override Size Size
-        {
-            get
-            {
-                return new Size();
-            }
-        }
-
-        /// <summary>
-        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
-        /// </summary>
-        public override string Symbol { get { return "\uE173"; } }
+        public override Size Size => new Size();
     }
 }

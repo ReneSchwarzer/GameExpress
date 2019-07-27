@@ -1,22 +1,22 @@
-﻿using Microsoft.Graphics.Canvas;
-using System.Threading.Tasks;
+﻿using GameExpress.Model.Structs;
+using Microsoft.Graphics.Canvas;
 using System.Xml.Serialization;
 using Windows.Foundation;
 
 namespace GameExpress.Model.Item
 {
     [XmlRoot(ElementName = "game")]
-    public class ItemGame : ItemVisual
+    public class ItemGame : ItemTreeNode, IItemVisual
     {
         /// <summary>
         /// Die Weite des Spielbereiches
         /// </summary>
-        private int m_width;
+        private int m_width = 1024;
 
         /// <summary>
         /// Die Höhe des Spielbereiches
         /// </summary>
-        private int m_height;
+        private int m_height = 768;
 
         /// <summary>
         /// Konstruktor
@@ -30,8 +30,34 @@ namespace GameExpress.Model.Item
         /// </summary>
         public override void Init()
         {
-            Width = 1024;
-            Height = 768;
+            base.Init();
+        }
+
+        /// <summary>
+        /// Objekt aktualisieren
+        /// </summary>
+        /// <param name="uc">Der Updatekontext</param>
+        public override void Update(UpdateContext uc)
+        {
+
+        }
+
+        /// <summary>
+        /// Objekt darstllen
+        /// </summary>
+        /// <param name="pc">Der Präsentationskontext</param>
+        public override void Presentation(PresentationContext pc)
+        {
+
+        }
+
+        /// <summary>
+        /// Liefert die Anzeigematrix des Items
+        /// </summary>
+        /// <returns>Die Matrix mit allen Transformationen des Items</returns>
+        public virtual Matrix3D GetMatrix()
+        {
+            return Matrix3D.Identity;
         }
 
         /// <summary>
@@ -53,7 +79,7 @@ namespace GameExpress.Model.Item
         /// <param name="g">Der Zeichenkontext</param>
         public override void CreateResources(ICanvasResourceCreator g)
         {
-            foreach(var c in Children)
+            foreach (var c in Children)
             {
                 c.CreateResources(g);
             };
@@ -72,7 +98,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("width")]
         public int Width
         {
-            get { return m_width; }
+            get => m_width;
             set
             {
                 if (!m_width.Equals(value))
@@ -90,7 +116,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("height")]
         public int Height
         {
-            get { return m_height; }
+            get => m_height;
             set
             {
                 if (!m_height.Equals(value))
@@ -106,17 +132,6 @@ namespace GameExpress.Model.Item
         /// Liefert die Größe
         /// </summary>
         [XmlIgnore]
-        public override Size Size
-        {
-            get
-            {
-                return new Size(Width, Height);
-            }
-        }
-
-        /// <summary>
-        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
-        /// </summary>
-        public override string Symbol { get { return "\uE7FC"; } }
+        public virtual Size Size => new Size(Width, Height);
     }
 }

@@ -26,9 +26,9 @@ namespace GameExpress.Converter
         {
             if (value is Blur)
             {
-                var buf = (byte)(Blur) value;
+                var buf = (byte)(Blur)value;
 
-                return (Int32) buf;
+                return (int)buf;
             }
 
             return 0;
@@ -46,15 +46,15 @@ namespace GameExpress.Converter
         {
             if (value is int)
             {
-                var buf = (int) value;
+                var buf = (int)value;
 
-                return new Blur((byte) buf);
+                return new Blur((byte)buf);
             }
             else if (value is double)
             {
-                var buf = (double) value;
+                var buf = (double)value;
 
-                return new Blur((byte) buf);
+                return new Blur((byte)buf);
             }
 
             return new Blur();

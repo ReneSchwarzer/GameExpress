@@ -15,14 +15,14 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert das mit der Ansicht verbundene Karte
         /// </summary>
-        private ItemMap Map { get { return DataContext as ItemMap; } }
+        private ItemMap Map => DataContext as ItemMap;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public MapPropertyPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>

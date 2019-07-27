@@ -1,13 +1,8 @@
 ﻿using GameExpress.Model.Structs;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Windows.Foundation;
 
 namespace GameExpress.Model.Item
 {
@@ -15,7 +10,7 @@ namespace GameExpress.Model.Item
     /// Objektinstanz
     /// </summary>
     [XmlType("story")]
-    public class ItemStory : ItemVisual
+    public class ItemStory : ItemTreeNode
     {
         /// <summary>
         /// Das Item
@@ -33,7 +28,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("loop")]
         public Loop Loop
         {
-            get { return m_loop; }
+            get => m_loop;
             set
             {
                 if (m_loop != value)
@@ -46,11 +41,6 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
-        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
-        /// </summary>
-        public override string Symbol { get { return "\uE77C"; } }
-
-        /// <summary>
         /// Liefert oder setzt die Schlüselbilder
         /// </summary>
         [XmlElement("keyframe")]
@@ -60,7 +50,7 @@ namespace GameExpress.Model.Item
         /// Liefert oder setzt den Verweis auf die übergeordnete Animation
         /// </summary>
         [XmlIgnore]
-        public ItemAnimation Animation { get { return Parent as ItemAnimation; } }
+        public ItemAnimation Animation => Parent as ItemAnimation;
 
         /// <summary>
         /// Die ID des mit der Instanz verbundenen Element
@@ -71,14 +61,34 @@ namespace GameExpress.Model.Item
         /// <summary>
         /// Liefert einen Verweis auf die aktuelle Story
         /// </summary>
-        public ItemStory Self { get { return this; } }
+        [XmlIgnore]
+        public ItemStory Self => this;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public ItemStory()
         {
+            KeyFrames.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (ItemKeyFrame v in e.NewItems)
+                    {
+                        v.Story = this;
+                        v.PropertyChanged += OnKeyFramePropertyChanged;
+                    }
+                }
 
+                if (e.OldItems != null)
+                {
+                    foreach (ItemKeyFrame v in e.OldItems)
+                    {
+                        v.Story = null;
+                        v.PropertyChanged -= OnKeyFramePropertyChanged;
+                    }
+                }
+            };
         }
 
         /// <summary>
@@ -88,26 +98,7 @@ namespace GameExpress.Model.Item
         {
             base.Init();
 
-            KeyFrames.CollectionChanged += (s, e) =>
-            {
-                if (e.NewItems != null)
-                {
-                    foreach (ItemKeyFrame v in e.NewItems)
-                    {
-                        v.Parent = this;
-                        v.PropertyChanged += OnKeyFramePropertyChanged;
-                    }
-                }
-
-                if (e.OldItems != null)
-                {
-                    foreach (ItemKeyFrame v in e.OldItems)
-                    {
-                        v.Parent = null;
-                        v.PropertyChanged -= OnKeyFramePropertyChanged;
-                    }
-                }
-            };
+            AttachedInstance(Item);
         }
 
         /// <summary>
@@ -116,13 +107,17 @@ namespace GameExpress.Model.Item
         /// <param name="uc">Der Updatekontext</param>
         public override void Update(UpdateContext uc)
         {
-            base.Update(uc);
-
             if (Instance == null)
             {
                 AttachedInstance(Item);
             }
 
+            var newUC = new UpdateContext(uc) { Time = LocalTime(uc.Time) };
+
+            if (GetKeyFrame((ulong)newUC.Time) is ItemKeyFrame frame)
+            {
+                frame.Update(newUC);
+            }
         }
 
         /// <summary>
@@ -131,30 +126,19 @@ namespace GameExpress.Model.Item
         /// <param name="pc">Der Präsentationskontext</param>
         public override void Presentation(PresentationContext pc)
         {
-            if (pc.Level > 10 || !Enable) return;
-
-            var newPC = new PresentationContext(pc) { Level = pc.Level, Time = LocalTime(pc.Time) };
-
-            base.Presentation(newPC);
-
-            if (Instance == null)
+            if (pc.Level > 10 || !Enable)
             {
-                AttachedInstance(Item);
+                return;
             }
 
-            var currentKeyFrame = GetKeyFrame((ulong)newPC.Time);
-
-            if (currentKeyFrame != null)
+            var newPC = new PresentationContext(pc)
             {
-                newPC.Matrix *= currentKeyFrame.Matrix;
+                Time = LocalTime(pc.Time)
+            };
 
-                if (Instance is ItemGraphics)
-                {
-                    var graphics = Instance as ItemGraphics;
-                    newPC.Matrix *= Matrix3D.Translation(graphics.Hotspot.X * -1, graphics.Hotspot.Y * -1);
-                }
-
-                Instance?.Presentation(newPC);
+            if (GetKeyFrame((ulong)newPC.Time) is ItemKeyFrame frame)
+            {
+                frame.Presentation(newPC);
             }
         }
 
@@ -175,18 +159,21 @@ namespace GameExpress.Model.Item
         /// <param name="item">Das Item</param>
         protected void AttachedInstance(string item)
         {
-            if (Animation == null) return;
+            if (Animation == null)
+            {
+                return;
+            }
 
             // Suche Item
-            var orgin = Animation.Root.FindItem(Item);
+            var origin = Animation.Root.FindItem(Item);
 
-            if (orgin != null)
+            if (origin != null)
             {
                 //Instance = orgin.Copy();
                 //Instance.Name = Name + "_" + Instance.Name;
                 //(Instance as Item).Parent = this;
 
-                Instance = orgin;
+                Instance = origin;
             }
         }
 
@@ -244,21 +231,14 @@ namespace GameExpress.Model.Item
             {
                 var from = absolutePredecessorEndTime;
                 var till = absoluteSuccessorStartTime;
+                var progress = (time - from) / (float)(till - from); // in %
 
-                var mt = predecessorKeyFrame.Matrix.Invert * successorKeyFrame.Matrix;
-
-                var t = (time - from) / (float)(till - from); //in %
-
-                tweening.Matrix = predecessorKeyFrame.Matrix * new Matrix3D
-                (
-                    (mt.M11 - 1) * t + 1, mt.M12 * t, 0,
-                    mt.M21 * t, (mt.M22 - 1) * t + 1, 0,
-                    mt.M31 * t, mt.M32 * t, 1
-                );
+                var snapShot = tweening.Copy<ItemKeyFrameTweening>();
+                snapShot.Init(predecessorKeyFrame, successorKeyFrame, progress);
 
                 // ToDo: Alpha, usw.
 
-                return tweening;
+                return snapShot;
             }
 
             return null;
@@ -285,19 +265,19 @@ namespace GameExpress.Model.Item
             else if (EndTime < ulong.MaxValue && Loop == Loop.Repeat)
             {
                 // Schleife
-                local.AddTick((ulong)time % (ulong)EndTime);
+                local.AddTick((ulong)time % EndTime);
             }
             else if (EndTime < ulong.MaxValue && Loop == Loop.Oscillate)
             {
                 // Schwingen
-                var direction = ((ulong)time / (ulong)EndTime) % 2;
+                var direction = ((ulong)time / EndTime) % 2;
                 switch (direction)
                 {
                     case 0:
-                        local.AddTick((ulong)time % (ulong)EndTime);
+                        local.AddTick((ulong)time % EndTime);
                         break;
                     default:
-                        local.AddTick((ulong)EndTime - (ulong)time % (ulong)EndTime);
+                        local.AddTick(EndTime - (ulong)time % EndTime);
                         break;
                 }
 
@@ -324,13 +304,7 @@ namespace GameExpress.Model.Item
         /// Liefert oder setzt die Zeit, bei dem die Annimation beendet wird
         /// </summary>
         [XmlIgnore]
-        public ulong EndTime
-        {
-            get
-            {
-                return (ulong)KeyFrames.Where(x => x is ItemKeyFrameAct).Select(x => x as ItemKeyFrameAct).Sum(x => (decimal)x.From + x.Duration);
-            }
-        }
+        public ulong EndTime => (ulong)KeyFrames.Where(x => x is ItemKeyFrameAct).Select(x => x as ItemKeyFrameAct).Sum(x => (decimal)x.From + x.Duration);
 
         /// <summary>
         /// Liefert oder setzt das mit der Instanz verbundene Element
@@ -338,7 +312,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("item")]
         public string Item
         {
-            get { return m_item; }
+            get => m_item;
             set
             {
                 if (m_item == null ? true : !m_item.Equals(value))
@@ -348,18 +322,6 @@ namespace GameExpress.Model.Item
 
                     RaisePropertyChanged();
                 }
-            }
-        }
-
-        /// <summary>
-        /// Liefert die Größe
-        /// </summary>
-        [XmlIgnore]
-        public override Size Size
-        {
-            get
-            {
-                return new Size();
             }
         }
     }

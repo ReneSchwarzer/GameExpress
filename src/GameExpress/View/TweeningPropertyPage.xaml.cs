@@ -24,14 +24,14 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert das mit der Ansicht verbundene Tweeningobjekt
         /// </summary>
-        private ItemKeyFrameTweening KeyFrame { get { return DataContext as ItemKeyFrameTweening; } }
+        private ItemKeyFrameTweening KeyFrame => DataContext as ItemKeyFrameTweening;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public TweeningPropertyPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>

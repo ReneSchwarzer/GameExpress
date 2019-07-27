@@ -28,17 +28,6 @@ namespace GameExpress.Model.Item
         /// Liefert die Größe
         /// </summary>
         [XmlIgnore]
-        public override Size Size
-        {
-            get
-            {
-                return new Size();
-            }
-        }
-
-        /// <summary>
-        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
-        /// </summary>
-        public override string Symbol { get { return "\uE1C3"; } }
+        public override Size Size => new Size();
     }
 }

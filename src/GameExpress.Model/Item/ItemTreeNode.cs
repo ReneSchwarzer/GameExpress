@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace GameExpress.Model.Item
@@ -11,7 +9,8 @@ namespace GameExpress.Model.Item
     /// <summary>
     /// Baumknoten
     /// </summary>
-    [XmlInclude(typeof(ItemVisual))]
+    [XmlInclude(typeof(ItemGraphics))]
+    //[XmlInclude(typeof(ItemGame))]
     [XmlInclude(typeof(ItemSound))]
     [XmlInclude(typeof(ItemMap))]
     public abstract class ItemTreeNode : Item
@@ -54,7 +53,10 @@ namespace GameExpress.Model.Item
         {
             get
             {
-                if (IsRoot) return this;
+                if (IsRoot)
+                {
+                    return this;
+                }
 
                 var parent = Parent;
                 while (!parent.IsRoot)
@@ -71,20 +73,14 @@ namespace GameExpress.Model.Item
         /// </summary>
         /// <returns>true wenn Root, sonst false</returns>
         [XmlIgnore]
-        public bool IsRoot
-        {
-            get { return (Parent == null); }
-        }
+        public bool IsRoot => (Parent == null);
 
         /// <summary>
         /// Prüft, ob Knoten ein Blatt ist
         /// </summary>
         /// <returns>true wenn Root, sonst false</returns>
         [XmlIgnore]
-        public bool IsLeaf
-        {
-            get { return (Children.Count == 0); }
-        }
+        public bool IsLeaf => (Children.Count == 0);
 
         /// <summary>
         /// Liefert den Pfad
@@ -97,7 +93,7 @@ namespace GameExpress.Model.Item
                 var path = GetPath();
 
                 return string.Join("/", path);
-                    
+
             }
         }
 
@@ -127,17 +123,33 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Initialisiert den Knoten und alle untergeordneten Knoten 
+        /// Arbeitet rekursiv
+        /// </summary>
+        public override void Init()
+        {
+            base.Init();
+
+            foreach (var child in Children)
+            {
+                child.Init();
+            }
+        }
+
+        /// <summary>
         /// Durchläuft den Baum in PreOrder
         /// </summary>
         /// <returns>Der Baum als Liste</returns>
         public ICollection<ItemTreeNode> GetPreOrder()
         {
-            var list = new List<ItemTreeNode>();
-            list.Add(this);
-
-            foreach (var v in Children)
+            var list = new List<ItemTreeNode>
             {
-                list.AddRange(v.GetPreOrder());
+                this
+            };
+
+            foreach (var child in Children)
+            {
+                list.AddRange(child.GetPreOrder());
             }
 
             return list;
@@ -149,8 +161,10 @@ namespace GameExpress.Model.Item
         /// <returns>Der Pfad</returns>
         public ICollection<ItemTreeNode> GetPath()
         {
-            var list = new List<ItemTreeNode>();
-            list.Add(this);
+            var list = new List<ItemTreeNode>
+            {
+                this
+            };
 
             var parent = Parent;
             while (parent != null)
@@ -230,7 +244,7 @@ namespace GameExpress.Model.Item
         /// <returns>Der Baumknoten in seiner Stringrepräsentation</returns>
         public override string ToString()
         {
-            return Name;
+            return base.ToString();
         }
     }
 }

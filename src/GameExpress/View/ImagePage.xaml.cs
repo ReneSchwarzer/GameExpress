@@ -20,14 +20,14 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert das mit der Ansicht verbundene Bild
         /// </summary>
-        private ItemImage Image {  get { return DataContext as ItemImage; } }
+        private ItemImage Image => DataContext as ItemImage;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public ImagePage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>

@@ -55,7 +55,7 @@
                                 <CommandBar.PrimaryCommands>
                                     <AppBarButton Name="FitButton" Label="Anpassen">
                                         <AppBarButton.Icon>
-                                            <FontIcon Glyph="&#xECE9;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                                            <FontIcon Glyph="&#xE9A6;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                                         </AppBarButton.Icon>
                                     </AppBarButton>
                                     <AppBarToggleButton Name="RulerButton" Label="Lineal" IsChecked="{Binding RulerVisibility, Mode=TwoWay, Converter={StaticResource VisibilityToBoolean}, UpdateSourceTrigger=PropertyChanged}">

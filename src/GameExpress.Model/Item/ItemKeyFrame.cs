@@ -1,19 +1,18 @@
 ﻿using GameExpress.Model.Structs;
 using System.Xml.Serialization;
-using Windows.Foundation;
 
 namespace GameExpress.Model.Item
 {
     [XmlType("keyframebase")]
     [XmlInclude(typeof(ItemKeyFrameAct))]
     [XmlInclude(typeof(ItemKeyFrameTweening))]
-    public abstract class ItemKeyFrame : ItemVisual
+    public abstract class ItemKeyFrame : Item
     {
         /// <summary>
         /// Liefert oder setzt den Verweis auf die zugehörige Story
         /// </summary>
         [XmlIgnore]
-        public ItemStory Story { get { return Parent as ItemStory; } }
+        public ItemStory Story { get; set; }
 
         /// <summary>ItemKeyFrameBase
         /// Konstruktor
@@ -28,7 +27,6 @@ namespace GameExpress.Model.Item
         /// <param name="uc">Der Updatekontext</param>
         public override void Update(UpdateContext uc)
         {
-            base.Update(uc);
         }
 
         /// <summary>
@@ -37,7 +35,6 @@ namespace GameExpress.Model.Item
         /// <param name="pc"></param>
         public override void Presentation(PresentationContext pc)
         {
-            base.Presentation(pc);
         }
 
         /// <summary>
@@ -50,23 +47,13 @@ namespace GameExpress.Model.Item
             return copy as T;
         }
 
-
         /// <summary>
-        /// Liefert oder setzt die Transformationsmatrix
+        /// In String umwandeln
         /// </summary>
-        [XmlIgnore]
-        public abstract Matrix3D Matrix { get; set; }
-
-        /// <summary>
-        /// Liefert die Größe
-        /// </summary>
-        [XmlIgnore]
-        public override Size Size
+        /// <returns>Die Stringrepräsentation</returns>
+        public override string ToString()
         {
-            get
-            {
-                return new Size();
-            }
+            return "KeyFrame";
         }
     }
 }

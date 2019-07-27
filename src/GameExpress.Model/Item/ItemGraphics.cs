@@ -1,13 +1,7 @@
 ﻿using GameExpress.Model.Structs;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Windows.Foundation;
-using Windows.UI;
 
 namespace GameExpress.Model.Item
 {
@@ -18,7 +12,7 @@ namespace GameExpress.Model.Item
     [XmlInclude(typeof(ItemObject))]
     [XmlInclude(typeof(ItemImage))]
     [XmlType("graphics")]
-    public abstract class ItemGraphics : ItemVisual
+    public abstract class ItemGraphics : ItemTreeNode, IItemVisual, IItemHotSpot, IItemClickable
     {
         /// <summary>
         /// Der Hotspot
@@ -57,7 +51,7 @@ namespace GameExpress.Model.Item
         /// </summary>
         public override void Init()
         {
-            
+            base.Init();
         }
 
         /// <summary>
@@ -82,35 +76,18 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
-        /// Zeichnet den Hotspot
+        /// Prüft ob der Punkt innerhalb eines Items liegt und gibt das Item zurück
         /// </summary>
-        /// <param name="pc">Der Präsentationskontext</param>
-        protected void DrawHotspot(PresentationContext pc)
-        {
-            if (!pc.Designer)
-            {
-                return;
-            }
+        /// <param name="hc">Der Kontext</param>
+        /// <param name="point">Der zu überprüfende Punkt</param>
+        /// <returns>Das erste Item, welches gefunden wurde oder null</returns>
+        public abstract Item HitTest(HitTestContext hc, Vector point);
 
-            // Hotspot zeichnen
-            var p = pc.Transform(new Point(Hotspot.X, Hotspot.Y));
-
-            var black = Color.FromArgb(200, 0, 0, 0);
-            var white = Color.FromArgb(200, 255, 255, 255);
-
-            if (pc.Level == 1)
-            {
-                pc.Graphics.DrawLine((float)p.X - 5, (float)p.Y, (float)p.X + 5, (float)p.Y, black, 3);
-                pc.Graphics.DrawLine((float)p.X, (float)p.Y - 5, (float)p.X, (float)p.Y + 5, black, 3);
-                pc.Graphics.DrawLine((float)p.X - 5, (float)p.Y, (float)p.X + 5, (float)p.Y, white, 1);
-                pc.Graphics.DrawLine((float)p.X, (float)p.Y - 5, (float)p.X, (float)p.Y + 5, white, 1);
-            }
-            else if (pc.Level == 2)
-            {
-                pc.Graphics.DrawEllipse((float)p.X - 3, (float)p.Y - 3, 6, 6, black, 3);
-                pc.Graphics.DrawEllipse((float)p.X - 3, (float)p.Y - 3, 6, 6, white);
-            }
-        }
+        /// <summary>
+        /// Liefert die Anzeigematrix des Items
+        /// </summary>
+        /// <returns>Die Matrix mit allen Transformationen des Items</returns>
+        public abstract Matrix3D GetMatrix();
 
         /// <summary>
         /// Liefert eine Tiefernkopie des Items
@@ -126,6 +103,7 @@ namespace GameExpress.Model.Item
 
             return copy as T;
         }
+
 
         /// <summary>
         /// Wird aufgerufen, wennsich der x-Wert oder y-Wert innerhalb des Hotspot ändert
@@ -143,7 +121,7 @@ namespace GameExpress.Model.Item
         [XmlElement("hotspot")]
         public Hotspot Hotspot
         {
-            get { return m_hotspot; }
+            get => m_hotspot;
             set
             {
                 if (!m_hotspot.Equals(value))
@@ -165,7 +143,7 @@ namespace GameExpress.Model.Item
         [XmlElement("gamma")]
         public Gamma Gamma
         {
-            get { return m_gamma; }
+            get => m_gamma;
             set
             {
                 if (!m_gamma.Equals(value))
@@ -183,7 +161,7 @@ namespace GameExpress.Model.Item
         [XmlElement("alpha")]
         public Alpha Alpha
         {
-            get { return m_alpha; }
+            get => m_alpha;
             set
             {
                 if (!m_alpha.Equals(value))
@@ -201,7 +179,7 @@ namespace GameExpress.Model.Item
         [XmlElement("blur")]
         public Blur Blur
         {
-            get { return m_blur; }
+            get => m_blur;
             set
             {
                 if (!m_blur.Equals(value))
@@ -219,7 +197,7 @@ namespace GameExpress.Model.Item
         [XmlIgnore]
         public Hue Hue
         {
-            get { return m_hue; }
+            get => m_hue;
             set
             {
                 if (!m_hue.Equals(value))
@@ -231,5 +209,10 @@ namespace GameExpress.Model.Item
             }
         }
 
+        /// <summary>
+        /// Liefert die Größe
+        /// </summary>
+        [XmlIgnore]
+        public abstract Size Size { get; }
     }
 }

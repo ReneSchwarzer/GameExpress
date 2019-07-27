@@ -6,7 +6,7 @@ using Windows.Foundation;
 namespace GameExpress.Model.Item
 {
     [XmlType("object")]
-    public class ItemObject : ItemVisual
+    public class ItemObject : ItemTreeNode, IItemVisual, IItemClickable
     {
         /// <summary>
         /// Liefert oder setzt die Objektzustände
@@ -19,7 +19,7 @@ namespace GameExpress.Model.Item
         /// </summary>
         public ItemObject()
         {
-            
+
         }
 
         /// <summary>
@@ -28,9 +28,9 @@ namespace GameExpress.Model.Item
         /// <param name="uc">Der Updatekontext</param>
         public override void Update(UpdateContext uc)
         {
-            base.Update(uc);
+            //base.Update(uc);
 
-            
+
         }
 
         /// <summary>
@@ -39,13 +39,36 @@ namespace GameExpress.Model.Item
         /// <param name="pc"></param>
         public override void Presentation(PresentationContext pc)
         {
-            if (!Enable) return;
+            if (!Enable)
+            {
+                return;
+            }
 
             var transform = pc.Graphics.Transform;
 
-            base.Presentation(pc);
+            //base.Presentation(pc);
 
             pc.Graphics.Transform = transform;
+        }
+
+        /// <summary>
+        /// Liefert die Anzeigematrix des Items
+        /// </summary>
+        /// <returns>Die Matrix mit allen Transformationen des Items</returns>
+        public virtual Matrix3D GetMatrix()
+        {
+            return Matrix3D.Identity;
+        }
+
+        /// <summary>
+        /// Prüft ob der Punkt innerhalb eines Items liegt und gibt das Item zurück
+        /// </summary>
+        /// <param name="hc">Der Kontext</param>
+        /// <param name="point">Der zu überprüfende Punkt</param>
+        /// <returns>Das erste Item, welches gefunden wurde oder null</returns>
+        public virtual Item HitTest(HitTestContext hc, Vector point)
+        {
+            return null;
         }
 
         /// <summary>
@@ -63,17 +86,6 @@ namespace GameExpress.Model.Item
         /// Liefert die Größe
         /// </summary>
         [XmlIgnore]
-        public override Size Size
-        {
-            get
-            {
-                return new Size();
-            }
-        }
-
-        /// <summary>
-        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
-        /// </summary>
-        public override string Symbol { get { return "\uEBD2"; } }
+        public virtual Size Size => new Size();
     }
 }

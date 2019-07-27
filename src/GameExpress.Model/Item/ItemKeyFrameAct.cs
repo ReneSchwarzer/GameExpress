@@ -6,7 +6,7 @@ using Windows.Foundation;
 namespace GameExpress.Model.Item
 {
     [XmlType("act")]
-    public class ItemKeyFrameAct : ItemKeyFrame
+    public class ItemKeyFrameAct : ItemKeyFrame, IItemVisual, IItemClickable, IItemTranslation, IItemScale
     {
         /// <summary>
         /// Relativer Beginn, ausgehend vom vorherigen Keyframe
@@ -46,12 +46,12 @@ namespace GameExpress.Model.Item
         /// <summary>
         /// Die Skalierung der x-Achse
         /// </summary>
-        private short m_scaleX = 100;
+        private double m_scaleX = 100;
 
         /// <summary>
         /// Die Skalierung der y-Achse
         /// </summary>
-        private short m_scaleY = 100;
+        private double m_scaleY = 100;
 
         /// <summary>
         /// Die Scherung der x-Achse
@@ -71,21 +71,89 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Initialisierung
+        /// </summary>
+        public virtual void Init()
+        {
+        }
+
+        /// <summary>
         /// Objekt aktualisieren
         /// </summary>
         /// <param name="uc">Der Updatekontext</param>
         public override void Update(UpdateContext uc)
         {
-            base.Update(uc);
+            var newUC = new UpdateContext(uc)
+            {
+                Matrix = uc.Matrix * GetMatrix()
+            };
+
+            base.Update(newUC);
+
+            Story.Instance?.Update(newUC);
         }
 
         /// <summary>
         /// Objekt darstllen
         /// </summary>
-        /// <param name="pc"></param>
+        /// <param name="pc">Der Präsentationskontext</param>
         public override void Presentation(PresentationContext pc)
         {
-            base.Presentation(pc);
+            var newPC = new PresentationContext(pc)
+            {
+                Matrix = pc.Matrix * GetMatrix()
+            };
+
+            base.Presentation(newPC);
+
+            Story.Instance?.Presentation(newPC);
+        }
+
+        /// <summary>
+        /// Liefert die Anzeigematrix des Items
+        /// </summary>
+        /// <returns>Die Matrix mit allen Transformationen des Items</returns>
+        public virtual Matrix3D GetMatrix()
+        {
+            var matrix = Matrix3D.Identity;
+
+            matrix *= Matrix3D.RotationX(RotationX);
+            matrix *= Matrix3D.RotationY(RotationY);
+            matrix *= Matrix3D.RotationZ(RotationZ);
+            matrix *= Matrix3D.Scaling((ScaleX == 0 ? 0.1f : ScaleX) / 100f, (ScaleY == 0 ? 0.1f : ScaleY) / 100f);
+            matrix *= Matrix3D.Translation(TranslationX, TranslationY);
+            matrix *= Matrix3D.Shear(ShearX / 100f, ShearY / 100f);
+
+            if (Story.Instance is IItemHotSpot item)
+            {
+                matrix *= Matrix3D.Translation(item.Hotspot.X * -1, item.Hotspot.Y * -1);
+            }
+
+            return matrix;
+        }
+
+        /// <summary>
+        /// Prüft ob der Punkt innerhalb eines Items liegt und gibt das Item zurück
+        /// </summary>
+        /// <param name="hc">Der Kontext</param>
+        /// <param name="point">Der zu überprüfende Punkt</param>
+        /// <returns>Das erste Item, welches gefunden wurde oder null</returns>
+        public virtual Item HitTest(HitTestContext hc, Vector point)
+        {
+            var newHC = new HitTestContext(hc)
+            {
+                Matrix = hc.Matrix * GetMatrix()
+            };
+
+            if (Story.Instance is IItemClickable instance)
+            {
+                if (instance.HitTest(newHC, point) != null)
+                {
+                    return Story;
+                };
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -116,7 +184,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("from")]
         public ulong From
         {
-            get { return m_from; }
+            get => m_from;
             set
             {
                 if (m_from != value)
@@ -134,7 +202,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("duration")]
         public ulong Duration
         {
-            get { return m_duration; }
+            get => m_duration;
             set
             {
                 if (m_duration != value)
@@ -147,38 +215,12 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
-        /// Liefert oder setzt die Transformationsmatrix
-        /// </summary>
-        [XmlIgnore]
-        public override Matrix3D Matrix
-        {
-            get
-            {
-                var matrix = Matrix3D.Identity;
-
-                matrix *= Matrix3D.RotationX(RotationX);
-                matrix *= Matrix3D.RotationY(RotationY);
-                matrix *= Matrix3D.RotationZ(RotationZ);
-                matrix *= Matrix3D.Scaling(ScaleX / 100f, ScaleY / 100f);
-                matrix *= Matrix3D.Translation(TranslationX, TranslationY);
-                matrix *= Matrix3D.Shear(ShearX / 100f, ShearY / 100f);
-
-                return matrix;
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        /// <summary>
         /// Liefert oder setzt die Rotation um die x-Achse
         /// </summary>
         [XmlAttribute("rotationx")]
         public short RotationX
         {
-            get { return m_rotaionX; }
+            get => m_rotaionX;
             set
             {
                 if (!m_rotaionX.Equals(value))
@@ -196,7 +238,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("rotationy")]
         public short RotationY
         {
-            get { return m_rotaionY; }
+            get => m_rotaionY;
             set
             {
                 if (!m_rotaionY.Equals(value))
@@ -214,7 +256,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("rotationz")]
         public short RotationZ
         {
-            get { return m_rotaionZ; }
+            get => m_rotaionZ;
             set
             {
                 if (!m_rotaionZ.Equals(value))
@@ -232,7 +274,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("translationx")]
         public short TranslationX
         {
-            get { return m_translationX; }
+            get => m_translationX;
             set
             {
                 if (!m_translationX.Equals(value))
@@ -250,7 +292,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("translationy")]
         public short TranslationY
         {
-            get { return m_translationY; }
+            get => m_translationY;
             set
             {
                 if (!m_translationY.Equals(value))
@@ -266,9 +308,9 @@ namespace GameExpress.Model.Item
         /// Liefert oder setzt die Skalierung der x-Achse
         /// </summary>
         [XmlAttribute("sclaex")]
-        public short ScaleX
+        public double ScaleX
         {
-            get { return m_scaleX; }
+            get => m_scaleX;
             set
             {
                 if (!m_scaleX.Equals(value))
@@ -284,9 +326,9 @@ namespace GameExpress.Model.Item
         /// Liefert oder setzt die Skalierung der y-Achse
         /// </summary>
         [XmlAttribute("scaley")]
-        public short ScaleY
+        public double ScaleY
         {
-            get { return m_scaleY; }
+            get => m_scaleY;
             set
             {
                 if (!m_scaleY.Equals(value))
@@ -304,7 +346,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("shearx")]
         public short ShearX
         {
-            get { return m_shearX; }
+            get => m_shearX;
             set
             {
                 if (!m_shearX.Equals(value))
@@ -322,7 +364,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("sheary")]
         public short ShearY
         {
-            get { return m_shearY; }
+            get => m_shearY;
             set
             {
                 if (!m_shearY.Equals(value))
@@ -338,10 +380,15 @@ namespace GameExpress.Model.Item
         /// Liefert die Größe
         /// </summary>
         [XmlIgnore]
-        public override Size Size
+        public virtual Size Size
         {
             get
             {
+                if (Story?.Instance is IItemVisual instance)
+                {
+                    return instance.Size;
+                }
+
                 return new Size();
             }
         }

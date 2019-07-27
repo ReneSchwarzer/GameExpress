@@ -41,7 +41,7 @@ namespace GameExpress.Converter
         /// <returns></returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if (value is Boolean && (Boolean)value == true)
+            if (value is bool && (bool)value == true)
             {
                 return Visibility.Visible;
             }

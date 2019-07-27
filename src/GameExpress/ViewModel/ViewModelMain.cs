@@ -1,4 +1,5 @@
-﻿using GameExpress.Model;
+﻿using GameExpress.Context;
+using GameExpress.Model;
 using GameExpress.Model.Item;
 using System;
 using System.Collections.ObjectModel;
@@ -17,7 +18,7 @@ namespace GameExpress.ViewModel
         /// </summary>
         public ViewModelMain()
         {
-            
+
         }
 
         /// <summary>
@@ -25,6 +26,18 @@ namespace GameExpress.ViewModel
         /// </summary>
         public override async void InitAsync()
         {
+            ContextRepository.RegisterContext(typeof(ItemGame), new ItemGameContext());
+            ContextRepository.RegisterContext(typeof(ItemScene), new ItemSceneContext());
+            ContextRepository.RegisterContext(typeof(ItemObject), new ItemObjectContext());
+            ContextRepository.RegisterContext(typeof(ItemAnimation), new ItemAnimationContext());
+            ContextRepository.RegisterContext(typeof(ItemMap), new ItemMapContext());
+            ContextRepository.RegisterContext(typeof(ItemStory), new ItemStoryContext());
+            ContextRepository.RegisterContext(typeof(ItemKeyFrame), new ItemKeyFrameContext());
+            ContextRepository.RegisterContext(typeof(ItemKeyFrameAct), new ItemKeyFrameContext());
+            ContextRepository.RegisterContext(typeof(ItemKeyFrameTweening), new ItemTweeningContext());
+            ContextRepository.RegisterContext(typeof(ItemImage), new ItemImageContext());
+            ContextRepository.RegisterContext(typeof(ItemSound), new ItemSoundContext());
+
 #if DEBUG
             var appInstalledFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
             var assets = await appInstalledFolder.GetFolderAsync("Assets");
@@ -65,7 +78,7 @@ namespace GameExpress.ViewModel
         /// <summary>
         /// Liefert oder setzt den Projektbaum
         /// </summary>
-        public ObservableCollection<ItemTreeNode> Tree { get { return Project.Tree; } }
+        public ObservableCollection<ItemTreeNode> Tree => Project.Tree;
 
         /// <summary>
         /// Liefert oder setzt den Dateinamen des Projektes

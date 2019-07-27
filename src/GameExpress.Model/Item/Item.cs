@@ -1,18 +1,14 @@
 ﻿using GameExpress.Model.Structs;
 using Microsoft.Graphics.Canvas;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace GameExpress.Model.Item
 {
     [XmlInclude(typeof(ItemTreeNode))]
-    public abstract class Item : INotifyPropertyChanged
+    public abstract class Item : INotifyPropertyChanged, IDisposable
     {
         /// <summary>
         /// Der Name des Items 
@@ -35,12 +31,18 @@ namespace GameExpress.Model.Item
         private bool m_lock = false;
 
         /// <summary>
+        /// Liefert einen Verweis auf sich selbst
+        /// </summary>
+        [XmlIgnore]
+        public Item This => this;
+
+        /// <summary>
         /// Liefert oder setzt den Name des Items
         /// </summary>
         [XmlAttribute("name")]
         public string Name
         {
-            get { return m_name; }
+            get => m_name;
             set
             {
                 if (!m_name.Equals(value))
@@ -58,7 +60,7 @@ namespace GameExpress.Model.Item
         [XmlElement("note", IsNullable = true)]
         public string Note
         {
-            get { return m_note; }
+            get => m_note;
             set
             {
                 if ((m_note != null && !m_note.Equals(value)) || (m_note == null && value != null))
@@ -81,7 +83,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("enable")]
         public bool Enable
         {
-            get { return m_enable; }
+            get => m_enable;
             set
             {
                 if (!m_enable.Equals(value))
@@ -99,7 +101,7 @@ namespace GameExpress.Model.Item
         [XmlAttribute("lock")]
         public bool Lock
         {
-            get { return m_lock; }
+            get => m_lock;
             set
             {
                 if (!m_lock.Equals(value))
@@ -116,15 +118,7 @@ namespace GameExpress.Model.Item
         /// Prüft, ob Eingaben erlaubt sind
         /// </summary>
         [XmlIgnore]
-        public bool Unlock
-        {
-            get { return !Lock; }
-        }
-
-        /// <summary>
-        /// Liefert das Icon des Items aus der FontFamily Segoe MDL2 Assets
-        /// </summary>
-        public virtual string Symbol { get { return "\uE18A"; } }
+        public bool Unlock => !Lock;
 
         /// <summary>
         /// Event zum Mitteilen, dass sich eine Eigenschaften geändert hat
@@ -136,7 +130,7 @@ namespace GameExpress.Model.Item
         /// </summary>
         public Item()
         {
-            Init();
+            //Init();
         }
 
         /// <summary>
@@ -144,7 +138,13 @@ namespace GameExpress.Model.Item
         /// </summary>
         public virtual void Init()
         {
-            m_enable = true;
+        }
+
+        /// <summary>
+        /// Entfernen nicht mehr benötigter Ressourcen des Items
+        /// </summary>
+        public virtual void Dispose()
+        {
         }
 
         /// <summary>
@@ -191,6 +191,15 @@ namespace GameExpress.Model.Item
         protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// In String umwandeln
+        /// </summary>
+        /// <returns>Die Stringrepräsentation</returns>
+        public override string ToString()
+        {
+            return GetType().Name + " " + Name;
         }
     }
 }

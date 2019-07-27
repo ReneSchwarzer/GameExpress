@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Xml.Serialization;
 
 namespace GameExpress.Model.Structs
@@ -48,8 +43,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("color")]
         public Color Color
         {
-            get { return m_color; }
-            set { m_color = value; }
+            get => m_color;
+            set => m_color = value;
         }
 
         /// <summary>
@@ -58,8 +53,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("enable")]
         public bool Enable
         {
-            get { return m_enable; }
-            set { m_enable = value; }
+            get => m_enable;
+            set => m_enable = value;
         }
 
         /// <summary>
@@ -68,8 +63,8 @@ namespace GameExpress.Model.Structs
         [XmlAttribute("alpha")]
         public Alpha Alpha
         {
-            get { return m_alpha; }
-            set { m_alpha = value; }
+            get => m_alpha;
+            set => m_alpha = value;
         }
     }
 }

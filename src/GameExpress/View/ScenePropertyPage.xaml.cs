@@ -25,14 +25,14 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert die mit der Ansicht verbundene Szene
         /// </summary>
-        private ItemScene Scene { get { return DataContext as ItemScene; } }
+        private ItemScene Scene => DataContext as ItemScene;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         public ScenePropertyPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>

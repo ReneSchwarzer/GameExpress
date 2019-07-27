@@ -1,10 +1,14 @@
-﻿using GameExpress.Model.Item;
+﻿using GameExpress.Context;
+using GameExpress.Model.Item;
 using GameExpress.Model.Structs;
+using GameExpress.SelectionFrames;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Composition;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -16,6 +20,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
 namespace GameExpress.Controls
@@ -76,19 +81,14 @@ namespace GameExpress.Controls
         private long GridVisibilityPropertyToken { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt das Device-Objekt
+        /// Liefert oder setzt die Auswahlrahmen
         /// </summary>
-        private CompositionGraphicsDevice Device { get; set; }
+        protected ObservableCollection<ISelectionFrame> SelectionFrames { get; } = new ObservableCollection<ISelectionFrame>();
 
         /// <summary>
-        /// Liefert oder setzt das DrawingSurface-Objekt
+        /// Liefert oder setzt das aktive Handle zur Manipulation eines Items
         /// </summary>
-        private CompositionDrawingSurface DrawingSurface { get; set; }
-
-        /// <summary>
-        /// Leifert oder setzt die DrawingSession
-        /// </summary>
-        private CanvasDrawingSession DrawingSession { get; set; }
+        private ISelectionFrameHandle CapturedHandle { get; set; }
 
         /// <summary>
         /// Konstruktor
@@ -96,6 +96,8 @@ namespace GameExpress.Controls
         public EditorPanel()
         {
             DefaultStyleKey = typeof(EditorPanel);
+
+            SelectedItems = new ObservableCollection<Item>();
 
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
@@ -171,7 +173,7 @@ namespace GameExpress.Controls
             }
 
             // Eigenschaft GridVisibilityProperty hat sich geändert
-            GridVisibilityPropertyToken = RegisterPropertyChangedCallback(GridVisibilityProperty, new DependencyPropertyChangedCallback((s, e) => 
+            GridVisibilityPropertyToken = RegisterPropertyChangedCallback(GridVisibilityProperty, new DependencyPropertyChangedCallback((s, e) =>
             {
                 // Neuzeichnen erforderlich
                 Content?.Invalidate();
@@ -183,7 +185,62 @@ namespace GameExpress.Controls
                 Item.PropertyChanged += OnInvalidate;
             }
 
+            PointerPressed += OnPointerPressed;
+            PointerMoved += OnPointerMoved;
+            PointerReleased += OnPointerReleased;
+            PointerExited += OnPointerExited;
+            PointerCanceled += OnPointerCanceled;
+
+            SelectedItems.CollectionChanged += OnSelectedItemsCollectionChanged;
+
             DataContext = this;
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn die Instanz-Auflistung geändert wurde
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnSelectedItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                SelectionFrames.Clear();
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (Item add in e.NewItems)
+                {
+                    // Auswahlrahmen
+                    var context = ContextRepository.FindContext(add);
+
+                    foreach (var frame in SelectionFrames.Where(x => x.Item == add))
+                    {
+                        frame.SwitchToolset();
+                    }
+
+                    if (SelectionFrames.Where(x => x.Item == add).Count() == 0)
+                    {
+                        SelectionFrames.Add(context.SelectionFrameFactory(add));
+                    }
+
+                }
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (Item remove in e.OldItems)
+                {
+                    var frames = SelectionFrames.Where(x => x.Item == remove);
+                    foreach (var frame in frames.ToList())
+                    {
+                        SelectionFrames.Remove(frame);
+                    }
+                }
+            }
+
+            Invalidate();
         }
 
         /// <summary>
@@ -217,7 +274,7 @@ namespace GameExpress.Controls
         /// <param name="commandBar">Fügt die Elemente der CommandBar am Ende an, sonst vorne</param>
         public void MergeCommandBar(CommandBar commandBar, bool tail = true)
         {
-            foreach(var command in tail ? commandBar.PrimaryCommands : commandBar.PrimaryCommands.Reverse())
+            foreach (var command in tail ? commandBar.PrimaryCommands : commandBar.PrimaryCommands.Reverse())
             {
                 if (tail)
                 {
@@ -241,9 +298,9 @@ namespace GameExpress.Controls
             var sz = new Size();
             var pt = new Point();
 
-            var size = Item is ItemVisual ? (Item as ItemVisual).Size : new Size();
+            var size = Item is IItemVisual ? (Item as IItemVisual).Size : new Size();
 
-            if (size.IsEmpty || size.Equals(new Size()))  
+            if (size.IsEmpty || size.Equals(new Size()))
             {
                 // Keine Größe angegeben, Infinity-Modus wird aktiv
                 sz = new Size(Content.ActualWidth, Content.ActualHeight);
@@ -305,7 +362,10 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnDrawContent(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            if (Item == null) return;
+            if (Item == null)
+            {
+                return;
+            }
 
             OnDrawContent(args);
         }
@@ -316,17 +376,35 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         protected virtual void OnDrawContent(CanvasDrawEventArgs args)
         {
-            var viewRect = GetItemViewRect(out bool infinty);
+            var viewRect = GetItemViewRect(out var infinty);
+            var uc = new UpdateContext()
+            {
+                Designer = true,
+                Matrix = Matrix3D.Identity * Matrix3D.Translation(viewRect.Left, viewRect.Top) * Matrix3D.Scaling(Zoom / 100f, Zoom / 100f)
+            };
+            var pc = new PresentationContext(args.DrawingSession)
+            {
+                Designer = true,
+                Matrix = Matrix3D.Identity * Matrix3D.Translation(viewRect.Left, viewRect.Top) * Matrix3D.Scaling(Zoom / 100f, Zoom / 100f)
+            };
 
             // Zeichne Hintergrund
             OnDrawBackground(args);
 
-            Item.Update(new UpdateContext() { Designer = true });
-            Item.Presentation(new PresentationContext(args.DrawingSession)
+            Item.Update(uc);
+            Item.Presentation(pc);
+
+            // SelectionFrame updaten
+            foreach (var frame in SelectionFrames)
             {
-                Designer = true,
-                Matrix = Matrix3D.Identity * Matrix3D.Translation(viewRect.Left, viewRect.Top) * Matrix3D.Scaling(Zoom / 100f, Zoom / 100f)
-            });
+                frame.Update(uc);
+            }
+
+            // SelectionFrame zeichnen
+            foreach (var frame in SelectionFrames)
+            {
+                frame.Presentation(pc);
+            }
 
             args.DrawingSession.Flush();
         }
@@ -337,7 +415,7 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         protected virtual void OnDrawBackground(CanvasDrawEventArgs args)
         {
-            var viewRect = GetItemViewRect(out bool infinty);
+            var viewRect = GetItemViewRect(out var infinty);
             var backround = Background is SolidColorBrush ? (Background as SolidColorBrush).Color : Color.FromArgb(255, 0, 0, 0);
 
             args.DrawingSession.FillRectangle(new Rect(0, 0, ActualWidth, ActualHeight), backround);
@@ -348,9 +426,9 @@ namespace GameExpress.Controls
 
                 var alternated = ((int)(viewRect.Top / 10) + (int)(viewRect.Left / 10)) % 2 == 0;
 
-                for (int y = (int)(viewRect.Top % 10) - 20; y < ActualHeight; y = y + 10)
+                for (var y = (int)(viewRect.Top % 10) - 20; y < ActualHeight; y = y + 10)
                 {
-                    for (int x = (int)(viewRect.Left % 10) - (alternated ? 10 : 20); x < ActualWidth; x = x + 20)
+                    for (var x = (int)(viewRect.Left % 10) - (alternated ? 10 : 20); x < ActualWidth; x = x + 20)
                     {
                         args.DrawingSession.FillRectangle(new Rect(x, y, 10, 10), lightGray);
                     }
@@ -367,7 +445,7 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnDrawVerticalRuler(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            var viewRect = GetItemViewRect(out bool infinity);
+            var viewRect = GetItemViewRect(out var infinity);
 
             var white = Color.FromArgb(255, 255, 255, 255);
             var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
@@ -384,9 +462,9 @@ namespace GameExpress.Controls
                 args.DrawingSession.FillRectangle(new Rect(2, viewRect.Top, VerticalRuler.ActualWidth - 4, viewRect.Height), black);
             }
 
-            int count = 0;
+            var count = 0;
 
-            for (int i = (int)viewRect.Top; i < VerticalRuler.ActualHeight; i += 10)
+            for (var i = (int)viewRect.Top; i < VerticalRuler.ActualHeight; i += 10)
             {
                 if (count % 10 == 0)
                 {
@@ -402,7 +480,7 @@ namespace GameExpress.Controls
 
             count = 1;
 
-            for (int i = (int)viewRect.Top - 10; i > 0; i -= 10)
+            for (var i = (int)viewRect.Top - 10; i > 0; i -= 10)
             {
                 if (count % 10 == 0)
                 {
@@ -424,7 +502,7 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnDrawHorizontalRuler(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            var viewRect = GetItemViewRect(out bool infinity);
+            var viewRect = GetItemViewRect(out var infinity);
 
             var white = Color.FromArgb(255, 255, 255, 255);
             var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
@@ -441,9 +519,9 @@ namespace GameExpress.Controls
                 args.DrawingSession.FillRectangle(new Rect(viewRect.Left, 2, viewRect.Width, HorizontalRuler.ActualHeight - 4), black);
             }
 
-            int count = 0;
+            var count = 0;
 
-            for (int i = (int)viewRect.Left; i < HorizontalRuler.ActualWidth; i += 10)
+            for (var i = (int)viewRect.Left; i < HorizontalRuler.ActualWidth; i += 10)
             {
                 if (count % 10 == 0)
                 {
@@ -459,7 +537,7 @@ namespace GameExpress.Controls
 
             count = 1;
 
-            for (int i = (int)viewRect.Left - 10; i > 0; i -= 10)
+            for (var i = (int)viewRect.Left - 10; i > 0; i -= 10)
             {
                 if (count % 10 == 0)
                 {
@@ -493,7 +571,7 @@ namespace GameExpress.Controls
         /// </summary>
         public int Zoom
         {
-            get { return (int)GetValue(ZoomProperty); }
+            get => (int)GetValue(ZoomProperty);
             set
             {
                 if (value < 10)
@@ -519,7 +597,7 @@ namespace GameExpress.Controls
         private void OnFitButtonClick(object sender, RoutedEventArgs e)
         {
             Zoom = 100;
-            var viewRect = GetItemViewRect(out bool infinity);
+            var viewRect = GetItemViewRect(out var infinity);
 
             var sx = Content.ActualWidth / viewRect.Width;
             var sy = Content.ActualHeight / viewRect.Height;
@@ -593,6 +671,14 @@ namespace GameExpress.Controls
             SizeChanged -= OnSizeChanged;
             Loaded -= OnLoaded;
             Unloaded -= OnUnloaded;
+
+            PointerPressed -= OnPointerPressed;
+            PointerMoved -= OnPointerMoved;
+            PointerReleased -= OnPointerReleased;
+            PointerExited -= OnPointerExited;
+            PointerCanceled -= OnPointerCanceled;
+
+            SelectedItems.CollectionChanged -= OnSelectedItemsCollectionChanged;
         }
 
         /// <summary>
@@ -606,6 +692,137 @@ namespace GameExpress.Controls
         }
 
         /// <summary>
+        /// Wird aufgerufen, wenn auf das Steuerelement gedrückt wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var point = e.GetCurrentPoint(Content).Position;
+
+            if (Item is IItemClickable item)
+            {
+                var viewRect = GetItemViewRect(out var infinty);
+                var hc = new HitTestContext()
+                {
+                    Designer = true,
+                    Matrix = Matrix3D.Identity * Matrix3D.Translation(viewRect.Left, viewRect.Top) * Matrix3D.Scaling(Zoom / 100f, Zoom / 100f)
+                };
+
+                foreach (var frame in SelectionFrames)
+                {
+                    var handle = frame.HitTest(hc, point);
+                    if (handle != null)
+                    {
+                        e.Handled = true;
+
+                        Content.CapturePointer(e.Pointer);
+                        handle.CaptureBegin(point);
+                        CapturedHandle = handle;
+
+                        return;
+                    }
+                }
+
+                // SubItem finden
+                var subItem = item.HitTest(hc, point);
+
+                if (subItem != null)
+                {
+                    // Ausgewählte Items
+                    if (SelectedItems.Where(x => x == subItem).Count() == 0)
+                    {
+                        if (e.KeyModifiers != Windows.System.VirtualKeyModifiers.Control)
+                        {
+                            SelectedItems.Clear();
+                        }
+                        SelectedItems.Add(subItem);
+                    }
+
+                    // Auswahlrahmen
+                    var context = ContextRepository.FindContext(subItem);
+
+                    foreach (var frame in SelectionFrames.Where(x => x.Item == subItem))
+                    {
+                        frame.SwitchToolset();
+                    }
+
+                    // Neuzeichnen
+                    Invalidate();
+
+                    e.Handled = true;
+                }
+                else
+                {
+                    SelectedItems.Clear();
+
+                    // Neuzeichnen
+                    Invalidate();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn innerhalb des Steuerelements die Position des Zeigegerätes sich ändert
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            var pointer = e.GetCurrentPoint(Content);
+            var viewRect = GetItemViewRect(out var infinty);
+            var matrix = Matrix3D.Identity * Matrix3D.Translation(viewRect.Left, viewRect.Top) * Matrix3D.Scaling(Zoom / 100f, Zoom / 100f);
+
+            if (pointer.IsInContact && CapturedHandle != null)
+            {
+                var point = e.GetCurrentPoint(Content).Position;
+
+                CapturedHandle.CaptureDrag(point, matrix);
+
+                Invalidate();
+            }
+
+            e.Handled = true;
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn das Zeigegeräte nicht mehrsub gedrückt wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            var pointer = e.GetCurrentPoint(Content);
+            Content.ReleasePointerCapture(e.Pointer);
+
+            if (CapturedHandle != null)
+            {
+                CapturedHandle.CaptureEnd();
+                CapturedHandle = null;
+            }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn das Zeigegeräte aus dem Steuerelement bewegt wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn das Zeigegeräte nicht mehr gültig ist
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnPointerCanceled(object sender, PointerRoutedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
         /// Using a DependencyProperty as the backing store for HorizontalScrollValue.  This enables animation, styling, binding, etc...
         /// </summary>
         public static readonly DependencyProperty ZoomProperty =
@@ -616,8 +833,8 @@ namespace GameExpress.Controls
         /// </summary>
         public int HorizontalScrollValue
         {
-            get { return (int)GetValue(HorizontalScrollValueProperty); }
-            set { SetValue(HorizontalScrollValueProperty, value); }
+            get => (int)GetValue(HorizontalScrollValueProperty);
+            set => SetValue(HorizontalScrollValueProperty, value);
         }
 
         /// <summary>
@@ -631,8 +848,8 @@ namespace GameExpress.Controls
         /// </summary>
         public int VerticalScrollValue
         {
-            get { return (int)GetValue(VerticalScrollValueProperty); }
-            set { SetValue(VerticalScrollValueProperty, value); }
+            get => (int)GetValue(VerticalScrollValueProperty);
+            set => SetValue(VerticalScrollValueProperty, value);
         }
 
         /// <summary>
@@ -642,12 +859,12 @@ namespace GameExpress.Controls
             DependencyProperty.Register("VerticalScrollValue", typeof(int), typeof(EditorPanel), new PropertyMetadata(0));
 
         /// <summary>
-        /// Liefert oder setzt das Items
+        /// Liefert oder setzt das Item
         /// </summary>
         public Item Item
         {
-            get { return (Item)GetValue(ItemProperty); }
-            set { SetValue(ItemProperty, value); }
+            get => (Item)GetValue(ItemProperty);
+            set => SetValue(ItemProperty, value);
         }
 
         /// <summary>
@@ -657,15 +874,27 @@ namespace GameExpress.Controls
             DependencyProperty.Register("Item", typeof(Item), typeof(EditorPanel), new PropertyMetadata(null));
 
         /// <summary>
+        /// Liefert oder setzt die Liste der ausgewählten Items
+        /// </summary>
+        public ObservableCollection<Item> SelectedItems
+        {
+            get => (ObservableCollection<Item>)GetValue(SelectedItemsProperty);
+            set => SetValue(SelectedItemsProperty, value);
+        }
+
+        /// <summary>
+        /// Using a DependencyProperty as the backing store for Item.  This enables animation, styling, binding, etc...
+        /// </summary>
+        public static readonly DependencyProperty SelectedItemsProperty =
+            DependencyProperty.Register("SelectedItems", typeof(ObservableCollection<Item>), typeof(EditorPanel), new PropertyMetadata(null));
+
+        /// <summary>
         /// Liefert oder setzt die Sichtbarbkeit des Rasters
         /// </summary>
         public Visibility GridVisibility
         {
-            get { return (Visibility)GetValue(GridVisibilityProperty); }
-            set
-            {
-                SetValue(GridVisibilityProperty, value);
-            }
+            get => (Visibility)GetValue(GridVisibilityProperty);
+            set => SetValue(GridVisibilityProperty, value);
         }
 
         /// <summary>
@@ -679,11 +908,8 @@ namespace GameExpress.Controls
         /// </summary>
         public Visibility RulerVisibility
         {
-            get { return (Visibility)GetValue(RulerVisibilityProperty); }
-            set
-            {
-                SetValue(RulerVisibilityProperty, value);
-            }
+            get => (Visibility)GetValue(RulerVisibilityProperty);
+            set => SetValue(RulerVisibilityProperty, value);
         }
 
         /// <summary>

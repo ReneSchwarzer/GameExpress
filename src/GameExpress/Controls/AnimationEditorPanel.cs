@@ -14,7 +14,7 @@ namespace GameExpress.Controls
     /// <summary>
     /// Editor für animierte Objekte
     /// </summary>
-    public class AnimationEditorPanel : EditorPanel 
+    public class AnimationEditorPanel : EditorPanel
     {
         /// <summary>
         /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die derigistrierung benötigt wird
@@ -83,24 +83,39 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         protected override void OnDrawContent(CanvasDrawEventArgs args)
         {
-            var viewRect = GetItemViewRect(out bool infinty);
+            var viewRect = GetItemViewRect(out var infinty);
 
             // Zeichne Hintergrund
             OnDrawBackground(args);
 
-            Item.Update(new UpdateContext()
-            {
-                Designer = true,
-                Time = new Time(Time)
-
-            });
-
-            Item.Presentation(new PresentationContext(args.DrawingSession)
+            var uc = new UpdateContext()
             {
                 Designer = true,
                 Time = new Time(Time),
                 Matrix = Matrix3D.Identity * Matrix3D.Translation(viewRect.Left, viewRect.Top) * Matrix3D.Scaling(Zoom / 100f, Zoom / 100f)
-            });
+            };
+
+            var pc = new PresentationContext(args.DrawingSession)
+            {
+                Designer = true,
+                Time = new Time(Time),
+                Matrix = Matrix3D.Identity * Matrix3D.Translation(viewRect.Left, viewRect.Top) * Matrix3D.Scaling(Zoom / 100f, Zoom / 100f)
+            };
+
+            Item.Update(uc);
+            Item.Presentation(pc);
+
+            // SelectionFrame updaten
+            foreach (var frame in SelectionFrames)
+            {
+                frame.Update(uc);
+            }
+
+            // SelectionFrame zeichnen
+            foreach (var frame in SelectionFrames)
+            {
+                frame.Presentation(pc);
+            }
         }
 
         /// <summary>
@@ -118,8 +133,8 @@ namespace GameExpress.Controls
         /// </summary>
         public ulong Time
         {
-            get { return (ulong)GetValue(TimeProperty); }
-            set { SetValue(TimeProperty, value); }
+            get => (ulong)GetValue(TimeProperty);
+            set => SetValue(TimeProperty, value);
         }
 
         /// <summary>
