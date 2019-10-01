@@ -56,7 +56,7 @@ namespace GameExpress.Model.Item
 
             base.Update(uc);
 
-            Story.Instance?.Update(uc);
+            Story?.Instance?.Update(uc);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace GameExpress.Model.Item
 
             base.Presentation(pc);
 
-            Story.Instance?.Presentation(pc);
+            Story?.Instance?.Presentation(pc);
         }
 
         /// <summary>

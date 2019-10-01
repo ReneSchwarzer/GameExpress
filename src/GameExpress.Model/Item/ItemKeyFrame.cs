@@ -44,6 +44,7 @@ namespace GameExpress.Model.Item
         public override T Copy<T>()
         {
             var copy = base.Copy<T>() as ItemKeyFrame;
+            copy.Story = Story;
             return copy as T;
         }
 
