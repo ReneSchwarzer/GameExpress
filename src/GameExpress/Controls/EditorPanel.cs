@@ -31,6 +31,16 @@ namespace GameExpress.Controls
     public class EditorPanel : Panel
     {
         /// <summary>
+        /// Zeigt an, dass ein Handle ausgewählt wurde
+        /// </summary>
+        public event EventHandler<ISelectionFrameHandle> SelectHandleChange;
+
+        /// <summary>
+        /// Zeigt an, dass das kein Item mehr ausgewählt ist
+        /// </summary>
+        public event EventHandler SelectedItemLost;
+
+        /// <summary>
         /// Liefert oder setzt die Ansicht
         /// </summary>
         protected CanvasControl Content { get; set; }
@@ -76,7 +86,7 @@ namespace GameExpress.Controls
         protected ScrollViewer ScrollViewer { get; set; }
 
         /// <summary>
-        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die derigistrierung benötigt wird
+        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die Derigistrierung benötigt wird
         /// </summary>
         private long GridVisibilityPropertyToken { get; set; }
 
@@ -101,6 +111,29 @@ namespace GameExpress.Controls
 
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
+        }
+
+        /// <summary>
+        /// Ansicht automatisch ausrichten
+        /// </summary>
+        public void FitSize()
+        {
+            Zoom = 100;
+            var viewRect = GetItemViewRect(out var infinity);
+
+            var sx = Content.ActualWidth / viewRect.Width;
+            var sy = Content.ActualHeight / viewRect.Height;
+            var zoom = (int)(Math.Min(sx, sy) * 80f);
+
+            Zoom = zoom;
+
+            ScrollViewer.ChangeView
+            (
+                ScrollViewer.ScrollableWidth / 2f,
+                ScrollViewer.ScrollableHeight / 2f,
+                1.0f,
+                false
+            );
         }
 
         /// <summary>
@@ -201,8 +234,9 @@ namespace GameExpress.Controls
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
         /// <param name="e">Das Eventargument</param>
-        private void OnSelectedItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        protected virtual void OnSelectedItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+
             if (e.Action == NotifyCollectionChangedAction.Reset)
             {
                 SelectionFrames.Clear();
@@ -215,16 +249,7 @@ namespace GameExpress.Controls
                     // Auswahlrahmen
                     var context = ContextRepository.FindContext(add);
 
-                    foreach (var frame in SelectionFrames.Where(x => x.Item == add))
-                    {
-                        frame.SwitchToolset();
-                    }
-
-                    if (SelectionFrames.Where(x => x.Item == add).Count() == 0)
-                    {
-                        SelectionFrames.Add(context.SelectionFrameFactory(add));
-                    }
-
+                    SelectionFrames.Add(context.SelectionFrameFactory(add));
                 }
             }
 
@@ -241,6 +266,11 @@ namespace GameExpress.Controls
             }
 
             Invalidate();
+
+            if (SelectionFrames.Count == 0)
+            {
+                SelectedItemLost?.Invoke(this, new EventArgs());
+            }
         }
 
         /// <summary>
@@ -262,9 +292,9 @@ namespace GameExpress.Controls
         public virtual void Invalidate()
         {
             //OnDrawContent(new CanvasDrawEventArgs(DrawingSession));
-            Content.Invalidate();
-            HorizontalRuler.Invalidate();
-            VerticalRuler.Invalidate();
+            Content?.Invalidate();
+            HorizontalRuler?.Invalidate();
+            VerticalRuler?.Invalidate();
         }
 
         /// <summary>
@@ -295,12 +325,12 @@ namespace GameExpress.Controls
         /// <returns>Das Rechteck, indem das Item gezeichnet werden soll</returns>
         protected Rect GetItemViewRect(out bool infinity)
         {
-            var sz = new Size();
+            Size sz;
             var pt = new Point();
 
-            var size = Item is IItemVisual ? (Item as IItemVisual).Size : new Size();
-
-            if (size.IsEmpty || size.Equals(new Size()))
+            var size = Item is IItemSizing ? (Item as IItemSizing).Size : new Vector();
+            
+            if (size.Length == 0)
             {
                 // Keine Größe angegeben, Infinity-Modus wird aktiv
                 sz = new Size(Content.ActualWidth, Content.ActualHeight);
@@ -312,7 +342,7 @@ namespace GameExpress.Controls
             }
             else
             {
-                sz = new Size(size.Width * Zoom / 100f, size.Height * Zoom / 100f);
+                sz = new Size(size.X * Zoom / 100f, size.Y * Zoom / 100f);
 
                 pt.X = (ScrollViewer.ScrollableWidth / 2) - (sz.Width / 2) - ScrollViewer.HorizontalOffset + (Content.ActualWidth / 2);
                 pt.Y = (ScrollViewer.ScrollableHeight / 2) - (sz.Height / 2) - ScrollViewer.VerticalOffset + (Content.ActualHeight / 2);
@@ -596,22 +626,7 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnFitButtonClick(object sender, RoutedEventArgs e)
         {
-            Zoom = 100;
-            var viewRect = GetItemViewRect(out var infinity);
-
-            var sx = Content.ActualWidth / viewRect.Width;
-            var sy = Content.ActualHeight / viewRect.Height;
-            var zoom = (int)(Math.Max(sx, sy) * 100f);
-
-            Zoom = zoom;
-
-            ScrollViewer.ChangeView
-            (
-                ScrollViewer.ScrollableWidth / 2f,
-                ScrollViewer.ScrollableHeight / 2f,
-                1.0f,
-                false
-            );
+            FitSize();
         }
 
         /// <summary>
@@ -679,6 +694,7 @@ namespace GameExpress.Controls
             PointerCanceled -= OnPointerCanceled;
 
             SelectedItems.CollectionChanged -= OnSelectedItemsCollectionChanged;
+
         }
 
         /// <summary>
@@ -703,23 +719,20 @@ namespace GameExpress.Controls
             if (Item is IItemClickable item)
             {
                 var viewRect = GetItemViewRect(out var infinty);
-                var hc = new HitTestContext()
-                {
-                    Designer = true,
-                    Matrix = Matrix3D.Identity * Matrix3D.Translation(viewRect.Left, viewRect.Top) * Matrix3D.Scaling(Zoom / 100f, Zoom / 100f)
-                };
+                var hc = CrateHitTestContext(viewRect);
 
                 foreach (var frame in SelectionFrames)
                 {
                     var handle = frame.HitTest(hc, point);
-                    if (handle != null)
+                    if (handle != null && !Item.Lock)
                     {
                         e.Handled = true;
 
                         Content.CapturePointer(e.Pointer);
-                        handle.CaptureBegin(point);
+                        handle.OnPointerPressed(point);
                         CapturedHandle = handle;
 
+                        SelectHandleChange?.Invoke(this, handle);
                         return;
                     }
                 }
@@ -736,6 +749,7 @@ namespace GameExpress.Controls
                         {
                             SelectedItems.Clear();
                         }
+
                         SelectedItems.Add(subItem);
                     }
 
@@ -777,7 +791,7 @@ namespace GameExpress.Controls
             {
                 var point = e.GetCurrentPoint(Content).Position;
 
-                CapturedHandle.CaptureDrag(point, matrix);
+                CapturedHandle.OnPointerMoved(point, matrix);
 
                 Invalidate();
             }
@@ -786,18 +800,17 @@ namespace GameExpress.Controls
         }
 
         /// <summary>
-        /// Wird aufgerufen, wenn das Zeigegeräte nicht mehrsub gedrückt wird
+        /// Wird aufgerufen, wenn das Zeigegerät nicht mehr gedrückt wird
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
         /// <param name="args">Das Eventargument</param>
         private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            var pointer = e.GetCurrentPoint(Content);
             Content.ReleasePointerCapture(e.Pointer);
 
             if (CapturedHandle != null)
             {
-                CapturedHandle.CaptureEnd();
+                CapturedHandle.OnPointerReleased();
                 CapturedHandle = null;
             }
         }
@@ -819,7 +832,20 @@ namespace GameExpress.Controls
         /// <param name="args">Das Eventargument</param>
         private void OnPointerCanceled(object sender, PointerRoutedEventArgs e)
         {
+        }
 
+        /// <summary>
+        /// Erzeugt einen HitTestContext
+        /// </summary>
+        /// <param name="viewRect">Die Koordinaten des Bereiches indem das Item gezeichnet wird</param>
+        /// <returns>Der HitTestContext</returns>
+        protected virtual HitTestContext CrateHitTestContext(Rect viewRect)
+        {
+            return new HitTestContext()
+            {
+                Designer = true,
+                Matrix = Matrix3D.Identity * Matrix3D.Translation(viewRect.Left, viewRect.Top) * Matrix3D.Scaling(Zoom / 100f, Zoom / 100f)
+            };
         }
 
         /// <summary>

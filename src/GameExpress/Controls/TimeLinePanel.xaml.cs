@@ -403,14 +403,15 @@ namespace GameExpress.Controls
             var dialog = new SelectInstanceDialog()
             {
                 CurrentItem = Item,
-                SelectedItem = story.Instance
+                SelectedItem = story.Instance?.Instance
             };
 
             switch (await dialog.ShowAsync())
             {
                 case ContentDialogResult.Primary:
                     {
-                        story.Item = dialog.SelectedItem?.Name;
+                        story.Instance.ID = dialog.SelectedItem?.ID;
+                        story.Instance.Name = dialog.SelectedItem?.Name;
 
                     }
                     break;

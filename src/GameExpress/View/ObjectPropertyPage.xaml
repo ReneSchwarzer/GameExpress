@@ -37,6 +37,7 @@
         <RichEditBox Header="Beschreibung:" Name="Note" Margin="0,10,0,10" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
         <Slider Header="Hotspot X:" Name="HotspotX" Minimum="0" Maximum="2048" Value="{Binding Hotspot.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
         <Slider Header="Hotspot Y:" Name="HotspotY" Minimum="0" Maximum="2048" Value="{Binding Hotspot.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+        <CheckBox Name="Clipping" Content="Ausgabe abschneiden" IsChecked="{Binding Clipping, Mode=TwoWay}"/>
         <!--<Slider Header="Alpha:" Name="Alpha" Minimum="0" Maximum="255" Value="{Binding Alpha, Mode=TwoWay, Converter={StaticResource AlphaToInt}, UpdateSourceTrigger=PropertyChanged}"/>
         <Slider Header="Unschärfe:" Name="Blur" Minimum="0" Maximum="255" Value="{Binding Blur, Mode=TwoWay, Converter={StaticResource BlurToInt}, UpdateSourceTrigger=PropertyChanged}"/>
         <Slider Header="Gamma:" Name="Gamma" Minimum="0" Maximum="255" Value="{Binding Gamma, Mode=TwoWay, Converter={StaticResource GammaToInt}, UpdateSourceTrigger=PropertyChanged}"/>-->

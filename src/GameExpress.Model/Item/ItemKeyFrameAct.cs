@@ -6,7 +6,7 @@ using Windows.Foundation;
 namespace GameExpress.Model.Item
 {
     [XmlType("act")]
-    public class ItemKeyFrameAct : ItemKeyFrame, IItemVisual, IItemClickable, IItemTranslation, IItemScale
+    public class ItemKeyFrameAct : ItemKeyFrame, IItemVisual, IItemSizing, IItemClickable, IItemTranslation, IItemScale
     {
         /// <summary>
         /// Relativer Beginn, ausgehend vom vorherigen Keyframe
@@ -145,7 +145,7 @@ namespace GameExpress.Model.Item
                 Matrix = hc.Matrix * GetMatrix()
             };
 
-            if (Story.Instance is IItemClickable instance)
+            if (Story.Instance?.Instance is IItemClickable instance)
             {
                 if (instance.HitTest(newHC, point) != null)
                 {
@@ -160,7 +160,16 @@ namespace GameExpress.Model.Item
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public override T Copy<T>()
+        public override Item Copy()
+        {
+            return Copy<ItemKeyFrameAct>();
+        }
+
+        /// <summary>
+        /// Liefert eine Tiefernkopie des Items
+        /// </summary>
+        /// <returns>Die Tiefenkopie</returns>
+        protected override T Copy<T>()
         {
             var copy = base.Copy<T>() as ItemKeyFrameAct;
             copy.From = From;
@@ -380,16 +389,16 @@ namespace GameExpress.Model.Item
         /// Liefert die Größe
         /// </summary>
         [XmlIgnore]
-        public virtual Size Size
+        public virtual Vector Size
         {
             get
             {
-                if (Story?.Instance is IItemVisual instance)
+                if (Story?.Instance?.Instance is IItemSizing instance)
                 {
                     return instance.Size;
                 }
 
-                return new Size();
+                return new Vector();
             }
         }
     }

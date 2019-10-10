@@ -12,6 +12,11 @@ namespace GameExpress.SelectionFrames
     public interface ISelectionFrameAnchor
     {
         /// <summary>
+        /// Event zum Abfragen der aktuellen Position
+        /// </summary>
+        event EventHandler<EventArgsRetrievePosition> RetrievePosition;
+
+        /// <summary>
         /// Liefert die Position
         /// </summary>
         Location Location { get; }

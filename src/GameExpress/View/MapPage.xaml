@@ -22,7 +22,7 @@
             <AppBarButton Name="New" Label="Neu" Icon="Add" IsEnabled="{Binding Unlock, Mode=OneWay}">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="Vertext" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                        <MenuFlyoutItem Text="Vertext" IsEnabled="{Binding Unlock, Mode=OneWay}" Click="OnAddVertext">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE139;" />
                             </MenuFlyoutItem.Icon>
@@ -38,6 +38,6 @@
             <AppBarSeparator/>
         </CommandBar>
 
-        <controls:EditorPanel Grid.Column="0" Grid.Row="0" x:Name="Editor" PointerPressed="OnPointerPressed"/>
+        <controls:EditorPanel Grid.Column="0" Grid.Row="0" x:Name="Editor"  SelectedItemLost="OnSelectedItemLost" SelectHandleChange="OnSelectHandleChange"/>
     </Grid>
 </Page>

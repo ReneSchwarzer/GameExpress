@@ -15,12 +15,12 @@ namespace GameExpress.Context
         /// <summary>
         /// Liefert die Eigenschaftsseite
         /// </summary>
-        public Type Property => typeof(ScenePropertyPage);
+        public Type Property => typeof(ObjectPropertyPage);
 
         /// <summary>
         /// Liefert die Bearbeitungsseite
         /// </summary>
-        public Type Page => null;
+        public Type Page => typeof(ObjectPage);
 
         /// <summary>
         /// Liefert den Auswahlrahmen

@@ -10,7 +10,7 @@ namespace GameExpress.Model.Item
     /// Baumknoten
     /// </summary>
     [XmlInclude(typeof(ItemGraphics))]
-    //[XmlInclude(typeof(ItemGame))]
+    [XmlInclude(typeof(ItemAnimation))]
     [XmlInclude(typeof(ItemSound))]
     [XmlInclude(typeof(ItemMap))]
     public abstract class ItemTreeNode : Item
@@ -45,6 +45,12 @@ namespace GameExpress.Model.Item
             }
         }
 
+        /// <summary>
+        /// Liefert oder setzt die Anzeige der Kinderknoten
+        /// </summary>
+        [XmlAttribute("expanded")]
+        public bool Expanded { get; set; }
+        
         /// <summary>
         /// Liefert die Wurzel
         /// </summary>
@@ -137,6 +143,18 @@ namespace GameExpress.Model.Item
         }
 
         /// <summary>
+        /// Liefert eine Tiefernkopie des Items
+        /// </summary>
+        /// <returns>Die Tiefenkopie</returns>
+        protected override T Copy<T>()
+        {
+            var copy = base.Copy<T>() as ItemTreeNode;
+            copy.Parent = Parent;
+
+            return copy as T;
+        }
+
+        /// <summary>
         /// Durchläuft den Baum in PreOrder
         /// </summary>
         /// <returns>Der Baum als Liste</returns>
@@ -177,6 +195,22 @@ namespace GameExpress.Model.Item
             list.Reverse();
 
             return list;
+        }
+
+        /// <summary>
+        /// Sucht ein Item anahnd der ID
+        /// </summary>
+        /// <param name="id">Die ID des gesuchten Items</param>
+        /// <param name="oneLevel">Die Suche beschränkt sich auf die nächste Ebene</param>
+        /// <returns>Das Item oder null</returns>
+        public ItemTreeNode FindId(string id, bool oneLevel = false)
+        {
+            var list = new List<ItemTreeNode>
+            (
+                oneLevel ? Children : GetPreOrder()
+            );
+
+            return list.Where(x => x.ID.Equals(id, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
         }
 
         /// <summary>

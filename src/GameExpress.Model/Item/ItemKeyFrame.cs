@@ -41,7 +41,7 @@ namespace GameExpress.Model.Item
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public override T Copy<T>()
+        protected override T Copy<T>()
         {
             var copy = base.Copy<T>() as ItemKeyFrame;
             copy.Story = Story;

@@ -1,4 +1,5 @@
-﻿using GameExpress.Model.Item;
+﻿using GameExpress.Dialog;
+using GameExpress.Model.Item;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +26,7 @@ namespace GameExpress.View
         /// <summary>
         /// Liefert das mit der Ansicht verbundene Zustand
         /// </summary>
-        private ItemAnimation State => DataContext as ItemAnimation;
+        private ItemAnimation Animation => DataContext as ItemAnimation;
 
         /// <summary>
         /// Konstruktor
@@ -64,12 +65,43 @@ namespace GameExpress.View
             var command = await dialog.ShowAsync();
             if (command == yesCommand)
             {
-                var parent = State.Parent;
-                parent.Children.Remove(State);
+                var parent = Animation.Parent;
+                parent.Children.Remove(Animation);
 
                 ViewHelper.ChangePropertyPage(parent);
                 ViewHelper.ChangePage(parent);
             }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn der zugehörige Hintergrund geändert werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private async void OnChangeBackground(object sender, RoutedEventArgs e)
+        {
+            var element = e.OriginalSource as Button;
+            if (element == null)
+            {
+                return;
+            }
+
+            var dialog = new SelectInstanceDialog()
+            {
+                //CurrentItem = Animation.Background,
+                SelectedItem = Animation.Background.Instance
+            };
+
+            switch (await dialog.ShowAsync())
+            {
+                case ContentDialogResult.Primary:
+                    {
+                        Animation.Background.ID = dialog.SelectedItem?.ID;
+                        Animation.Background.Name = dialog.SelectedItem?.Name;
+                    }
+                    break;
+            }
+
         }
     }
 }

@@ -1,66 +1,559 @@
 <?xml version="1.0"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Lost on Omicron" id="e7cc6e48-8c26-4822-8e85-8d1093d129d7" enable="true" lock="false" width="1024" height="768">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Lost on Omicron" id="e7cc6e48-8c26-4822-8e85-8d1093d129d7" enable="true" lock="false" expanded="true" width="1024" height="768">
   <note>Adventurespiel</note>
-  <item xsi:type="scene" name="Szene 1" id="c71a0e1c-19bd-46b7-bca9-093d572be91e" enable="true" lock="false">
+  <item xsi:type="scene" name="Szene 1" id="c71a0e1c-19bd-46b7-bca9-093d572be91e" enable="true" lock="false" expanded="true" clipping="true">
     <note />
-    <item xsi:type="image" name="Hintergrund" id="edb96474-f5d6-4cee-8835-2cdefbfac695" enable="true" lock="false">
+    <item xsi:type="animation" name="Landung" id="71a98a73-42ee-4258-88c1-15d44bf682b6" enable="true" lock="false" expanded="false">
       <note />
       <hotspot x="0" y="0" />
       <gamma value="0" />
-      <alpha value="255" />
+      <alpha value="0" />
       <blur value="0" />
-      <source>./scene1.png</source>
-    <item xsi:type="map" name="Map" id="9df5b3b9-45ed-4857-98ad-30cc28cbeb7b" enable="true" lock="false">
-      <vertex id="75B82404-5DAA-49CB-BF78-407C9DC8DB3D">
-        <vector x="100" y="900"/>
-      </vertex>
-      <vertex id="80EE8F74-843F-4553-A02F-5F05AFDFE35C">
-        <vector x="500" y="900"/>
-      </vertex>
-      <vertex id="2256FD05-7025-41F3-9DAF-F6836DA49F6C">
-        <vector x="100" y="1200"/>
-      </vertex>
-      <mesh vertext1="75B82404-5DAA-49CB-BF78-407C9DC8DB3D" vertext2="80EE8F74-843F-4553-A02F-5F05AFDFE35C" vertext3="2256FD05-7025-41F3-9DAF-F6836DA49F6C"/>
+      <story name="Story 1" id="05f9179b-f63d-4735-a899-00a75ac4f1d2" enable="true" lock="false" expanded="false" loop="freeze">
+        <note />
+        <keyframe xsi:type="act" name="" id="5cbab346-2341-4b9a-a2d1-09359abbe165" enable="true" lock="false" from="0" duration="500" rotationx="0" rotationy="0" rotationz="0" translationx="1808" translationy="-1511" sclaex="100" scaley="100" shearx="0" sheary="0">
+          <note />
+        </keyframe>
+        <keyframe xsi:type="tweening" name="" id="12797744-f207-4a67-8575-1a56a1eed4e2" enable="true" lock="false">
+          <note />
+        </keyframe>
+        <keyframe xsi:type="act" name="" id="d1a3db13-2140-409f-abf5-5e76a0e0e37b" enable="true" lock="false" from="2627" duration="500" rotationx="0" rotationy="0" rotationz="351" translationx="986" translationy="444" sclaex="100" scaley="100" shearx="0" sheary="0">
+          <note />
+        </keyframe>
+        <keyframe xsi:type="tweening" name="" id="09539b7e-fcd8-462e-97ee-5fe12bc457db" enable="true" lock="false">
+          <note />
+        </keyframe>
+        <keyframe xsi:type="act" name="" id="2cac75e6-b5f8-4766-b2ea-13937da2eea2" enable="true" lock="false" from="4848" duration="500" rotationx="0" rotationy="0" rotationz="353" translationx="1108" translationy="830" sclaex="100" scaley="100" shearx="0" sheary="0">
+          <note />
+        </keyframe>
+        <instance id="1f235524-5d77-44cb-bdfd-cbf170160c89" name="UFO" stateid="" state="" />
+      </story>
+      <background id="b0c2c111-aafa-43bc-bd71-8305c002913a" name="Hintergrund" stateid="655a1a70-ccab-41bf-a6e6-8d7f24a1030c" state="Ankunft" />
+    </item>
+    <item xsi:type="animation" name="Abflug" id="ffb82b69-07fc-4021-84c6-38fa406f82d4" enable="true" lock="false" expanded="false">
       <note />
+      <hotspot x="0" y="0" />
+      <gamma value="0" />
+      <alpha value="0" />
+      <blur value="0" />
+      <story name="Story 1" id="e7213074-5b88-4b83-99c8-bb5107be1b1a" enable="true" lock="false" expanded="false" loop="none">
+        <note />
+        <keyframe xsi:type="act" name="" id="a87bb813-7b70-4e76-a6c1-9e57b9c5ca61" enable="true" lock="false" from="0" duration="575" rotationx="0" rotationy="0" rotationz="353" translationx="1064" translationy="867" sclaex="100" scaley="100" shearx="0" sheary="0">
+          <note />
+        </keyframe>
+        <keyframe xsi:type="tweening" name="" id="20feaaed-7609-482a-8211-d4142084c2d6" enable="true" lock="false">
+          <note />
+        </keyframe>
+        <keyframe xsi:type="act" name="" id="62eeffb2-0bc3-4a02-b78e-4a73f47ad53d" enable="true" lock="false" from="4185" duration="500" rotationx="0" rotationy="0" rotationz="0" translationx="353" translationy="-742" sclaex="100" scaley="100" shearx="0" sheary="0">
+          <note />
+        </keyframe>
+        <instance id="1f235524-5d77-44cb-bdfd-cbf170160c89" name="UFO" stateid="" state="" />
+      </story>
+      <background id="b0c2c111-aafa-43bc-bd71-8305c002913a" name="Hintergrund" stateid="270ea4b8-2c44-4a7f-872b-06e0debad413" state="Abreise" />
     </item>
+    <item xsi:type="animation" name="Standard" id="f1e1d96e-5043-456d-930f-4230c150e308" enable="true" lock="false" expanded="false">
+      <note />
+      <hotspot x="0" y="0" />
+      <gamma value="0" />
+      <alpha value="0" />
+      <blur value="0" />
+      <background id="b0c2c111-aafa-43bc-bd71-8305c002913a" name="Hintergrund" stateid="5e24785f-1d25-483f-a20f-b7a71c25f651" state="Standard" />
     </item>
-    
+    <item xsi:type="map" name="Map" id="9df5b3b9-45ed-4857-98ad-30cc28cbeb7b" enable="true" lock="false" expanded="false">
+      <note />
+      <vertex name="" id="75B82404-5DAA-49CB-BF78-407C9DC8DB3D" enable="true" lock="false">
+        <note />
+        <vector x="1.7311485407371379" y="826.72713338358949" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="80EE8F74-843F-4553-A02F-5F05AFDFE35C" enable="true" lock="false">
+        <note />
+        <vector x="73.983038698475752" y="821.1179508936707" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="2256FD05-7025-41F3-9DAF-F6836DA49F6C" enable="true" lock="false">
+        <note />
+        <vector x="4.118479813841077" y="1369.2238276785779" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="f42fbefc-5f6c-42a0-b998-3f9cce5ac304" enable="true" lock="false">
+        <note />
+        <vector x="1132.0187247487115" y="845.60946962320679" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="67fbfe90-b778-4eab-adc4-09358bba303e" enable="true" lock="false">
+        <note />
+        <vector x="1902.2705436783792" y="854.93730136018928" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="46a97a57-0bbd-4b25-9298-e89c1454680c" enable="true" lock="false">
+        <note />
+        <vector x="641.35812734734031" y="1368.5593560716879" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="df72509b-5869-46a3-897b-dca3275395e4" enable="true" lock="false">
+        <note />
+        <vector x="276.77055840037031" y="796.12075733871734" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="f2bfc425-69e9-4ef5-a648-fe43f7f2a4cf" enable="true" lock="false">
+        <note />
+        <vector x="517.73419946203137" y="799.30371400729041" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="d8f193e8-1009-4248-8e94-6901429f3f49" enable="true" lock="false">
+        <note />
+        <vector x="649.48849070894289" y="809.38286709429337" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="dc9a269d-72bf-4e35-ad96-e6400bbeb689" enable="true" lock="false">
+        <note />
+        <vector x="389.89210116100435" y="792.274846431768" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="7d6f4f54-14b4-4560-b8f4-a77916c68285" enable="true" lock="false">
+        <note />
+        <vector x="443.86874513976409" y="1366.9409728465444" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="57834072-d552-4865-9c27-e97548a8245d" enable="true" lock="false">
+        <note />
+        <vector x="164.51052152705432" y="809.38294740371055" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="6ff79858-e27c-4499-bbfc-976d4db1477c" enable="true" lock="false">
+        <note />
+        <vector x="77.258881722904619" y="1368.0836718608787" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="f5597cf4-b257-4df1-8a1f-2dd7ebb557af" enable="true" lock="false">
+        <note />
+        <vector x="239.76693278207063" y="1367.4794238371835" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="e270a82e-4d43-4139-ba7f-d80132721bf2" enable="true" lock="false">
+        <note />
+        <vector x="859.221566257413" y="833.58614445049909" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="38b1544d-aa51-48fe-a8ac-02b6bbca5241" enable="true" lock="false">
+        <note />
+        <vector x="1397.3123826141407" y="842.86949813829585" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="8e6f1905-efa2-4378-a951-3e3e560f23d6" enable="true" lock="false">
+        <note />
+        <vector x="742.46295821179774" y="1026.1842283131352" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="20767883-8633-4605-962b-0492f35a345c" enable="true" lock="false">
+        <note />
+        <vector x="1185.5609544702036" y="988.05386121076162" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="079831ba-fe2b-4813-a836-2c8cb9a6b4d9" enable="true" lock="false">
+        <note />
+        <vector x="1807.9666845100765" y="1363.5767400589753" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="8aa5ac44-a12c-4b3e-b6d7-1247aa5d57d4" enable="true" lock="false">
+        <note />
+        <vector x="1896.6757182162398" y="1366.0223200108483" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="9ee98d9f-2fb9-4e14-afd7-44bb09d6a193" enable="true" lock="false">
+        <note />
+        <vector x="1606.5381946997973" y="831.30835612407486" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="e2e326a8-97b3-464c-80bd-cef9f924ad99" enable="true" lock="false">
+        <note />
+        <vector x="935.88740542474136" y="958.26107587960473" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="3f6ea675-8d06-4cd8-8def-f982f9ff3198" enable="true" lock="false">
+        <note />
+        <vector x="822.1668830110724" y="1167.3666214168077" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="7427d0e0-f39d-4253-ad36-56a10c68a92a" enable="true" lock="false">
+        <note />
+        <vector x="1131.9802557863181" y="1156.9168642312268" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="71dd7f55-96a5-4ce5-b767-403e03e05b7e" enable="true" lock="false">
+        <note />
+        <vector x="972.57159836953247" y="1201.383667819111" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="49ac009e-b4b9-4180-a82f-bbdc640bb845" enable="true" lock="false">
+        <note />
+        <vector x="1142.5408635853928" y="1371.1360338386085" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="973404e1-f658-4150-a4c9-df3724d9bda2" enable="true" lock="false">
+        <note />
+        <vector x="880.972639802912" y="1370.0242739913297" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="04bbeea7-d5d8-443b-a22e-820221f6f2ee" enable="true" lock="false">
+        <note />
+        <vector x="1810.5237882573069" y="849.76190907364139" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="4a02ea90-99dd-465d-bc18-72e3932df944" enable="true" lock="false">
+        <note />
+        <vector x="1598.7568406628495" y="1368.8014391366023" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <vertex name="" id="167e5ebc-290e-4beb-9187-31650408a98c" enable="true" lock="false">
+        <note />
+        <vector x="1363.312022510921" y="1367.3563196306054" />
+        <gamma value="0" />
+        <alpha value="0" />
+        <matrix m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1" />
+      </vertex>
+      <mesh name="" id="09070d54-f985-4efc-832e-bae11724de97" enable="true" lock="false" vertext1="75B82404-5DAA-49CB-BF78-407C9DC8DB3D" vertext2="80EE8F74-843F-4553-A02F-5F05AFDFE35C" vertext3="2256FD05-7025-41F3-9DAF-F6836DA49F6C">
+        <note />
+      </mesh>
+    </item>
+    <item xsi:type="object" name="Hintergrund" id="b0c2c111-aafa-43bc-bd71-8305c002913a" enable="true" lock="false" expanded="false" clipping="true">
+      <note />
+      <item xsi:type="image" name="Hintergrund1" id="edb96474-f5d6-4cee-8835-2cdefbfac695" enable="true" lock="false" expanded="false">
+        <note />
+        <hotspot x="0" y="0" />
+        <gamma value="0" />
+        <alpha value="255" />
+        <blur value="0" />
+        <source>./scene1.png</source>
+      </item>
+      <item xsi:type="image" name="Hintergrund2" id="8e23e220-964d-4299-ae8b-f2895bf6b265" enable="true" lock="false" expanded="false">
+        <note />
+        <hotspot x="0" y="0" />
+        <gamma value="0" />
+        <alpha value="255" />
+        <blur value="0" />
+        <source>./scene2.png</source>
+      </item>
+      <item xsi:type="image" name="Hintergrund3" id="f53bd7f0-c843-4c73-bb40-11321680f169" enable="true" lock="false" expanded="false">
+        <note />
+        <hotspot x="0" y="0" />
+        <gamma value="0" />
+        <alpha value="255" />
+        <blur value="0" />
+        <source>./scene3.png</source>
+      </item>
+      <item xsi:type="image" name="Wolke1" id="e12d5fcd-22df-41e0-9c6c-642dcb10149b" enable="true" lock="false" expanded="false">
+        <note />
+        <hotspot x="0" y="0" />
+        <gamma value="0" />
+        <alpha value="255" />
+        <blur value="0" />
+        <source>./cloud1.png</source>
+      </item>
+      <item xsi:type="image" name="Wolke2" id="d926e605-2354-4f9a-906c-2f3889c4c2ad" enable="true" lock="false" expanded="false">
+        <note />
+        <hotspot x="0" y="0" />
+        <gamma value="0" />
+        <alpha value="255" />
+        <blur value="0" />
+        <source>./cloud2.png</source>
+      </item>
+      <item xsi:type="image" name="Wolke3" id="33e86b35-f9f1-490a-912c-7ef281e905b3" enable="true" lock="false" expanded="false">
+        <note />
+        <hotspot x="0" y="0" />
+        <gamma value="0" />
+        <alpha value="255" />
+        <blur value="0" />
+        <source>./cloud3.png</source>
+      </item>
+      <item xsi:type="image" name="Wolke4" id="70989977-a7b2-4a76-8171-8b5629ddc261" enable="true" lock="false" expanded="false">
+        <note />
+        <hotspot x="0" y="0" />
+        <gamma value="0" />
+        <alpha value="255" />
+        <blur value="0" />
+        <source>./cloud4.png</source>
+      </item>
+      <item xsi:type="animation" name="Standard" id="5e24785f-1d25-483f-a20f-b7a71c25f651" enable="true" lock="false" expanded="false">
+        <note />
+        <hotspot x="0" y="0" />
+        <gamma value="0" />
+        <alpha value="255" />
+        <blur value="0" />
+        <story name="Wolke 1" id="d41ce056-9bf0-45e1-ac5e-3aad984785ca" enable="true" lock="false" expanded="false" loop="repeat">
+          <note />
+          <keyframe xsi:type="act" name="" id="29abfc63-a768-4301-80e4-045a5c4df2fb" enable="true" lock="false" from="0" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="139" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="85df4e25-833e-4949-813e-37d48116eba3" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="7579afa5-6a56-455d-93b1-a4d5465825e3" enable="true" lock="false" from="40000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1925" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="1dcd4d07-2775-4b19-b7ff-a912fc685aa2" enable="false" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="40382087-e65e-463a-b4ef-efa2eb722944" enable="true" lock="false" from="10" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="-500" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="4675c5ba-16b1-478d-a88f-e6990cd0f632" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="8a1f4146-636b-4060-bad5-b55b8c5e09f7" enable="true" lock="false" from="8000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="139" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <instance id="e12d5fcd-22df-41e0-9c6c-642dcb10149b" name="Wolke1" stateid="" state="" />
+        </story>
+        <story name="Wolke 2" id="5c21b286-cd12-4a4e-9e53-ab76a5d16b1c" enable="true" lock="false" expanded="false" loop="repeat">
+          <note />
+          <keyframe xsi:type="act" name="" id="A9abfc63-a768-4301-80e4-045a5c4df2fb" enable="true" lock="false" from="0" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1139" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="A5df4e25-833e-4949-813e-37d48116eba3" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="A579afa5-6a56-455d-93b1-a4d5465825e3" enable="true" lock="false" from="15000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1925" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="Adcd4d07-2775-4b19-b7ff-a912fc685aa2" enable="false" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="A0382087-e65e-463a-b4ef-efa2eb722944" enable="true" lock="false" from="10" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="-500" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="A675c5ba-16b1-478d-a88f-e6990cd0f632" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="Aa1f4146-636b-4060-bad5-b55b8c5e09f7" enable="true" lock="false" from="30000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1139" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <instance id="d926e605-2354-4f9a-906c-2f3889c4c2ad" name="Wolke2" stateid="" state="" />
+        </story>
+        <background id="edb96474-f5d6-4cee-8835-2cdefbfac695" name="Hintergrund1" stateid="edb96474-f5d6-4cee-8835-2cdefbfac695" state="" />
+      </item>
+      <item xsi:type="animation" name="Ankunft" id="655a1a70-ccab-41bf-a6e6-8d7f24a1030c" enable="true" lock="false" expanded="false">
+        <note />
+        <hotspot x="0" y="0" />
+        <gamma value="0" />
+        <alpha value="255" />
+        <blur value="0" />
+        <story name="Wolke 1" id="e41ce056-9bf0-45e1-ac5e-3aad984785ca" enable="true" lock="false" expanded="false" loop="repeat">
+          <note />
+          <keyframe xsi:type="act" name="" id="e9abfc63-a768-4301-80e4-045a5c4df2fb" enable="true" lock="false" from="0" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="139" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="e5df4e25-833e-4949-813e-37d48116eba3" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="e579afa5-6a56-455d-93b1-a4d5465825e3" enable="true" lock="false" from="40000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1925" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="edcd4d07-2775-4b19-b7ff-a912fc685aa2" enable="false" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="e0382087-e65e-463a-b4ef-efa2eb722944" enable="true" lock="false" from="10" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="-500" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="e675c5ba-16b1-478d-a88f-e6990cd0f632" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="ea1f4146-636b-4060-bad5-b55b8c5e09f7" enable="true" lock="false" from="8000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="139" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <instance id="e12d5fcd-22df-41e0-9c6c-642dcb10149b" name="Wolke1" stateid="" state="" />
+        </story>
+        <story name="Wolke 2" id="ec21b286-cd12-4a4e-9e53-ab76a5d16b1c" enable="true" lock="false" expanded="false" loop="repeat">
+          <note />
+          <keyframe xsi:type="act" name="" id="e9abfc63-a768-4301-80e4-045a5c4df2fb" enable="true" lock="false" from="0" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1139" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="e5df4e25-833e-4949-813e-37d48116eba3" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="e579afa5-6a56-455d-93b1-a4d5465825e3" enable="true" lock="false" from="15000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1925" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="edcd4d07-2775-4b19-b7ff-a912fc685aa2" enable="false" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="e0382087-e65e-463a-b4ef-efa2eb722944" enable="true" lock="false" from="10" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="-500" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="e675c5ba-16b1-478d-a88f-e6990cd0f632" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="ea1f4146-636b-4060-bad5-b55b8c5e09f7" enable="true" lock="false" from="30000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1139" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <instance id="d926e605-2354-4f9a-906c-2f3889c4c2ad" name="Wolke2" stateid="" state="" />
+        </story>
+        <background id="f53bd7f0-c843-4c73-bb40-11321680f169" name="Hintergrund3" stateid="f53bd7f0-c843-4c73-bb40-11321680f169" state="" />
+      </item>
+      <item xsi:type="animation" name="Abreise" id="270ea4b8-2c44-4a7f-872b-06e0debad413" enable="true" lock="false" expanded="false">
+        <note />
+        <hotspot x="0" y="0" />
+        <gamma value="0" />
+        <alpha value="255" />
+        <blur value="0" />
+        <story name="Wolke 1" id="B41ce056-9bf0-45e1-ac5e-3aad984785ca" enable="true" lock="false" expanded="false" loop="repeat">
+          <note />
+          <keyframe xsi:type="act" name="" id="B9abfc63-a768-4301-80e4-045a5c4df2fb" enable="true" lock="false" from="0" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="139" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="B5df4e25-833e-4949-813e-37d48116eba3" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="B579afa5-6a56-455d-93b1-a4d5465825e3" enable="true" lock="false" from="40000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1925" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="Bdcd4d07-2775-4b19-b7ff-a912fc685aa2" enable="false" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="B0382087-e65e-463a-b4ef-efa2eb722944" enable="true" lock="false" from="10" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="-500" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="B675c5ba-16b1-478d-a88f-e6990cd0f632" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="Ba1f4146-636b-4060-bad5-b55b8c5e09f7" enable="true" lock="false" from="8000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="139" translationy="158" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <instance id="70989977-a7b2-4a76-8171-8b5629ddc261" name="Wolke4" stateid="" state="" />
+        </story>
+        <story name="Wolke 2" id="Bc21b286-cd12-4a4e-9e53-ab76a5d16b1c" enable="true" lock="false" expanded="false" loop="repeat">
+          <note />
+          <keyframe xsi:type="act" name="" id="b9abfc63-a768-4301-80e4-045a5c4df2fb" enable="true" lock="false" from="0" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1139" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="b5df4e25-833e-4949-813e-37d48116eba3" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="b579afa5-6a56-455d-93b1-a4d5465825e3" enable="true" lock="false" from="15000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1925" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="bdcd4d07-2775-4b19-b7ff-a912fc685aa2" enable="false" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="b0382087-e65e-463a-b4ef-efa2eb722944" enable="true" lock="false" from="10" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="-500" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="tweening" name="" id="b675c5ba-16b1-478d-a88f-e6990cd0f632" enable="true" lock="false">
+            <note />
+          </keyframe>
+          <keyframe xsi:type="act" name="" id="ba1f4146-636b-4060-bad5-b55b8c5e09f7" enable="true" lock="false" from="30000" duration="1" rotationx="0" rotationy="0" rotationz="0" translationx="1139" translationy="140" sclaex="100" scaley="100" shearx="0" sheary="0">
+            <note />
+          </keyframe>
+          <instance id="33e86b35-f9f1-490a-912c-7ef281e905b3" name="Wolke3" stateid="" state="" />
+        </story>
+        <background id="8e23e220-964d-4299-ae8b-f2895bf6b265" name="Hintergrund2" stateid="8e23e220-964d-4299-ae8b-f2895bf6b265" state="" />
+      </item>
+      <hotspot x="0" y="0" />
+      <gamma value="0" />
+      <alpha value="0" />
+      <blur value="0" />
+    </item>
     <hotspot x="0" y="0" />
     <gamma value="0" />
-    <alpha value="255" />
-    <blur value="0" /> 
-    <story name="UFO" id="adffc276-f894-4653-bba6-a370436c2d61" enable="true" lock="false" item="UFO" loop="freeze">
-      <keyframe xsi:type="act" id="ae4db681-d031-4fd4-aad9-1e4f832d820a" enable="true" lock="false" from="0" duration="100" tweening="true" rotationx="0" rotationy="0" rotationz="45" translationx="500" translationy="-500" sclaex="1" scaley="1" shearx="0" sheary="0" />
-      <keyframe xsi:type="tweening" id="8F67BB54-8721-4F5C-9590-C438D0E28A8F" enable="true"/>
-      <keyframe xsi:type="act" id="5e6db681-d031-4fd4-aad9-1e4f832d820b" enable="true" lock="false" from="3000" duration="1000" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="800" translationy="300" sclaex="100" scaley="100" shearx="0" sheary="0" />
-      <keyframe xsi:type="tweening" id="5A2848E6-BC2B-47A2-816D-A1D15E20AC7F" enable="true"/>
-      <keyframe xsi:type="act" id="be6db681-d031-4fd4-aad9-1e4f832d820b" enable="true" lock="false" from="3000" duration="10000" tweening="false" rotationx="0" rotationy="0" rotationz="351" translationx="800" translationy="700" sclaex="100" scaley="100" shearx="0" sheary="0" />
-    </story>
-    <story name="Hintergrund" id="ddffc276-f894-4653-bba6-a3704e6c2d61" enable="true" lock="false" item="Hintergrund">
-      <keyframe xsi:type="act"  name="" id="ae4db681-d031-4fd4-aad9-1e4f835d820d" enable="true" lock="false" from="0" duration="99999999" tweening="false" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0" />
-    </story>
-    </item>
-  <item xsi:type="object" name="Fliegendes UFO" id="4a6ba17c-05fc-4538-a092-6ef6cda6086d" enable="true" lock="false">
+    <alpha value="0" />
+    <blur value="0" />
+  </item>
+  <item xsi:type="object" name="Fliegendes UFO" id="4a6ba17c-05fc-4538-a092-6ef6cda6086d" enable="true" lock="false" expanded="false" clipping="false">
     <note />
-    <state name="Standard" id="9AA25CA0-9271-4DA2-8F80-F586C45A3E52" />
-    <state name="Parken" id="DCB90FF1-A7DD-4741-82D1-EE3EEB85392C" />
-    <item xsi:type="animation" name="Standard" id="9AA25CA0-9271-4DA2-8F80-F586C45A3E52">
+    <item xsi:type="animation" name="Standard" id="9AA25CA0-9271-4DA2-8F80-F586C45A3E52" enable="true" lock="false" expanded="false">
+      <note />
       <hotspot x="0" y="0" />
       <gamma value="0" />
       <alpha value="255" />
       <blur value="0" />
-      <story name="Erstes Schlüsselbild" id="5afc2d97-2666-4b0f-81ed-c8e3b77fdf45" enable="true" lock="false" item="UFO" loop="oscillate">
-        <keyframe xsi:type="act"  name="" id="0b47212d-c971-472b-8f2f-26bf6e4828b5" enable="true" lock="false" from="0" duration="100" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0" />
-        <keyframe xsi:type="tweening" id="54567691-9EC0-401E-80DD-BB782E297834" enable="true"/>
-        <keyframe xsi:type="act"  name="" id="ee87b05d-4eb6-4012-a4c6-bd857ca601cc" enable="true" lock="false" from="500" duration="10" tweening="true" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="10" scaley="10" shearx="0" sheary="0" />
-        <keyframe xsi:type="tweening" id="CA5DFA42-419E-408A-B279-19D5D6A9BB7E" enable="true"/>
-        <keyframe xsi:type="act"  name="" id="5675c1f2-8c75-4628-83c5-6c7f01b9ecec" enable="true" lock="false" from="800" duration="100" tweening="true" rotationx="0" rotationy="0" rotationz="40" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0" />
+      <story name="Erstes Schlüsselbild" id="5afc2d97-2666-4b0f-81ed-c8e3b77fdf45" enable="true" lock="false" expanded="false" loop="oscillate">
+        <note />
+        <keyframe xsi:type="act" name="" id="0b47212d-c971-472b-8f2f-26bf6e4828b5" enable="true" lock="false" from="0" duration="100" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0">
+          <note />
+        </keyframe>
+        <keyframe xsi:type="tweening" name="" id="54567691-9EC0-401E-80DD-BB782E297834" enable="true" lock="false">
+          <note />
+        </keyframe>
+        <keyframe xsi:type="act" name="" id="ee87b05d-4eb6-4012-a4c6-bd857ca601cc" enable="true" lock="false" from="500" duration="10" rotationx="0" rotationy="0" rotationz="0" translationx="0" translationy="0" sclaex="10" scaley="10" shearx="0" sheary="0">
+          <note />
+        </keyframe>
+        <keyframe xsi:type="tweening" name="" id="CA5DFA42-419E-408A-B279-19D5D6A9BB7E" enable="true" lock="false">
+          <note />
+        </keyframe>
+        <keyframe xsi:type="act" name="" id="5675c1f2-8c75-4628-83c5-6c7f01b9ecec" enable="true" lock="false" from="800" duration="100" rotationx="0" rotationy="0" rotationz="40" translationx="0" translationy="0" sclaex="100" scaley="100" shearx="0" sheary="0">
+          <note />
+        </keyframe>
+        <instance id="" name="" stateid="" state="" />
       </story>
-      <story name="Zweites Schlüsselbild" id="558c5774-2817-4c09-83d2-fe01532f6809" enable="true" lock="false" item="Omicron" loop="repeat">
-        <keyframe xsi:type="act"  name="" id="3bccb90a-8c5a-4938-8af7-800c7fd0dda6" enable="true" lock="false" from="0" duration="210" tweening="true" rotationx="0" rotationy="0" rotationz="45" translationx="500" translationy="1900" sclaex="30" scaley="30" shearx="0" sheary="0" />
+      <story name="Zweites Schlüsselbild" id="558c5774-2817-4c09-83d2-fe01532f6809" enable="true" lock="false" expanded="false" loop="repeat">
+        <note />
+        <keyframe xsi:type="act" name="" id="3bccb90a-8c5a-4938-8af7-800c7fd0dda6" enable="true" lock="false" from="0" duration="210" rotationx="0" rotationy="0" rotationz="45" translationx="500" translationy="1900" sclaex="30" scaley="30" shearx="0" sheary="0">
+          <note />
+        </keyframe>
+        <instance id="" name="" stateid="" state="" />
       </story>
+      <background id="eba44d54-09db-4b8b-855a-f793d272b1fe" name="" stateid="eba44d54-09db-4b8b-855a-f793d272b1fe" state="" />
     </item>
-    <item xsi:type="image" name="UFO" id="1f235524-5d77-44cb-bdfd-cbf170160c89" enable="true" lock="false">
+    <item xsi:type="image" name="UFO" id="1f235524-5d77-44cb-bdfd-cbf170160c89" enable="true" lock="false" expanded="false">
       <note />
       <hotspot x="288" y="194" />
       <gamma value="0" />
@@ -68,8 +561,12 @@
       <blur value="0" />
       <source>ufo.png</source>
     </item>
+    <hotspot x="0" y="0" />
+    <gamma value="0" />
+    <alpha value="0" />
+    <blur value="0" />
   </item>
-  <item xsi:type="image" name="Sputnik" id="960e35a1-0bbc-4245-9f41-cbaf2109aaea" enable="true" lock="false">
+  <item xsi:type="image" name="Sputnik" id="960e35a1-0bbc-4245-9f41-cbaf2109aaea" enable="true" lock="false" expanded="false">
     <note />
     <hotspot x="0" y="0" />
     <gamma value="0" />
@@ -77,7 +574,7 @@
     <blur value="0" />
     <source>sputnik.png</source>
   </item>
-  <item xsi:type="image" name="Omicron" id="f53f7739-5196-4af3-89e5-83c069074c0f" enable="true" lock="false">
+  <item xsi:type="image" name="Omicron" id="f53f7739-5196-4af3-89e5-83c069074c0f" enable="true" lock="false" expanded="false">
     <note />
     <hotspot x="0" y="0" />
     <gamma value="0" />
@@ -85,7 +582,7 @@
     <blur value="0" />
     <source>omicron.png</source>
   </item>
-  <item xsi:type="sound" name="Boom" id="fcd70f22-33fc-4391-b7f6-f21bb130d33e" enable="true" lock="false">
+  <item xsi:type="sound" name="Boom" id="fcd70f22-33fc-4391-b7f6-f21bb130d33e" enable="true" lock="false" expanded="false">
     <note />
     <source>boom.m4a</source>
   </item>

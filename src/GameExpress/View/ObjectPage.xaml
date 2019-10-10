@@ -22,10 +22,9 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="120"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <CommandBar Grid.Column="0" Grid.Row="0" 
                     Name="ToolBar" 
                     Visibility="Visible" 
@@ -54,44 +53,58 @@
                               SelectedIndex="0" 
                               VerticalAlignment="Center"
                               BorderThickness="0"
+                              SelectedItem="{x:Bind Object.CurrentState, Mode=TwoWay}"
+                              SelectionChanged="OnStateSelectionChanged"
                               Background="Transparent">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="item:ItemAnimation">
-                            <TextBlock Text="{Binding Name}"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="item:ItemAnimation">
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </Grid>
             </CommandBar.Content>
             <AppBarToggleButton Name="Play" Label="Abspielen" Icon="Play" Click="OnPlay"/>
             <AppBarButton Name="Previous" Label="Zurücksetzen" Icon="Previous" Click="OnPrevious"/>
             <AppBarSeparator/>
-            <AppBarButton Name="Stroy" Label="Story" Icon="Add" Click="OnAddStory" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
+            <AppBarButton Name="Add" Label="Hinzufügen" Icon="Add" IsEnabled="{Binding Unlock, Mode=OneWay}" FlowDirection="LeftToRight">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Objekt" Click="OnAddObject" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xEBD2;" Margin="0,0,5,0"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Animation" Click="OnAddAnimation" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE173;" Margin="0,0,5,0"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Karte" Click="OnAddMap" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE707;" Margin="0,0,5,0"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Bild" Click="OnAddImage" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xF69E;" Margin="0,0,5,0"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="Sound" Click="OnAddSound" IsEnabled="{Binding Unlock, Mode=OneWay}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8D6;" Margin="0,0,5,0"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
         </CommandBar>
-      
-        <controls:TimeLinePanel 
-            Grid.Column="0" 
-            Grid.Row="1" 
-            x:Name="TimeLine" 
-            Background="{ThemeResource SystemChromeMediumLowColor}" 
-            Time="{x:Bind Path=Editor.Time, Mode=TwoWay}"
-            Item="{x:Bind Path=Editor.Item, Mode=OneWay, Converter={StaticResource ItemToItemAnimation}}"/>
         
         <controls:AnimationEditorPanel Grid.Column="0" 
-                                       Grid.Row="2" 
+                                       Grid.Row="1" 
                                        x:Name="Editor" 
-                                       Item="{x:Bind State.SelectedItem, Mode=OneWay, Converter={StaticResource ObjectToItem}}"
+                                       Item="{x:Bind Object, Mode=OneWay}"
                                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
 
-        <toolkit:GridSplitter Background="Transparent"
-            Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Height="4">
-            <toolkit:GridSplitter.RenderTransform>
-                <TranslateTransform Y="-8" />
-            </toolkit:GridSplitter.RenderTransform>
-            <toolkit:GridSplitter.Element>
-                <Grid>
-                </Grid>
-            </toolkit:GridSplitter.Element>
-        </toolkit:GridSplitter>
     </Grid>
 </Page>

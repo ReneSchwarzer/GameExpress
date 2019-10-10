@@ -2,12 +2,14 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
+using Windows.Foundation;
 
 namespace GameExpress.Model.Item
 {
     [XmlType("map")]
-    public class ItemMap : ItemTreeNode, IItemClickable
+    public class ItemMap : ItemTreeNode, IItemClickable, IItemSizing
     {
         /// <summary>
         /// Liefert oder setzt die Vertices
@@ -20,6 +22,46 @@ namespace GameExpress.Model.Item
         /// </summary>
         [XmlElement("mesh")]
         public ObservableCollection<ItemMapMesh> Mesh { get; set; } = new ObservableCollection<ItemMapMesh>();
+
+        /// <summary>
+        /// Liefert den Ausgangspunkt
+        /// </summary>
+        [XmlIgnore]
+        public virtual Vector Location
+        {
+            get
+            {
+                // Ermittle den min. X- und den min. Y-Wert.
+                return new Vector
+                (
+                    Vertices.Select(x => x.Vector.X).Min(),
+                    Vertices.Select(x => x.Vector.Y).Min()
+                );
+            }
+        }
+
+        /// <summary>
+        /// Liefert die Größe
+        /// </summary>
+        [XmlIgnore]
+        public virtual Vector Size
+        {
+            get
+            {
+                if (Parent is IItemSizing sizing)
+                {
+                    return sizing.Size;
+                }
+
+                // Ermittle den max. X- und den max. Y-Wert.
+                return new Vector
+                (
+                    Vertices.Select(x => x.Vector.X).Max(),
+                    Vertices.Select(x => x.Vector.Y).Max()
+                ) -
+                Location;
+            }
+        }
 
         /// <summary>
         /// Konstruktor
@@ -136,6 +178,11 @@ namespace GameExpress.Model.Item
         /// <param name="uc">Der Updatekontext</param>
         public override void Update(UpdateContext uc)
         {
+            if (uc.Designer)
+            {
+                // Hintergrund
+                Parent.Update(uc);
+            }
             foreach (var v in Mesh)
             {
                 v.Update(new UpdateContext(uc));
@@ -176,7 +223,16 @@ namespace GameExpress.Model.Item
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public override T Copy<T>()
+        public override Item Copy()
+        {
+            return Copy<ItemMap>();
+        }
+
+        /// <summary>
+        /// Liefert eine Tiefernkopie des Items
+        /// </summary>
+        /// <returns>Die Tiefenkopie</returns>
+        protected override T Copy<T>()
         {
             var copy = base.Copy<T>() as ItemMap;
 

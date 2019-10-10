@@ -163,7 +163,16 @@ namespace GameExpress.Model.Item
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public virtual T Copy<T>() where T : Item, new()
+        public virtual Item Copy()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Liefert eine Tiefernkopie des Items
+        /// </summary>
+        /// <returns>Die Tiefenkopie</returns>
+        protected virtual T Copy<T>() where T : Item, new()
         {
             var copy = new T()
             {
@@ -199,7 +208,7 @@ namespace GameExpress.Model.Item
         /// <returns>Die Stringrepräsentation</returns>
         public override string ToString()
         {
-            return GetType().Name + " " + Name;
+            return Name;
         }
     }
 }

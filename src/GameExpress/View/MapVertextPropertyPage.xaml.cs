@@ -1,36 +1,26 @@
 ﻿using GameExpress.Model.Item;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace GameExpress.View
 {
     /// <summary>
-    /// Eigenschaftsseite einer Szene
+    /// Eigenschaftsseite einer Karte
     /// </summary>
-    public sealed partial class ScenePropertyPage : Page
+    public sealed partial class MapVertextPropertyPage : Page
     {
         /// <summary>
-        /// Liefert die mit der Ansicht verbundene Szene
+        /// Liefert das mit der Ansicht verbundene Karte
         /// </summary>
-        private ItemScene Scene => DataContext as ItemScene;
+        private ItemMapVertext Map => DataContext as ItemMapVertext;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
-        public ScenePropertyPage()
+        public MapVertextPropertyPage()
         {
             InitializeComponent();
         }
@@ -47,13 +37,13 @@ namespace GameExpress.View
         }
 
         /// <summary>
-        /// Wird aufgerufen, wenn eine Szene gelöscht werden soll
+        /// Wird aufgerufen, wenn die Karte gelöscht werden soll
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
         /// <param name="e">Das Eventargument</param>
-        private async void OnDeleteScene(object sender, RoutedEventArgs e)
+        private async void OnDeleteVertext(object sender, RoutedEventArgs e)
         {
-            var dialog = new MessageDialog("Möchten Sie die Szene wirklich löschen?", "Löschen");
+            var dialog = new MessageDialog("Möchten Sie den Vertext wirklich löschen?", "Löschen");
             var yesCommand = new UICommand("Ja");
             var noCommand = new UICommand("Nein");
             dialog.Commands.Add(yesCommand);
@@ -64,11 +54,11 @@ namespace GameExpress.View
             var command = await dialog.ShowAsync();
             if (command == yesCommand)
             {
-                var parent = Scene.Parent;
-                parent.Children.Remove(Scene);
+                //var parent = Map.Parent;
+                //parent.Children.Remove(Map);
 
-                ViewHelper.ChangePropertyPage(parent);
-                ViewHelper.ChangePage(parent);
+                //ViewHelper.ChangePropertyPage(parent);
+                //ViewHelper.ChangePage(parent);
             }
         }
     }

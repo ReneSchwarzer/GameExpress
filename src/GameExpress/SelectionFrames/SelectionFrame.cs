@@ -36,7 +36,7 @@ namespace GameExpress.SelectionFrames
         /// <summary>
         /// Liefert oder setzt die Anker
         /// </summary>
-        protected IDictionary<Location, ISelectionFrameAnchor> Anchors { get; private set; } = new Dictionary<Location, ISelectionFrameAnchor>();
+        protected IDictionary<Location, List<ISelectionFrameAnchor>> Anchors { get; private set; } = new Dictionary<Location, List<ISelectionFrameAnchor>>();
 
         /// <summary>
         /// Konstruktor
@@ -46,16 +46,16 @@ namespace GameExpress.SelectionFrames
         {
             Item = item;
 
-            Anchors.Add(Location.North, new SelectionFrameAnchor(this, Location.North));
-            Anchors.Add(Location.NorthEast, new SelectionFrameAnchor(this, Location.NorthEast));
-            Anchors.Add(Location.East, new SelectionFrameAnchor(this, Location.East));
-            Anchors.Add(Location.SouthEast, new SelectionFrameAnchor(this, Location.SouthEast));
-            Anchors.Add(Location.South, new SelectionFrameAnchor(this, Location.South));
-            Anchors.Add(Location.SouthWest, new SelectionFrameAnchor(this, Location.SouthWest));
-            Anchors.Add(Location.West, new SelectionFrameAnchor(this, Location.West));
-            Anchors.Add(Location.NorthWest, new SelectionFrameAnchor(this, Location.NorthWest));
-            Anchors.Add(Location.HotSpot, new SelectionFrameAnchor(this, Location.HotSpot));
-            Anchors.Add(Location.Center, new SelectionFrameAnchor(this, Location.Center));
+            AddAnchor(Location.North, new SelectionFrameAnchor(this, Location.North));
+            AddAnchor(Location.NorthEast, new SelectionFrameAnchor(this, Location.NorthEast));
+            AddAnchor(Location.East, new SelectionFrameAnchor(this, Location.East));
+            AddAnchor(Location.SouthEast, new SelectionFrameAnchor(this, Location.SouthEast));
+            AddAnchor(Location.South, new SelectionFrameAnchor(this, Location.South));
+            AddAnchor(Location.SouthWest, new SelectionFrameAnchor(this, Location.SouthWest));
+            AddAnchor(Location.West, new SelectionFrameAnchor(this, Location.West));
+            AddAnchor(Location.NorthWest, new SelectionFrameAnchor(this, Location.NorthWest));
+            AddAnchor(Location.HotSpot, new SelectionFrameAnchor(this, Location.HotSpot));
+            AddAnchor(Location.Center, new SelectionFrameAnchor(this, Location.Center));
         }
 
         /// <summary>
@@ -64,33 +64,32 @@ namespace GameExpress.SelectionFrames
         /// <param name="uc">Der Updatekontext</param>
         public virtual void Update(UpdateContext uc)
         {
-            foreach (var anchors in Anchors.Values)
+            foreach (var anchors in Anchors.Values.SelectMany(x => x))
             {
                 // Änderungen übernehmen
                 var newUC = new UpdateContext(uc);
                 newUC.Matrix *= GetMatrix(newUC, anchors, Item);
 
                 anchors.Update(newUC);
-
-                foreach(var handle in anchors.Handles)
-                {
-                    handle.Item = Item;
-                }
             }
 
-            var a = Anchors[Location.NorthEast].CurrentPosition;
-            var b = Anchors[Location.SouthWest].CurrentPosition;
+            var a = GetAnchor(Location.NorthEast).CurrentPosition;
+            var b = GetAnchor(Location.SouthWest).CurrentPosition;
 
-            var c = Anchors[Location.NorthWest].CurrentPosition;
-            var d = Anchors[Location.SouthEast].CurrentPosition;
+            var c = GetAnchor(Location.NorthWest).CurrentPosition;
+            var d = GetAnchor(Location.SouthEast).CurrentPosition;
 
-            var e = Anchors[Location.North].CurrentPosition;
-            var f = Anchors[Location.South].CurrentPosition;
+            var e = GetAnchor(Location.North).CurrentPosition;
+            var f = GetAnchor(Location.South).CurrentPosition;
 
-            var g = Anchors[Location.West].CurrentPosition;
-            var h = Anchors[Location.East].CurrentPosition;
+            var g = GetAnchor(Location.West).CurrentPosition;
+            var h = GetAnchor(Location.East).CurrentPosition;
 
-            var l = Math.Min(Math.Min((b - a).Length, (c - d).Length), Math.Min((f - e).Length, (h - g).Length));
+            var l = Math.Min
+                    (
+                        Math.Min((b - a).Length, (c - d).Length),
+                        Math.Min((f - e).Length, (h - g).Length)
+                    );
 
             if (l == 0)
             {
@@ -98,21 +97,31 @@ namespace GameExpress.SelectionFrames
             }
             else if (l < 100)
             {
-                foreach (var anchors in Anchors.Values)
+                foreach (var anchors in Anchors.Values.SelectMany(x => x))
                 {
                     foreach (var handles in anchors.Handles)
                     {
-                        handles.HightOrbit = true;
+                        if (anchors.Location != Location.Owner &&
+                            anchors.Location != Location.Center &&
+                            anchors.Location != Location.HotSpot)
+                        {
+                            handles.HightOrbit = true;
+                        }
                     }
                 }
             }
             else
             {
-                foreach (var anchors in Anchors.Values)
+                foreach (var anchors in Anchors.Values.SelectMany(x => x))
                 {
                     foreach (var handles in anchors.Handles)
                     {
-                        handles.HightOrbit = false;
+                        if (anchors.Location != Location.Owner &&
+                            anchors.Location != Location.Center &&
+                            anchors.Location != Location.HotSpot)
+                        {
+                            handles.HightOrbit = false;
+                        }
                     }
                 }
             }
@@ -131,7 +140,7 @@ namespace GameExpress.SelectionFrames
 
             DrawFrame(pc);
 
-            foreach (var anchors in Anchors.Values)
+            foreach (var anchors in Anchors.Values.SelectMany(x => x))
             {
                 // Änderungen übernehmen
                 var newPC = new PresentationContext(pc);
@@ -153,14 +162,14 @@ namespace GameExpress.SelectionFrames
         {
             var accent = new UISettings().GetColorValue(UIColorType.Accent);
 
-            var p0 = Anchors[Location.North].CurrentPosition;
-            var p1 = Anchors[Location.NorthEast].CurrentPosition;
-            var p2 = Anchors[Location.East].CurrentPosition;
-            var p3 = Anchors[Location.SouthEast].CurrentPosition;
-            var p4 = Anchors[Location.South].CurrentPosition;
-            var p5 = Anchors[Location.SouthWest].CurrentPosition;
-            var p6 = Anchors[Location.West].CurrentPosition;
-            var p7 = Anchors[Location.NorthWest].CurrentPosition;
+            var p0 = GetAnchor(Location.North).CurrentPosition;
+            var p1 = GetAnchor(Location.NorthEast).CurrentPosition;
+            var p2 = GetAnchor(Location.East).CurrentPosition;
+            var p3 = GetAnchor(Location.SouthEast).CurrentPosition;
+            var p4 = GetAnchor(Location.South).CurrentPosition;
+            var p5 = GetAnchor(Location.SouthWest).CurrentPosition;
+            var p6 = GetAnchor(Location.West).CurrentPosition;
+            var p7 = GetAnchor(Location.NorthWest).CurrentPosition;
 
             // Rahmen zeichnen
             using (var geometry = CanvasGeometry.CreatePolygon(pc.Graphics, new Vector2[]
@@ -214,7 +223,7 @@ namespace GameExpress.SelectionFrames
         /// <returns>Das erste Handle, welches gefunden wurde oder null</returns>
         public virtual ISelectionFrameHandle HitTest(HitTestContext hc, Vector point)
         {
-            foreach (var anchors in Anchors.Values)
+            foreach (var anchors in Anchors.Values.SelectMany(x => x))
             {
                 var newHC = new HitTestContext(hc);
 
@@ -242,14 +251,14 @@ namespace GameExpress.SelectionFrames
         {
             var matrix = Matrix3D.Identity;
 
-            if (item is IItemVisual visual)
+            if (item is IItemSizing sizing)
             {
                 switch (anchors.Location)
                 {
                     case Location.North:
                         return Matrix3D.Translation
                         (
-                            new Vector(visual.Size.Width / 2f, 0)
+                            new Vector(sizing.Size.X / 2f, 0)
                         );
                     case Location.NorthWest:
                         return Matrix3D.Translation
@@ -259,36 +268,36 @@ namespace GameExpress.SelectionFrames
                     case Location.NorthEast:
                         return Matrix3D.Translation
                         (
-                            new Vector(visual.Size.Width, 0)
+                            new Vector(sizing.Size.X, 0)
                         );
                     case Location.South:
                         return Matrix3D.Translation
                         (
-                            new Vector(visual.Size.Width / 2, visual.Size.Height)
+                            new Vector(sizing.Size.X / 2, sizing.Size.Y)
                         );
                     case Location.SouthWest:
                         return Matrix3D.Translation
                         (
-                            new Vector(0, visual.Size.Height)
+                            new Vector(0, sizing.Size.Y)
                         );
                     case Location.SouthEast:
                         return Matrix3D.Translation
                         (
-                            new Vector(visual.Size.Width, visual.Size.Height)
+                            new Vector(sizing.Size.X, sizing.Size.Y)
                         );
                     case Location.East:
                         return Matrix3D.Translation
                         (
-                            new Vector(visual.Size.Width, visual.Size.Height / 2f)
+                            new Vector(sizing.Size.X, sizing.Size.Y / 2f)
                         );
                     case Location.West:
                         return Matrix3D.Translation
                         (
-                            new Vector(0, visual.Size.Height / 2)
+                            new Vector(0, sizing.Size.Y / 2)
                         );
                     case Location.HotSpot:
                         {
-                            if (visual is IItemHotSpot hotspot)
+                            if (item is IItemHotSpot hotspot)
                             {
                                 return Matrix3D.Translation(hotspot.Hotspot);
                             }
@@ -296,7 +305,7 @@ namespace GameExpress.SelectionFrames
                         }
                     case Location.Center:
                         {
-                            return Matrix3D.Translation(visual.Size.Width / 2, visual.Size.Height / 2);
+                            return Matrix3D.Translation(sizing.Size.X / 2, sizing.Size.Y / 2);
                         }
                 }
             }
@@ -306,7 +315,7 @@ namespace GameExpress.SelectionFrames
         }
 
         /// <summary>
-        /// Liefert einen Anker
+        /// Liefert einen Anker einer Position
         /// </summary>
         /// <param name="location">Die Position des Ankers</param>
         /// <returns>Der Anker oder null</returns>
@@ -314,10 +323,86 @@ namespace GameExpress.SelectionFrames
         {
             if (Anchors.ContainsKey(location))
             {
+                return Anchors[location].FirstOrDefault();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Liefert einen alle Anker einer Position
+        /// </summary>
+        /// <param name="location">Die Position des Ankers</param>
+        /// <returns>Der Anker oder null</returns>
+        public virtual List<ISelectionFrameAnchor> GetAnchors(Location location)
+        {
+            if (Anchors.ContainsKey(location))
+            {
                 return Anchors[location];
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Fügt einen neuen Anker einer Position hinzu
+        /// </summary>
+        /// <param name="location">Die Position des Ankers<</param>
+        /// <param name="anchor">Der Anker, der hinzugefügt werden soll</param>
+        public void AddAnchor(Location location, ISelectionFrameAnchor anchor)
+        {
+            if (!Anchors.ContainsKey(location))
+            {
+                Anchors[location] = new List<ISelectionFrameAnchor>();
+            }
+
+            Anchors[location].Add(anchor);
+        }
+
+        /// <summary>
+        /// Entfert einen Anker einer Position
+        /// </summary>
+        /// <param name="location">Die Position des Ankers<</param>
+        /// <param name="anchor">Der Anker, der entfernt werden soll</param>
+        public void RemoveAnchor(Location location, ISelectionFrameAnchor anchor)
+        {
+            if (Anchors.ContainsKey(location))
+            {
+                Anchors[location].Remove(anchor);
+            }
+        }
+
+        /// <summary>
+        /// Entfert alle Anker einer Position
+        /// </summary>
+        /// <param name="location">Die Position des Ankers<</param>
+        public void RemoveAnchors(Location location)
+        {
+            if (Anchors.ContainsKey(location))
+            {
+                Anchors[location].Clear();
+            }
+        }
+
+        /// <summary>
+        /// Fügt einen neuen Handle einer Position hinzu
+        /// </summary>
+        /// <param name="location">Die Position des Handle<</param>
+        /// <param name="handle">Der Handle, der hinzugefügt werden soll</param>
+        public void AddHandle(Location location, ISelectionFrameHandle handle)
+        {
+            var anchor = GetAnchor(location);
+            anchor?.Handles.Add(handle);
+        }
+
+        /// <summary>
+        /// Entfert alle Handles einer Position
+        /// </summary>
+        /// <param name="location">Die Position des Ankers<</param>
+        public void RemoveHandles(Location location)
+        {
+            var anchor = GetAnchor(location);
+            anchor?.Handles.Clear();
         }
     }
 }

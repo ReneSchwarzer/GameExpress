@@ -11,8 +11,8 @@
     <AssemblyName>GameExpress.Model</AssemblyName>
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -122,8 +122,12 @@
   <ItemGroup>
     <Compile Include="Item\IItemClickable.cs" />
     <Compile Include="Item\IItemScale.cs" />
+    <Compile Include="Item\IItemState.cs" />
+    <Compile Include="Item\IItemStates.cs" />
     <Compile Include="Item\IItemTranslation.cs" />
     <Compile Include="Item\IItemHotSpot.cs" />
+    <Compile Include="Item\IItemSizing.cs" />
+    <Compile Include="Item\IItemClipping.cs" />
     <Compile Include="Item\IItemVisual.cs" />
     <Compile Include="Item\Item.cs" />
     <Compile Include="Item\ItemGame.cs" />
@@ -150,6 +154,7 @@
     <Compile Include="Structs\Gamma.cs" />
     <Compile Include="Structs\Hue.cs" />
     <Compile Include="Structs\IContext.cs" />
+    <Compile Include="Item\ItemInstance.cs" />
     <Compile Include="Structs\Loop.cs" />
     <Compile Include="Structs\Matrix3D.cs" />
     <Compile Include="Structs\PresentationContext.cs" />

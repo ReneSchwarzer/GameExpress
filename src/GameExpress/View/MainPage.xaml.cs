@@ -220,6 +220,27 @@ namespace GameExpress.View
         }
 
         /// <summary>
+        /// Wird aufgerufen, wenn eine neue Animation erstellt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnAddAnimation(object sender, RoutedEventArgs e)
+        {
+            var select = Tree.SelectedNodes.FirstOrDefault();
+            var node = select?.Content as ItemTreeNode;
+
+            if (node != null)
+            {
+                node.Children.Add(new ItemAnimation() { Name = "Neue Animation" });
+            }
+            else
+            {
+                var game = Model.Tree.FirstOrDefault();
+                game.Children.Add(new ItemAnimation() { Name = "Neue Animation" });
+            }
+        }
+
+        /// <summary>
         /// Wird aufgerufen, wenn eine neue Karte erstellt werden soll
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
@@ -283,11 +304,24 @@ namespace GameExpress.View
         /// Wird aufgerufen, wenn auf der Titelleiste geklickt wird
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
-        /// <param name="e">Das Eventargument</param>
-        private void OnTitelPointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        /// <param name="args">Das Eventargument</param>
+        private void OnTitelPointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs args)
         {
             var item = (ItemFrame.Content as Page)?.DataContext as Item;
             ViewHelper.ChangePropertyPage(item);
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn ein Element im Baum verschoben wird
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs args)
+        {
+            if (args.DropResult == Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move)
+            {
+                var items = args.Items.ToList();
+            }
         }
     }
 }

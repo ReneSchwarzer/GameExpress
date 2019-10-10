@@ -78,22 +78,31 @@ namespace GameExpress.Model.Item
             if (pc.Designer)
             {
                 // Vertex im Weltkoordinaten transformieren
-                var p = pc.Transform(Vector);
+                //var p = pc.Transform(Vector);
 
-                var black = Color.FromArgb(200, 0, 0, 0);
-                var white = Color.FromArgb(200, 255, 255, 255);
+                //var black = Color.FromArgb(200, 0, 0, 0);
+                //var white = Color.FromArgb(200, 255, 255, 255);
 
                 // Create a Pen object.
-                pc.Graphics.FillEllipse((float)p.X - 4, (float)p.Y - 4, 8, 8, white);
-                pc.Graphics.DrawEllipse((float)p.X - 4, (float)p.Y - 4, 8, 8, black);
+                //pc.Graphics.FillEllipse((float)p.X - 4, (float)p.Y - 4, 8, 8, white);
+                //pc.Graphics.DrawEllipse((float)p.X - 4, (float)p.Y - 4, 8, 8, black);
             }
+        }
+
+        /// <summary>
+        /// Liefert eine Tiefernkopie des Items
+        /// </summary>
+        /// <returns>Die Tiefenkopie</returns>
+        public override Item Copy()
+        {
+            return Copy<ItemMapVertext>();
         }
 
         // <summary>
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public override T Copy<T>()
+        protected override T Copy<T>()
         {
             var copy = base.Copy<T>() as ItemMapVertext;
             copy.Vector = Vector;

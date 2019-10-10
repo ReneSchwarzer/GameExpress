@@ -31,6 +31,7 @@ namespace GameExpress.ViewModel
             ContextRepository.RegisterContext(typeof(ItemObject), new ItemObjectContext());
             ContextRepository.RegisterContext(typeof(ItemAnimation), new ItemAnimationContext());
             ContextRepository.RegisterContext(typeof(ItemMap), new ItemMapContext());
+            ContextRepository.RegisterContext(typeof(ItemMapVertext), new ItemMapVertextContext());
             ContextRepository.RegisterContext(typeof(ItemStory), new ItemStoryContext());
             ContextRepository.RegisterContext(typeof(ItemKeyFrame), new ItemKeyFrameContext());
             ContextRepository.RegisterContext(typeof(ItemKeyFrameAct), new ItemKeyFrameContext());

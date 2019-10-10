@@ -25,7 +25,7 @@ namespace GameExpress.SelectionFrames
         /// <summary>
         /// Liefert oder setzt das aktuelle Frame
         /// </summary>
-        private ItemKeyFrame Frame { get; set; }
+        private ItemKeyFrame KeyFrame { get; set; }
 
         /// <summary>
         /// Liefert oder setzt die aktuelle Werkzegzusammenstellung
@@ -54,7 +54,7 @@ namespace GameExpress.SelectionFrames
 
             if (Item is ItemStory story && story.GetKeyFrame((ulong)story.LocalTime(uc.Time)) is ItemKeyFrame frame)
             {
-                Frame = frame;
+                KeyFrame = frame;
 
                 var newUC = new UpdateContext(uc)
                 {
@@ -69,9 +69,9 @@ namespace GameExpress.SelectionFrames
                 // Frame updaten 
                 base.Update(newUC);
 
-                foreach (var handle in Anchors.Values.SelectMany(x => x.Handles))
+                foreach (var handle in Anchors.Values.SelectMany(x => x).SelectMany(x => x.Handles))
                 {
-                    handle.Item = Frame;
+                    handle.Item = KeyFrame;
                 }
             }
         }
@@ -87,14 +87,14 @@ namespace GameExpress.SelectionFrames
                 return;
             }
 
-            if (Item is ItemStory story && Frame != null)
+            if (Item is ItemStory story && KeyFrame != null)
             {
                 var newPC = new PresentationContext(pc)
                 {
                     Time = story.LocalTime(pc.Time)
                 };
 
-                if (Frame is IItemVisual visual)
+                if (KeyFrame is IItemVisual visual)
                 {
                     newPC.Matrix *= visual.GetMatrix();
                 }
@@ -112,14 +112,14 @@ namespace GameExpress.SelectionFrames
         /// <returns>Das erste Handle, welches gefunden wurde oder null</returns>
         public override ISelectionFrameHandle HitTest(HitTestContext hc, Vector point)
         {
-            if (Item is ItemStory story && Frame != null)
+            if (Item is ItemStory story && KeyFrame != null)
             {
                 var newHC = new HitTestContext(hc)
                 {
                     Time = story.LocalTime(hc.Time)
                 };
 
-                if (Frame is IItemVisual visual)
+                if (KeyFrame is IItemVisual visual)
                 {
                     newHC.Matrix *= visual.GetMatrix();
                 }
@@ -140,14 +140,14 @@ namespace GameExpress.SelectionFrames
         /// </summary>
         public override void SwitchToolset()
         {
-            Anchors[Location.North].Handles.Clear();
-            Anchors[Location.NorthEast].Handles.Clear();
-            Anchors[Location.East].Handles.Clear();
-            Anchors[Location.SouthEast].Handles.Clear();
-            Anchors[Location.South].Handles.Clear();
-            Anchors[Location.SouthWest].Handles.Clear();
-            Anchors[Location.West].Handles.Clear();
-            Anchors[Location.NorthWest].Handles.Clear();
+            RemoveHandles(Location.North);
+            RemoveHandles(Location.NorthEast);
+            RemoveHandles(Location.East);
+            RemoveHandles(Location.SouthEast);
+            RemoveHandles(Location.South);
+            RemoveHandles(Location.SouthWest);
+            RemoveHandles(Location.West);
+            RemoveHandles(Location.NorthWest);
 
             switch (CurrentToolset)
             {
@@ -155,16 +155,16 @@ namespace GameExpress.SelectionFrames
                     // Wechsel zu Rotation
                     CurrentToolset = Toolset.Rotation;
 
-                    Anchors[Location.North].Handles.Add(new SelectionFrameHandleSizeN(this, Anchors[Location.North]));
-                    Anchors[Location.NorthEast].Handles.Add(new SelectionFrameHandleSizeNE(this, Anchors[Location.NorthEast]));
-                    Anchors[Location.East].Handles.Add(new SelectionFrameHandleSizeE(this, Anchors[Location.East]));
-                    Anchors[Location.SouthEast].Handles.Add(new SelectionFrameHandleSizeSE(this, Anchors[Location.SouthEast]));
-                    Anchors[Location.South].Handles.Add(new SelectionFrameHandleSizeS(this, Anchors[Location.South]));
-                    Anchors[Location.SouthWest].Handles.Add(new SelectionFrameHandleSizeSW(this, Anchors[Location.SouthWest]));
-                    Anchors[Location.West].Handles.Add(new SelectionFrameHandleSizeW(this, Anchors[Location.West]));
-                    Anchors[Location.NorthWest].Handles.Add(new SelectionFrameHandleSizeNW(this, Anchors[Location.NorthWest]));
-                    
-                    Anchors[Location.South].Handles.Add(new SelectionFrameHandleMove(this, Anchors[Location.South]));
+                    AddHandle(Location.North, new SelectionFrameHandleSizeN(this, GetAnchor(Location.North)));
+                    AddHandle(Location.NorthEast, new SelectionFrameHandleSizeNE(this, GetAnchor(Location.NorthEast)));
+                    AddHandle(Location.East, new SelectionFrameHandleSizeE(this, GetAnchor(Location.East)));
+                    AddHandle(Location.SouthEast, new SelectionFrameHandleSizeSE(this, GetAnchor(Location.SouthEast)));
+                    AddHandle(Location.South, new SelectionFrameHandleSizeS(this, GetAnchor(Location.South)));
+                    AddHandle(Location.SouthWest, new SelectionFrameHandleSizeSW(this, GetAnchor(Location.SouthWest)));
+                    AddHandle(Location.West, new SelectionFrameHandleSizeW(this, GetAnchor(Location.West)));
+                    AddHandle(Location.NorthWest, new SelectionFrameHandleSizeNW(this, GetAnchor(Location.NorthWest)));
+
+                    AddHandle(Location.South, new SelectionFrameHandleTranslation(this, GetAnchor(Location.South)));
 
                     break;
                 case Toolset.Rotation:
@@ -197,7 +197,7 @@ namespace GameExpress.SelectionFrames
         /// <param name="item">Das Item</param>
         protected override Matrix3D GetMatrix(IContext context, ISelectionFrameAnchor anchors, Item item)
         {
-            return base.GetMatrix(context, anchors, Frame);
+            return base.GetMatrix(context, anchors, KeyFrame);
         }
     }
 }

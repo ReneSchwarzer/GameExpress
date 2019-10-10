@@ -17,6 +17,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <controls:EditorPanel Grid.Column="0" Grid.Row="0" x:Name="Editor" />
+        <controls:EditorPanel Grid.Column="0" Grid.Row="0" x:Name="Editor" SelectedItemLost="OnSelectedItemLost"/>
     </Grid>
 </Page>

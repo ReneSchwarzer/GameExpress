@@ -145,7 +145,7 @@ namespace GameExpress.Model.Structs
         /// </summary>
         /// <param name="v"></param>
         /// <param name="scalar"></param>
-        /// <returns></returns>
+        /// <returns>Das Produkt</returns>
         public static Vector operator *(Vector v, int scalar)
         {
             return new Vector(v.X * scalar, v.Y * scalar);
@@ -204,6 +204,16 @@ namespace GameExpress.Model.Structs
         public static bool operator !=(Vector v1, Vector v2)
         {
             return v1.X != v2.X || v1.Y != v2.Y;
+        }
+
+        /// <summary>
+        /// Prüft, ob v ein ungültigen Wert enthällt
+        /// </summary>
+        /// <param name="v">Der zu prüfende Vektor</param>
+        /// <returns>true wenn v ungültig ist, false sonst </returns>
+        public static bool IsNaN(Vector v)
+        {
+            return double.IsNaN(v.X) || double.IsNaN(v.Y);
         }
 
         /// <summary>

@@ -64,7 +64,16 @@ namespace GameExpress.Model.Item
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public override T Copy<T>()
+        public override Item Copy()
+        {
+            return Copy<ItemGame>();
+        }
+
+        /// <summary>
+        /// Liefert eine Tiefernkopie des Items
+        /// </summary>
+        /// <returns>Die Tiefenkopie</returns>
+        protected override T Copy<T>()
         {
             var copy = base.Copy<T>() as ItemGame;
             copy.Height = Height;

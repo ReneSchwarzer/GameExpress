@@ -96,10 +96,12 @@
                         <controls:TreeView Name="Tree" 
                                            ItemsSource="{Binding Tree}"
                                            ItemInvoked="OnItemInvoked" 
+                                           DragItemsCompleted="OnDragItemsCompleted"
+                                           CanReorderItems="true"
                                            SelectionMode="Single">
                             <controls:TreeView.ItemTemplate>
                                 <DataTemplate x:DataType="item:Item">
-                                    <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="True">
+                                    <TreeViewItem ItemsSource="{Binding Children}" IsExpanded="{Binding Expanded, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
                                             <FontIcon Glyph="{x:Bind view:ViewHelper.GetSymbol(This), Mode=OneWay}" Margin="0,0,5,0"/>
                                             <TextBlock Text="{Binding Name}" />
@@ -129,6 +131,11 @@
                                     <MenuFlyoutItem Text="Objekt" Click="OnAddObject">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xEBD2;" Margin="0,0,5,0"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Animation" Click="OnAddAnimation">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE173;" Margin="0,0,5,0"/>
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Text="Karte" Click="OnAddMap">

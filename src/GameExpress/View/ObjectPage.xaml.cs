@@ -47,32 +47,65 @@ namespace GameExpress.View
             DataContext = args.Parameter as ItemObject;
             ViewHelper.ChangePropertyPage(args.Parameter as Item);
 
-            Editor.Loaded += (s, e) =>
-            {
-                //Editor.MergeCommandBar(ToolBar, false);
-                //ToolBar.Visibility = Visibility.Collapsed;
-            };
+            Editor.FitSize();
         }
 
         /// <summary>
-        /// Wird aufgerufen, wenn eine neue Story hinzugefügt werden soll
+        /// Wird aufgerufen, wenn eine neues Objekt erstellt werden soll
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
-        /// <param name="e">Das Eventargument</param>
-        private void OnAddStory(object sender, RoutedEventArgs e)
+        /// <param name="args">Das Eventargument</param>
+        private void OnAddObject(object sender, RoutedEventArgs args)
         {
-            //Object.StoryBoard.Add(new ItemStory()
-            //{
-            //    Name = "Story " + (Object.StoryBoard.Count + 1)
-            //});
+            Object.Children.Add(new ItemObject() { Name = "Neues Objekt" });
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn eine neue Animation erstellt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnAddAnimation(object sender, RoutedEventArgs args)
+        {
+            Object.Children.Add(new ItemAnimation() { Name = "Neue Animation" });
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn eine neue Karte erstellt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnAddMap(object sender, RoutedEventArgs args)
+        {
+            Object.Children.Add(new ItemMap() { Name = "Neue Karte" });
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn eine neues Bild erstellt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnAddImage(object sender, RoutedEventArgs args)
+        {
+            Object.Children.Add(new ItemImage() { Name = "Neues Bild" });
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn eine neuer Sound erstellt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnAddSound(object sender, RoutedEventArgs args)
+        {
+            Object.Children.Add(new ItemSound() { Name = "Neuer Sound" });
         }
 
         /// <summary>
         /// Wird aufgerufen, wenn der Previousbutton gedrückt wird
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
-        /// <param name="e">Das Eventargument</param>
-        private void OnPrevious(object sender, RoutedEventArgs e)
+        /// <param name="args">Das Eventargument</param>
+        private void OnPrevious(object sender, RoutedEventArgs args)
         {
             Play.IsChecked = false;
             Editor.Time = 0;
@@ -82,8 +115,8 @@ namespace GameExpress.View
         /// Wird aufgerufen, wenn der Playbutton gedrückt wird
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
-        /// <param name="e">Das Eventargument</param>
-        private void OnPlay(object sender, RoutedEventArgs e)
+        /// <param name="args">Das Eventargument</param>
+        private void OnPlay(object sender, RoutedEventArgs args)
         {
             var isChecked = Play.IsChecked.Value;
             var ticks = DateTime.Now.Ticks;
@@ -107,6 +140,16 @@ namespace GameExpress.View
                 }
             });
 
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn sich die Auswahl des Zustandes (Animation) geändert hat
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="args">Das Eventargument</param>
+        private void OnStateSelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            Editor.Invalidate();
         }
     }
 }

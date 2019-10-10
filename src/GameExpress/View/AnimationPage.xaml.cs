@@ -42,15 +42,17 @@ namespace GameExpress.View
         /// <summary>
         /// Wird aufgerufen, wenn zu dieser Seite gewechselt wird
         /// </summary>
-        /// <param name="e">Das Eventargument</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        /// <param name="args">Das Eventargument</param>
+        protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            base.OnNavigatedTo(e);
+            base.OnNavigatedTo(args);
 
-            DataContext = e.Parameter;
+            DataContext = args.Parameter;
             Editor.Item = Animation;
 
-            ViewHelper.ChangePropertyPage(e.Parameter as Item);
+            ViewHelper.ChangePropertyPage(args.Parameter as Item);
+
+            Editor.FitSize();
         }
 
         /// <summary>
@@ -67,8 +69,8 @@ namespace GameExpress.View
         /// Wird aufgerufen, wenn die Seite entladen wurde
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
-        /// <param name="e">Das Eventargument</param>
-        private void OnUnloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        /// <param name="args">Das Eventargument</param>
+        private void OnUnloaded(object sender, Windows.UI.Xaml.RoutedEventArgs args)
         {
             Animation.PropertyChanged -= OnPropertyChanged;
         }
@@ -87,21 +89,21 @@ namespace GameExpress.View
         /// Wird aufgerufen, wenn eine neue Story hinzugefügt werden soll
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
-        /// <param name="e">Das Eventargument</param>
-        private void OnAddStory(object sender, RoutedEventArgs e)
+        /// <param name="args">Das Eventargument</param>
+        private void OnAddStory(object sender, RoutedEventArgs args)
         {
-            //Object.StoryBoard.Add(new ItemStory()
-            //{
-            //    Name = "Story " + (Object.StoryBoard.Count + 1)
-            //});
+            Animation.StoryBoard.Add(new ItemStory()
+            {
+                Name = "Story " + (Animation.StoryBoard.Count + 1)
+            });
         }
 
         /// <summary>
         /// Wird aufgerufen, wenn der Previousbutton gedrückt wird
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
-        /// <param name="e">Das Eventargument</param>
-        private void OnPrevious(object sender, RoutedEventArgs e)
+        /// <param name="args">Das Eventargument</param>
+        private void OnPrevious(object sender, RoutedEventArgs args)
         {
             Play.IsChecked = false;
             Editor.Time = 0;
@@ -111,8 +113,8 @@ namespace GameExpress.View
         /// Wird aufgerufen, wenn der Playbutton gedrückt wird
         /// </summary>
         /// <param name="sender">Der Auslöser des Events</param>
-        /// <param name="e">Das Eventargument</param>
-        private void OnPlay(object sender, RoutedEventArgs e)
+        /// <param name="args">Das Eventargument</param>
+        private void OnPlay(object sender, RoutedEventArgs args)
         {
             var isChecked = Play.IsChecked.Value;
             var ticks = DateTime.Now.Ticks;

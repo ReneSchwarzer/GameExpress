@@ -29,7 +29,7 @@ namespace GameExpress.Context
         /// <return>Der Auswahlrahmen</return>
         public ISelectionFrame SelectionFrameFactory(Item item)
         {
-            return null;
+            return new SelectionFrameMap(item as ItemMap);
         }
 
         /// <summary>

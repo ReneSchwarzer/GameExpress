@@ -1,10 +1,15 @@
 ﻿<Page
-    x:Class="GameExpress.View.ScenePropertyPage"
+    x:Class="GameExpress.View.MapVertextPropertyPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converter="using:GameExpress.Converter"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converter:NegationConverter x:Key="Negation" />
+    </UserControl.Resources>
 
     <StackPanel Padding="10,10,10,10">
         <Grid>
@@ -18,16 +23,18 @@
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE1F7;" />
                 </ToggleButton>
                 <!-- Enable -->
-                <ToggleButton Margin="0,0,10,0" IsChecked="{Binding Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE052;" />
+                <ToggleButton Margin="0,0,10,0" IsChecked="{Binding Enable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource Negation}}">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF140;" />
                 </ToggleButton>
             </StackPanel>
-            <Button Grid.Column="1" Click="OnDeleteScene" IsEnabled="{Binding Unlock, Mode=OneWay}">
+            <Button Grid.Column="1" Click="OnDeleteVertext" IsEnabled="{Binding Unlock, Mode=OneWay}">
                 <SymbolIcon Symbol="Delete"/>
             </Button>
         </Grid>
         <TextBox Header="Name:" Name="Name" Margin="0,10,0,10" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
         <RichEditBox Header="Beschreibung:" Name="Note" Margin="0,10,0,10" IsEnabled="{Binding Unlock, Mode=OneWay}"/>
 
+        <TextBox Header="Position X:" Name="PosX" Margin="0,10,0,10" IsEnabled="{Binding Unlock, Mode=OneWay}" Text="{Binding Vector.X, Mode=TwoWay}"/>
+        <TextBox Header="Position Y:" Name="PosY" Margin="0,10,0,10" IsEnabled="{Binding Unlock, Mode=OneWay}" Text="{Binding Vector.Y, Mode=TwoWay}"/>
     </StackPanel>
 </Page>

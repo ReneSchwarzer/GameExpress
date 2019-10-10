@@ -81,15 +81,15 @@ namespace GameExpress.View
             var dialog = new SelectInstanceDialog()
             {
                 CurrentItem = Story.Animation as ItemAnimation,
-                SelectedItem = Story.Instance
+                SelectedItem = Story.Instance?.Instance
             };
 
             switch (await dialog.ShowAsync())
             {
                 case ContentDialogResult.Primary:
                     {
-                        Story.Item = dialog.SelectedItem?.Name;
-
+                        Story.Instance.ID = dialog.SelectedItem?.ID;
+                        Story.Instance.Name = dialog.SelectedItem?.Name;
                     }
                     break;
             }

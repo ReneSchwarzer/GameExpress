@@ -5,7 +5,7 @@ using Windows.Foundation;
 namespace GameExpress.Model.Item
 {
     [XmlType("tweening")]
-    public class ItemKeyFrameTweening : ItemKeyFrame, IItemVisual, IItemClickable
+    public class ItemKeyFrameTweening : ItemKeyFrame, IItemVisual, IItemSizing, IItemClickable
     {
         /// <summary>
         /// Liefert oder setzt den Vorgänger
@@ -113,7 +113,16 @@ namespace GameExpress.Model.Item
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public override T Copy<T>()
+        public override Item Copy()
+        {
+            return Copy<ItemKeyFrameTweening>();
+        }
+
+        /// <summary>
+        /// Liefert eine Tiefernkopie des Items
+        /// </summary>
+        /// <returns>Die Tiefenkopie</returns>
+        protected override T Copy<T>()
         {
             var copy = base.Copy<T>() as ItemKeyFrameTweening;
 
@@ -124,16 +133,16 @@ namespace GameExpress.Model.Item
         /// Liefert die Größe
         /// </summary>
         [XmlIgnore]
-        public virtual Size Size
+        public virtual Vector Size
         {
             get
             {
-                if (Story?.Instance is IItemVisual instance)
+                if (Story?.Instance?.Instance is IItemSizing instance)
                 {
                     return instance.Size;
                 }
 
-                return new Size();
+                return new Vector();
             }
         }
     }

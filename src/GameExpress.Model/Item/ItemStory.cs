@@ -13,14 +13,14 @@ namespace GameExpress.Model.Item
     public class ItemStory : ItemTreeNode
     {
         /// <summary>
-        /// Das Item
-        /// </summary>
-        private string m_item;
-
-        /// <summary>
         /// Bestimmt die Animationnach dem letzten KeyFrame  
         /// </summary>
         private Loop m_loop;
+
+        /// <summary>
+        /// Liefert oder setzt die Instanz
+        /// </summary>
+        private ItemInstance m_instance;
 
         /// <summary>
         /// Liefert oder setzt ob die Annimation in einer Schleife wiederholt werden soll
@@ -53,10 +53,23 @@ namespace GameExpress.Model.Item
         public ItemAnimation Animation => Parent as ItemAnimation;
 
         /// <summary>
-        /// Die ID des mit der Instanz verbundenen Element
+        /// Liefert oder setzt die Instanz
         /// </summary>
-        [XmlIgnore]
-        public Item Instance { get; private set; }
+        [XmlElement("instance")]
+        public ItemInstance Instance
+        {
+            get => m_instance;
+            set
+            {
+                if (m_instance != value)
+                {
+                    m_instance = value;
+                    m_instance.Parent = this;
+                    m_instance.Init();
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Liefert einen Verweis auf die aktuelle Story
@@ -98,7 +111,7 @@ namespace GameExpress.Model.Item
         {
             base.Init();
 
-            AttachedInstance(Item);
+            Instance.Parent = this;
         }
 
         /// <summary>
@@ -107,11 +120,6 @@ namespace GameExpress.Model.Item
         /// <param name="uc">Der Updatekontext</param>
         public override void Update(UpdateContext uc)
         {
-            if (Instance == null)
-            {
-                AttachedInstance(Item);
-            }
-
             var newUC = new UpdateContext(uc) { Time = LocalTime(uc.Time) };
 
             if (GetKeyFrame((ulong)newUC.Time) is ItemKeyFrame frame)
@@ -146,37 +154,29 @@ namespace GameExpress.Model.Item
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public override T Copy<T>()
+        public override Item Copy()
         {
-            var copy = base.Copy<T>() as ItemStory;
-
-            return copy as T;
+            return Copy<ItemStory>();
         }
 
         /// <summary>
-        /// Ermittelt und fügt die Instanz hinzu
+        /// Liefert eine Tiefernkopie des Items
         /// </summary>
-        /// <param name="item">Das Item</param>
-        protected void AttachedInstance(string item)
+        /// <returns>Die Tiefenkopie</returns>
+        protected override T Copy<T>()
         {
-            if (Animation == null)
+            var copy = base.Copy<T>() as ItemStory;
+            copy.Loop = Loop;
+            copy.Instance = Instance?.Copy();
+
+            foreach (var k in KeyFrames)
             {
-                return;
+                copy.KeyFrames.Add(k.Copy() as ItemKeyFrame);
             }
 
-            // Suche Item
-            var origin = Animation.Root.FindItem(Item);
-
-            if (origin != null)
-            {
-                //Instance = orgin.Copy();
-                //Instance.Name = Name + "_" + Instance.Name;
-                //(Instance as Item).Parent = this;
-
-                Instance = origin;
-            }
+            return copy as T;
         }
-
+        
         /// <summary>
         /// Liefert ein Schlüselbild zu der gegebenen Zeit
         /// </summary>
@@ -227,13 +227,13 @@ namespace GameExpress.Model.Item
             }
 
             // Tweening
-            if (absolutePredecessorEndTime < time && time < absoluteSuccessorStartTime && tweening != null)
+            if (absolutePredecessorEndTime < time && time < absoluteSuccessorStartTime && tweening != null && tweening.Enable)
             {
                 var from = absolutePredecessorEndTime;
                 var till = absoluteSuccessorStartTime;
                 var progress = (time - from) / (float)(till - from); // in %
 
-                var snapShot = tweening.Copy<ItemKeyFrameTweening>();
+                var snapShot = tweening.Copy() as ItemKeyFrameTweening;
                 snapShot.Init(predecessorKeyFrame, successorKeyFrame, progress);
 
                 // ToDo: Alpha, usw.
@@ -305,25 +305,6 @@ namespace GameExpress.Model.Item
         /// </summary>
         [XmlIgnore]
         public ulong EndTime => (ulong)KeyFrames.Where(x => x is ItemKeyFrameAct).Select(x => x as ItemKeyFrameAct).Sum(x => (decimal)x.From + x.Duration);
-
-        /// <summary>
-        /// Liefert oder setzt das mit der Instanz verbundene Element
-        /// </summary>
-        [XmlAttribute("item")]
-        public string Item
-        {
-            get => m_item;
-            set
-            {
-                if (m_item == null ? true : !m_item.Equals(value))
-                {
-                    m_item = value;
-                    AttachedInstance(Item);
-
-                    RaisePropertyChanged();
-                }
-            }
-        }
     }
 }
 

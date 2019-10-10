@@ -77,7 +77,7 @@ namespace GameExpress.View
 
             if (item is ItemStory story)
             {
-                if (ContextRepository.FindContext(story.Instance) is IItemContext c)
+                if (ContextRepository.FindContext(story.Instance?.Instance) is IItemContext c)
                 {
                     return c.Symbol;
                 }

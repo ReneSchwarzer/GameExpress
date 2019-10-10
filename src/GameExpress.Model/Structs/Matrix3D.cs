@@ -304,7 +304,7 @@ namespace GameExpress.Model.Structs
         /// <returns>Die Stringrepräsentation der Matrix</returns>
         public override string ToString()
         {
-            return "< " + m_11 + ", " + m_12 + ", " + m_13 + ">, <" + m_21 + ", " + m_22 + ", " + m_23 + ">, <" + m_31 + ", " + m_32 + ", " + m_33 + ">";
+            return "< " + m_11 + "; " + m_12 + "; " + m_13 + ">, <" + m_21 + "; " + m_22 + "; " + m_23 + ">, <" + m_31 + "; " + m_32 + "; " + m_33 + ">";
         }
 
         /// <summary>

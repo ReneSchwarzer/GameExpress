@@ -40,7 +40,7 @@
                                 <controls:CanvasControl Name="Content" Canvas.Top="0" Canvas.Left="0"/>
                             </Canvas>
                         </ScrollViewer>
-                         <Grid Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Background="{ThemeResource SystemAltMediumColor}">
+                         <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Background="{ThemeResource SystemAltMediumColor}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>

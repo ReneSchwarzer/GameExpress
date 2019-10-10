@@ -11,8 +11,8 @@
     <AssemblyName>GameExpress</AssemblyName>
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -121,6 +121,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Context\ContextRepository.cs" />
+    <Compile Include="Context\ItemMapVertextContext.cs" />
     <Compile Include="Context\ItemSoundContext.cs" />
     <Compile Include="Context\ItemImageContext.cs" />
     <Compile Include="Context\ItemTweeningContext.cs" />
@@ -132,6 +133,9 @@
     <Compile Include="Context\ItemSceneContext.cs" />
     <Compile Include="Context\ItemGameContext.cs" />
     <Compile Include="Controls\AnimationEditorPanel.cs" />
+    <Compile Include="Controls\InstanceSelector.xaml.cs">
+      <DependentUpon>InstanceSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SelectionHelper.cs" />
     <Compile Include="Controls\EditorPanel.cs" />
     <Compile Include="Controls\KeyFrameEditor.xaml.cs">
@@ -152,6 +156,7 @@
     <Compile Include="Dialog\SelectInstanceDialog.xaml.cs">
       <DependentUpon>SelectInstanceDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SelectionFrames\EventArgsRetrievePosition.cs" />
     <Compile Include="SelectionFrames\ISelectionFrameAnchor.cs" />
     <Compile Include="SelectionFrames\ISelectionFrame.cs" />
     <Compile Include="SelectionFrames\ISelectionFrameHandle.cs" />
@@ -159,7 +164,8 @@
     <Compile Include="SelectionFrames\Location.cs" />
     <Compile Include="SelectionFrames\SelectionFrameAnchor.cs" />
     <Compile Include="SelectionFrames\SelectionFrameHandle.cs" />
-    <Compile Include="SelectionFrames\SelectionFrameHandleMove.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleMapVertextMove.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameHandleTranslation.cs" />
     <Compile Include="SelectionFrames\SelectionFrameHandleSizeW.cs" />
     <Compile Include="SelectionFrames\SelectionFrameHandleSizeE.cs" />
     <Compile Include="SelectionFrames\SelectionFrameHandleSizeS.cs" />
@@ -170,6 +176,7 @@
     <Compile Include="SelectionFrames\SelectionFrameHandleSizeNW.cs" />
     <Compile Include="SelectionFrames\SelectionFrameHandleHotSpot.cs" />
     <Compile Include="SelectionFrames\SelectionFrameImage.cs" />
+    <Compile Include="SelectionFrames\SelectionFrameMap.cs" />
     <Compile Include="SelectionFrames\SelectionFrameStory.cs" />
     <Compile Include="SelectionFrames\SelectionFrame.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
@@ -189,6 +196,9 @@
     <Compile Include="Context\IItemContext.cs" />
     <Compile Include="View\KeyFramePropertyPage.xaml.cs">
       <DependentUpon>KeyFramePropertyPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MapVertextPropertyPage.xaml.cs">
+      <DependentUpon>MapVertextPropertyPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MapPropertyPage.xaml.cs">
       <DependentUpon>MapPropertyPage.xaml</DependentUpon>
@@ -218,9 +228,6 @@
     <Compile Include="View\ObjectPropertyPage.xaml.cs">
       <DependentUpon>ObjectPropertyPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ScenePropertyPage.xaml.cs">
-      <DependentUpon>ScenePropertyPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\SoundPage.xaml.cs">
       <DependentUpon>SoundPage.xaml</DependentUpon>
     </Compile>
@@ -240,11 +247,17 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="Assets\TestProject\boom.m4a" />
+    <Content Include="Assets\TestProject\cloud3.png" />
+    <Content Include="Assets\TestProject\cloud1.png" />
+    <Content Include="Assets\TestProject\cloud4.png" />
+    <Content Include="Assets\TestProject\cloud2.png" />
     <Content Include="Assets\TestProject\lostonomicron.gx" />
     <None Include="GameExpress_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\TestProject\omicron.png" />
+    <Content Include="Assets\TestProject\scene3.png" />
+    <Content Include="Assets\TestProject\scene2.png" />
     <Content Include="Assets\TestProject\scene1.png" />
     <Content Include="Assets\TestProject\sputnik.png" />
     <Content Include="Assets\TestProject\ufo.png" />
@@ -300,6 +313,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\InstanceSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\KeyFrameEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -340,6 +357,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\MapVertextPropertyPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\MapPropertyPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -373,10 +394,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ObjectPropertyPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\ScenePropertyPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

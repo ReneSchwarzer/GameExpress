@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using GameExpress.Model.Structs;
+using System.Xml.Serialization;
 using Windows.Foundation;
 
 namespace GameExpress.Model.Item
@@ -17,17 +18,21 @@ namespace GameExpress.Model.Item
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public override T Copy<T>()
+        public override Item Copy()
+        {
+            return Copy<ItemScene>();
+        }
+
+        /// <summary>
+        /// Liefert eine Tiefernkopie des Items
+        /// </summary>
+        /// <returns>Die Tiefenkopie</returns>
+        protected override T Copy<T>()
         {
             var copy = base.Copy<T>() as ItemScene;
 
             return copy as T;
         }
 
-        /// <summary>
-        /// Liefert die Größe
-        /// </summary>
-        [XmlIgnore]
-        public override Size Size => new Size();
     }
 }

@@ -10,11 +10,6 @@ namespace GameExpress.Model.Item
     public interface IItemVisual
     {
         /// <summary>
-        /// Liefert die Größe
-        /// </summary>
-        Size Size { get; }
-
-        /// <summary>
         /// Liefert die Anzeigematrix des Items
         /// </summary>
         /// <returns>Die Matrix mit allen Transformationen des Items</returns>

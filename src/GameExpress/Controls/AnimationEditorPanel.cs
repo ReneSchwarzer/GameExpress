@@ -17,7 +17,7 @@ namespace GameExpress.Controls
     public class AnimationEditorPanel : EditorPanel
     {
         /// <summary>
-        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die derigistrierung benötigt wird
+        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die Derigistrierung  benötigt wird
         /// </summary>
         private long TimePropertyToken { get; set; }
 
@@ -126,6 +126,19 @@ namespace GameExpress.Controls
         private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             ViewHelper.ChangePropertyPage(Item);
+        }
+
+        /// <summary>
+        /// Erzeugt einen HitTestContext
+        /// </summary>
+        /// <param name="viewRect">Die Koordinaten des Bereiches indem das Item gezeichnet wird</param>
+        /// <returns>Der HitTestContext</returns>
+        protected override HitTestContext CrateHitTestContext(Rect viewRect)
+        {
+            var hc = base.CrateHitTestContext(viewRect);
+            hc.Time = new Time(Time);
+
+            return hc;
         }
 
         /// <summary>

@@ -24,6 +24,10 @@ namespace GameExpress.SelectionFrames
         /// <summary>
         /// Der Schwerpunkt
         /// </summary>
-        Center
+        Center,
+        /// <summary>
+        /// Vom Eigentümer defenierte Position
+        /// </summary>
+        Owner
     }
 }

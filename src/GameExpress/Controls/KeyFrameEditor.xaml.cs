@@ -30,12 +30,12 @@ namespace GameExpress.Controls
     public sealed partial class KeyFrameEditor : UserControl
     {
         /// <summary>
-        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die derigistrierung benötigt wird
+        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die Derigistrierung benötigt wird
         /// </summary>
         private long TimePropertyToken { get; set; }
 
         /// <summary>
-        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die derigistrierung benötigt wird
+        /// Token, welches beim RegisterPropertyChangedCallback erzeugt und für die Derigistrierung benötigt wird
         /// </summary>
         private long TimeOffsetPropertyToken { get; set; }
 

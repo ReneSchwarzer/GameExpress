@@ -17,6 +17,11 @@ namespace GameExpress.SelectionFrames
     public class SelectionFrameAnchor : ISelectionFrameAnchor
     {
         /// <summary>
+        /// Event zum Abfragen der aktuellen Position
+        /// </summary>
+        public event EventHandler<EventArgsRetrievePosition> RetrievePosition;
+
+        /// <summary>
         /// Liefert oder setzt die Position auf einem Orbit
         /// </summary>
         public Location Location { get; private set; }
@@ -27,7 +32,7 @@ namespace GameExpress.SelectionFrames
         protected ISelectionFrame Frame { get; private set; }
 
         /// <summary>
-        /// Liefert oder setzt die Koordinaten, die beim letzten Zeivhnen vorlagen
+        /// Liefert oder setzt die Koordinaten, die beim letzten Zeichnen vorlagen
         /// </summary>
         public Vector CurrentPosition { get; private set; } = new Vector(0f);
 
@@ -62,7 +67,9 @@ namespace GameExpress.SelectionFrames
         /// <param name="uc">Der Updatekontext</param>
         public virtual void Update(UpdateContext uc)
         {
-            CurrentPosition = uc.Transform(new Vector(0f));
+            var args = new EventArgsRetrievePosition();
+            OnRetrievePosition(args);
+            CurrentPosition = uc.Transform(args.Position);
 
             // Updated die Handles
             foreach (var handle in Handles)
@@ -318,6 +325,15 @@ namespace GameExpress.SelectionFrames
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn die aktuelle Position ermittelt werden muss
+        /// </summary>
+        /// <param name="position">Die Position</param>
+        protected virtual void OnRetrievePosition(EventArgsRetrievePosition position)
+        {
+            RetrievePosition?.Invoke(this, position);
         }
     }
 }

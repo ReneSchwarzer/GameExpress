@@ -61,11 +61,15 @@ namespace GameExpress.SelectionFrames
         {
             base.CaptureBegin(capturePoint);
 
-            if (Item is IItemScale item && Item is IItemVisual visual)
+            if (Item is IItemScale scale && Item is IItemSizing sizing)
             {
-                OriginalScaleX = item.ScaleX;
-                OriginalScaleY = item.ScaleY;
-                OriginalSize = new Vector(visual.Size.Width * item.ScaleX / 100f, visual.Size.Height * item.ScaleY / 100f);
+                OriginalScaleX = scale.ScaleX;
+                OriginalScaleY = scale.ScaleY;
+                OriginalSize = new Vector
+                (
+                    sizing.Size.X * scale.ScaleX / 100f, 
+                    sizing.Size.Y * scale.ScaleY / 100f
+                );
             }
         }
 

@@ -45,7 +45,7 @@ namespace GameExpress.Model.Item
         /// Liefert die Größe
         /// </summary>
         [XmlIgnore]
-        public override Size Size => Image != null ? Image.Size : new Size();
+        public override Vector Size => Image != null ? new Vector(Image.Size.Width, Image.Size.Height) : new Vector();
 
         /// <summary>
         /// Konstruktor
@@ -190,7 +190,16 @@ namespace GameExpress.Model.Item
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public override T Copy<T>()
+        public override Item Copy()
+        {
+            return Copy<ItemImage>();
+        }
+
+        /// <summary>
+        /// Liefert eine Tiefernkopie des Items
+        /// </summary>
+        /// <returns>Die Tiefenkopie</returns>
+        protected override T Copy<T>()
         {
             var copy = base.Copy<T>() as ItemImage;
             copy.Source = Source;

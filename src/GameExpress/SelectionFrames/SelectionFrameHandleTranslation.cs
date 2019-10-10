@@ -16,7 +16,7 @@ using Vector = GameExpress.Model.Structs.Vector;
 
 namespace GameExpress.SelectionFrames
 {
-    public class SelectionFrameHandleMove : SelectionFrameHandle
+    public class SelectionFrameHandleTranslation : SelectionFrameHandle
     {
         /// <summary>
         /// Liefert oder setzt die Verschiebung der x-Achse entlang
@@ -33,7 +33,7 @@ namespace GameExpress.SelectionFrames
         /// </summary>
         /// <param name="frame">Verweis auf den zugehörigen Frame</param>
         /// <param name="anchor">Der zugehörige Anker</param>
-        public SelectionFrameHandleMove(ISelectionFrame frame, ISelectionFrameAnchor anchor)
+        public SelectionFrameHandleTranslation(ISelectionFrame frame, ISelectionFrameAnchor anchor)
             : base(frame, anchor, Orbit.Low)
         {
             Width = Height *= 2;
@@ -45,6 +45,8 @@ namespace GameExpress.SelectionFrames
         /// <param name="pc">Der Präsentationskontext</param>
         public override void DrawOverlay(PresentationContext pc)
         {
+            if (Orbit == Orbit.None) return;
+
             var lightGray = (Color)Application.Current.Resources["SystemChromeHighColor"];
 
             var p = CurrentPosition;
@@ -112,10 +114,15 @@ namespace GameExpress.SelectionFrames
         {
             var p1 = CurrentPosition;
 
-            var p2 = Anchor.GetHandle(Orbit.None).CurrentPosition;
-            var foreground = new UISettings().GetColorValue(UIColorType.Foreground);
+            var handle = Anchor.GetHandle(Orbit.None);
 
-            pc.Graphics.DrawLine((float)p1.X, (float)p1.Y, (float)p2.X, (float)p2.Y, foreground, 1);
+            if (handle != null)
+            {
+                var p2 = handle.CurrentPosition;
+                var foreground = new UISettings().GetColorValue(UIColorType.Foreground);
+
+                pc.Graphics.DrawLine((float)p1.X, (float)p1.Y, (float)p2.X, (float)p2.Y, foreground, 1);
+            }
         }
 
         /// <summary>

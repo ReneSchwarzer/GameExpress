@@ -22,6 +22,11 @@ namespace GameExpress.View
     public sealed partial class MapPage : Page
     {
         /// <summary>
+        /// Liefert das mit der Ansicht verbundene Karte
+        /// </summary>
+        private ItemMap Map => DataContext as ItemMap;
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         public MapPage()
@@ -41,6 +46,9 @@ namespace GameExpress.View
             Editor.Item = e.Parameter as ItemMap;
 
             ViewHelper.ChangePropertyPage(e.Parameter as Item);
+
+            Editor.SelectedItems.Add(Map);
+            Editor.FitSize();
         }
 
         /// <summary>
@@ -63,9 +71,36 @@ namespace GameExpress.View
         {
         }
 
-        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        /// <summary>
+        /// Wird aufgerufen, wenn kein atives Item mehr ausgewählt wurde
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnSelectedItemLost(object sender, System.EventArgs e)
         {
+            Editor.SelectedItems.Add(Map);
+        }
 
+        /// <summary>
+        /// Wird aufgerufen, ein Handle (Vertext) ausgewählt wurde
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnSelectHandleChange(object sender, SelectionFrames.ISelectionFrameHandle e)
+        {
+            ViewHelper.ChangePropertyPage(e?.Item);
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn ein neuer Vertext hinzugefügt werden soll
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnAddVertext(object sender, RoutedEventArgs e)
+        {
+            Map.Vertices.Add(new ItemMapVertext() { Vector = new Model.Structs.Vector() });
+
+            Editor.Invalidate();
         }
     }
 }

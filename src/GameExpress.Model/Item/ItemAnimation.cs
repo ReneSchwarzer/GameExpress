@@ -8,8 +8,14 @@ using Windows.Foundation;
 namespace GameExpress.Model.Item
 {
     [XmlType("animation")]
-    public class ItemAnimation : ItemGraphics
+    public class ItemAnimation : ItemGraphics, IItemState
     {
+        /// <summary>
+        /// Liefert die Größe
+        /// </summary>
+        [XmlIgnore]
+        public override Vector Size => Background != null ? Background.Size : new Vector();
+
         /// <summary>
         /// Liefert oder setzt die Instanzen
         /// </summary>
@@ -17,10 +23,35 @@ namespace GameExpress.Model.Item
         public ObservableCollection<ItemStory> StoryBoard { get; set; } = new ObservableCollection<ItemStory>();
 
         /// <summary>
+        /// Liefert oder setzt das Hintergrundbild
+        /// </summary>
+        private ItemInstance m_background;
+
+        /// <summary>
+        /// Liefert oder setzt das Hintergrundbild
+        /// </summary>
+        [XmlElement("background")]
+        public ItemInstance Background 
+        { 
+            get => m_background; 
+            set
+            {
+                if (m_background != value)
+                {
+                    m_background = value;
+                    m_background.Parent = this;
+                    m_background.Init();
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         public ItemAnimation()
         {
+            Background = new ItemInstance(this);
             StoryBoard.CollectionChanged += (s, e) =>
             {
                 if (e.NewItems != null)
@@ -50,10 +81,20 @@ namespace GameExpress.Model.Item
         {
             base.Init();
 
+            Background?.Init();
+
             foreach (var story in StoryBoard)
             {
                 story.Init();
             }
+        }
+
+        /// <summary>
+        /// Entfernen nicht mehr benötigter Ressourcen des Items
+        /// </summary>
+        public override void Dispose()
+        {
+            Background?.Dispose();
         }
 
         /// <summary>
@@ -74,6 +115,8 @@ namespace GameExpress.Model.Item
         {
             base.Update(uc);
 
+            Background?.Update(uc);
+
             foreach (var story in StoryBoard)
             {
                 var newUC = new UpdateContext(uc);
@@ -88,6 +131,8 @@ namespace GameExpress.Model.Item
         public override void Presentation(PresentationContext pc)
         {
             base.Presentation(pc);
+
+            Background?.Presentation(pc);
 
             if (StoryBoard == null)
             {
@@ -140,22 +185,26 @@ namespace GameExpress.Model.Item
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public override T Copy<T>()
+        public override Item Copy()
+        {
+            return Copy<ItemAnimation>();
+        }
+
+        /// <summary>
+        /// Liefert eine Tiefernkopie des Items
+        /// </summary>
+        /// <returns>Die Tiefenkopie</returns>
+        protected override T Copy<T>()
         {
             var copy = base.Copy<T>() as ItemAnimation;
+            copy.Background = Background?.Copy();
 
             foreach (var i in StoryBoard)
             {
-                copy.StoryBoard.Add(i.Copy<ItemStory>());
+                copy.StoryBoard.Add(i.Copy() as ItemStory);
             }
 
             return copy as T;
         }
-
-        /// <summary>
-        /// Liefert die Größe
-        /// </summary>
-        [XmlIgnore]
-        public override Size Size => new Size();
     }
 }

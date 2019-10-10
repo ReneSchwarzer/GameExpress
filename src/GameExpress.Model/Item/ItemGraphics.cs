@@ -12,7 +12,7 @@ namespace GameExpress.Model.Item
     [XmlInclude(typeof(ItemObject))]
     [XmlInclude(typeof(ItemImage))]
     [XmlType("graphics")]
-    public abstract class ItemGraphics : ItemTreeNode, IItemVisual, IItemHotSpot, IItemClickable
+    public abstract class ItemGraphics : ItemTreeNode, IItemVisual, IItemSizing, IItemHotSpot, IItemClickable
     {
         /// <summary>
         /// Der Hotspot
@@ -93,7 +93,7 @@ namespace GameExpress.Model.Item
         /// Liefert eine Tiefernkopie des Items
         /// </summary>
         /// <returns>Die Tiefenkopie</returns>
-        public override T Copy<T>()
+        protected override T Copy<T>()
         {
             var copy = base.Copy<T>() as ItemGraphics;
             copy.Hotspot = Hotspot;
@@ -103,7 +103,6 @@ namespace GameExpress.Model.Item
 
             return copy as T;
         }
-
 
         /// <summary>
         /// Wird aufgerufen, wennsich der x-Wert oder y-Wert innerhalb des Hotspot ändert
@@ -213,6 +212,6 @@ namespace GameExpress.Model.Item
         /// Liefert die Größe
         /// </summary>
         [XmlIgnore]
-        public abstract Size Size { get; }
+        public abstract Vector Size { get; }
     }
 }

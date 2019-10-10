@@ -43,6 +43,9 @@ namespace GameExpress.View
             ViewHelper.ChangePropertyPage(e.Parameter as Item);
 
             Editor.Item = Image;
+            Editor.SelectedItems.Add(Image);
+
+            Editor.FitSize();
         }
 
         /// <summary>
@@ -73,6 +76,16 @@ namespace GameExpress.View
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             Editor.Invalidate();
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn kein atives Item mehr ausgewählt wurde
+        /// </summary>
+        /// <param name="sender">Der Auslöser des Events</param>
+        /// <param name="e">Das Eventargument</param>
+        private void OnSelectedItemLost(object sender, System.EventArgs e)
+        {
+            Editor.SelectedItems.Add(Image);
         }
     }
 }

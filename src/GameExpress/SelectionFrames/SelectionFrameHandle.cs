@@ -86,7 +86,7 @@ namespace GameExpress.SelectionFrames
         /// <summary>
         /// Liefert oder setzt den zugehörigen Anker
         /// </summary>
-        protected ISelectionFrameAnchor Anchor { get; private set; }
+        public ISelectionFrameAnchor Anchor { get; private set; }
 
         /// <summary>
         /// Konstruktor
@@ -99,6 +99,8 @@ namespace GameExpress.SelectionFrames
             Frame = frame;
             Anchor = anchor;
             Orbit = orbit;
+
+            Item = Frame.Item;
         }
 
         /// <summary>
@@ -182,6 +184,42 @@ namespace GameExpress.SelectionFrames
             var rect = new Rect(new Point(p.X - Width / 2f, p.Y - Height / 2f), new Size(Width, Height));
 
             return rect.Contains(point) ? this : null;
+        }
+
+        /// <summary>
+        /// Wird beim Anklicken des Handles aufgerufen
+        /// </summary>
+        /// <param name="point">Die Koordinaten des Pointers</param> 
+        public virtual void OnPointerPressed(Vector point)
+        {
+            if (Item != null && !Item.Lock)
+            {
+                CaptureBegin(point);
+            }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn innerhalb des Steuerelements die Position des Zeigegerätes sich ändert
+        /// </summary>
+        /// <param name="point">Die Koordinaten des Pointers</param> 
+        /// <param name="matrix">Die Matrix mit den Transformationseigenschaften</param>
+        public virtual void OnPointerMoved(Vector point, Matrix3D matrix)
+        {
+            if (!Vector.IsNaN(CapturePoint))
+            {
+                CaptureDrag(point, matrix);
+            }
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn das Zeigegerät nicht mehr gedrückt wird
+        /// </summary>
+        public virtual void OnPointerReleased()
+        {
+            if (!Vector.IsNaN(CapturePoint))
+            {
+                CaptureEnd();
+            }
         }
 
         /// <summary>
